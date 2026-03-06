@@ -1,6 +1,6 @@
 <h2>Data Kelas</h2>
 
-<a href="{{ route('kelas.create') }}">Tambah Kelas</a>
+<a href="{{ route('admin.kelas.create') }}">Tambah Kelas</a>
 
 @if(session('success'))
     <p style="color:green">{{ session('success') }}</p>
@@ -20,9 +20,9 @@
         <td>{{ $k->nama_kelas }}</td>
         <td>{{ $k->tahun_ajaran }}</td>
         <td>
-            <a href="{{ route('kelas.edit', $k->id_kelas) }}">Edit</a>
+            <a href="{{ route('admin.kelas.edit', $k->id_kelas) }}">Edit</a>
 
-            <form action="{{ route('kelas.destroy', $k->id_kelas) }}" method="POST" style="display:inline;">
+            <form action="{{ route('admin.kelas.destroy', $k->id_kelas) }}" method="POST" style="display:inline;">
                 @csrf
                 @method('DELETE')
                 <button type="submit" onclick="return confirm('Yakin ingin menghapus?')">Hapus</button>

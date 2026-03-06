@@ -1,6 +1,6 @@
 <h2>Edit Siswa</h2>
 
-<form action="{{ route('siswa.update', $siswa->id_siswa) }}" method="POST">
+<form action="{{ route('admin.siswa.update', $siswa->id_siswa) }}" method="POST">
     @csrf
     @method('PUT')
 
@@ -37,4 +37,4 @@
     <button type="submit">Update</button>
 </form>
 
-<a href="{{ route('siswa.index') }}">Kembali</a>
+<a href="{{ route('admin.siswa.index') }}">Kembali</a>

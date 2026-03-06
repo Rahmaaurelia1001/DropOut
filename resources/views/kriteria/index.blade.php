@@ -1,6 +1,6 @@
 <h2>Data Kriteria</h2>
 
-<a href="{{ route('kriteria.create') }}">Tambah Kriteria</a>
+<a href="{{ route('admin.kriteria.create') }}">Tambah Kriteria</a>
 
 @if(session('success'))
     <p style="color:green">{{ session('success') }}</p>
@@ -20,9 +20,9 @@
         <td>{{ $k->nama_kriteria }}</td>
         <td>{{ $k->bobot }}</td>
         <td>
-            <a href="{{ route('kriteria.edit', $k->id_kriteria) }}">Edit</a>
+            <a href="{{ route('admin.kriteria.edit', $k->id_kriteria) }}">Edit</a>
 
-            <form action="{{ route('kriteria.destroy', $k->id_kriteria) }}" method="POST" style="display:inline;">
+            <form action="{{ route('admin.kriteria.destroy', $k->id_kriteria) }}" method="POST" style="display:inline;">
                 @csrf
                 @method('DELETE')
                 <button type="submit" onclick="return confirm('Yakin hapus?')">Hapus</button>

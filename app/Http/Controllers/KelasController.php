@@ -20,18 +20,18 @@ class KelasController extends Controller
 
     public function store(Request $request)
     {
-    $request->validate([
-        'nama_kelas' => 'required',
-        'tahun_ajaran' => 'required'
-    ]);
+        $request->validate([
+            'nama_kelas' => 'required',
+            'tahun_ajaran' => 'required'
+        ]);
 
-    Kelas::create([
-        'nama_kelas' => $request->nama_kelas,
-        'tahun_ajaran' => $request->tahun_ajaran
-    ]);
+        Kelas::create([
+            'nama_kelas' => $request->nama_kelas,
+            'tahun_ajaran' => $request->tahun_ajaran
+        ]);
 
-    return redirect()->route('kelas.index')
-        ->with('success', 'Data kelas berhasil ditambahkan');
+        return redirect()->route('admin.kelas.index')
+            ->with('success', 'Data kelas berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -42,15 +42,16 @@ class KelasController extends Controller
 
     public function update(Request $request, $id)
     {
-       $request->validate([
-        'nama_kelas' => 'required',
-        'tahun_ajaran' => 'required'
-    ]);
+        $request->validate([
+            'nama_kelas' => 'required',
+            'tahun_ajaran' => 'required'
+        ]);
 
-    $kelas = Kelas::findOrFail($id);
-    $kelas->update($request->all());
+        $kelas = Kelas::findOrFail($id);
+        $kelas->update($request->all());
 
-    return redirect()->route('kelas.index')->with('success', 'Data berhasil diupdate');
+        return redirect()->route('admin.kelas.index')
+            ->with('success', 'Data berhasil diupdate');
     }
 
     public function destroy($id)
@@ -58,7 +59,7 @@ class KelasController extends Controller
         $kelas = Kelas::findOrFail($id);
         $kelas->delete();
 
-        return redirect()->route('kelas.index')
+        return redirect()->route('admin.kelas.index')
             ->with('success', 'Data kelas berhasil dihapus');
     }
 }

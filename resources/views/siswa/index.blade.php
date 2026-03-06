@@ -1,6 +1,6 @@
 <h2>Data Siswa</h2>
 
-<a href="{{ route('siswa.create') }}">Tambah Siswa</a>
+<a href="{{ route('admin.siswa.create') }}">Tambah Siswa</a>
 
 @if(session('success'))
     <p style="color:green">{{ session('success') }}</p>
@@ -26,9 +26,9 @@
         <td>{{ $s->tanggal_lahir }}</td>
         <td>{{ $s->kelas->nama_kelas ?? '-' }}</td>
         <td>
-            <a href="{{ route('siswa.edit', $s->id_siswa) }}">Edit</a>
+            <a href="{{ route('admin.siswa.edit', $s->id_siswa) }}">Edit</a>
 
-            <form action="{{ route('siswa.destroy', $s->id_siswa) }}" method="POST" style="display:inline;">
+            <form action="{{ route('admin.siswa.destroy', $s->id_siswa) }}" method="POST" style="display:inline;">
                 @csrf
                 @method('DELETE')
                 <button type="submit" onclick="return confirm('Yakin hapus?')">Hapus</button>

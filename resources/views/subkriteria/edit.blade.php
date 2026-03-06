@@ -1,6 +1,6 @@
 <h2>Edit Subkriteria</h2>
 
-<form action="{{ route('subkriteria.update', $subkriteria->id_subkriteria) }}" method="POST">
+<form action="{{ route('admin.subkriteria.update', $subkriteria->id_subkriteria) }}" method="POST">
     @csrf
     @method('PUT')
 
@@ -15,14 +15,14 @@
     </select><br><br>
 
     <label>Nama Subkriteria</label><br>
-    <input type="text" name="nama_subkriteria" 
+    <input type="text" name="nama_subkriteria"
            value="{{ $subkriteria->nama_subkriteria }}" required><br><br>
 
     <label>Nilai Skala</label><br>
-    <input type="number" name="nilai_skala" 
+    <input type="number" name="nilai_skala"
            value="{{ $subkriteria->nilai_skala }}" required><br><br>
 
     <button type="submit">Update</button>
 </form>
 
-<a href="{{ route('subkriteria.index') }}">Kembali</a>
+<a href="{{ route('admin.subkriteria.index') }}">Kembali</a>

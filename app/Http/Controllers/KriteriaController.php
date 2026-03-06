@@ -27,8 +27,8 @@ class KriteriaController extends Controller
 
         Kriteria::create($request->all());
 
-        return redirect()->route('kriteria.index')
-            ->with('success','Data kriteria berhasil ditambahkan');
+        return redirect()->route('admin.kriteria.index')
+            ->with('success', 'Data kriteria berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -47,8 +47,8 @@ class KriteriaController extends Controller
         $kriteria = Kriteria::findOrFail($id);
         $kriteria->update($request->all());
 
-        return redirect()->route('kriteria.index')
-            ->with('success','Data kriteria berhasil diupdate');
+        return redirect()->route('admin.kriteria.index')
+            ->with('success', 'Data kriteria berhasil diupdate');
     }
 
     public function destroy($id)
@@ -56,7 +56,7 @@ class KriteriaController extends Controller
         $kriteria = Kriteria::findOrFail($id);
         $kriteria->delete();
 
-        return redirect()->route('kriteria.index')
-            ->with('success','Data kriteria berhasil dihapus');
+        return redirect()->route('admin.kriteria.index')
+            ->with('success', 'Data kriteria berhasil dihapus');
     }
 }

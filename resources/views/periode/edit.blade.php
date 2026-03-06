@@ -1,6 +1,6 @@
 <h2>Edit Periode Penilaian</h2>
 
-<form action="{{ route('periode.update', $periode->id_periode) }}" method="POST">
+<form action="{{ route('admin.periode.update', $periode->id_periode) }}" method="POST">
     @csrf
     @method('PUT')
 
@@ -37,4 +37,4 @@
     <button type="submit">Update</button>
 </form>
 
-<a href="{{ route('periode.index') }}">Kembali</a>
+<a href="{{ route('admin.periode.index') }}">Kembali</a>

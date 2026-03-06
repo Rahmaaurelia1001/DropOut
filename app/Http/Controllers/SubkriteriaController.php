@@ -30,8 +30,8 @@ class SubkriteriaController extends Controller
 
         Subkriteria::create($request->all());
 
-        return redirect()->route('subkriteria.index')
-            ->with('success','Data subkriteria berhasil ditambahkan');
+        return redirect()->route('admin.subkriteria.index')
+            ->with('success', 'Data subkriteria berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -39,7 +39,7 @@ class SubkriteriaController extends Controller
         $subkriteria = Subkriteria::findOrFail($id);
         $kriteria = Kriteria::all();
 
-        return view('subkriteria.edit', compact('subkriteria','kriteria'));
+        return view('subkriteria.edit', compact('subkriteria', 'kriteria'));
     }
 
     public function update(Request $request, $id)
@@ -53,15 +53,15 @@ class SubkriteriaController extends Controller
         $subkriteria = Subkriteria::findOrFail($id);
         $subkriteria->update($request->all());
 
-        return redirect()->route('subkriteria.index')
-            ->with('success','Data subkriteria berhasil diupdate');
+        return redirect()->route('admin.subkriteria.index')
+            ->with('success', 'Data subkriteria berhasil diupdate');
     }
 
     public function destroy($id)
     {
         Subkriteria::findOrFail($id)->delete();
 
-        return redirect()->route('subkriteria.index')
-            ->with('success','Data subkriteria berhasil dihapus');
+        return redirect()->route('admin.subkriteria.index')
+            ->with('success', 'Data subkriteria berhasil dihapus');
     }
 }

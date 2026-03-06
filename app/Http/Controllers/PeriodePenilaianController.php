@@ -29,14 +29,14 @@ class PeriodePenilaianController extends Controller
         ]);
 
         if ($request->status == 'aktif') {
-            PeriodePenilaian::where('status','aktif')
+            PeriodePenilaian::where('status', 'aktif')
                 ->update(['status' => 'nonaktif']);
         }
 
         PeriodePenilaian::create($request->all());
 
-        return redirect()->route('periode.index')
-            ->with('success','Periode berhasil ditambahkan');
+        return redirect()->route('admin.periode.index')
+            ->with('success', 'Periode berhasil ditambahkan');
     }
 
     public function edit($id)
@@ -56,23 +56,23 @@ class PeriodePenilaianController extends Controller
         ]);
 
         if ($request->status == 'aktif') {
-            PeriodePenilaian::where('status','aktif')
-                ->where('id_periode','!=',$id)
+            PeriodePenilaian::where('status', 'aktif')
+                ->where('id_periode', '!=', $id)
                 ->update(['status' => 'nonaktif']);
         }
 
         $periode = PeriodePenilaian::findOrFail($id);
         $periode->update($request->all());
 
-        return redirect()->route('periode.index')
-            ->with('success','Periode berhasil diupdate');
+        return redirect()->route('admin.periode.index')
+            ->with('success', 'Periode berhasil diupdate');
     }
 
     public function destroy($id)
     {
         PeriodePenilaian::findOrFail($id)->delete();
 
-        return redirect()->route('periode.index')
-            ->with('success','Periode berhasil dihapus');
+        return redirect()->route('admin.periode.index')
+            ->with('success', 'Periode berhasil dihapus');
     }
 }

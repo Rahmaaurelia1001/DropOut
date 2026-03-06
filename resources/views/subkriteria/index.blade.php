@@ -1,6 +1,6 @@
 <h2>Data Subkriteria</h2>
 
-<a href="{{ route('subkriteria.create') }}">Tambah Subkriteria</a>
+<a href="{{ route('admin.subkriteria.create') }}">Tambah Subkriteria</a>
 
 @if(session('success'))
     <p style="color:green">{{ session('success') }}</p>
@@ -22,12 +22,12 @@
         <td>{{ $s->nama_subkriteria }}</td>
         <td>{{ $s->nilai_skala }}</td>
         <td>
-            <a href="{{ route('subkriteria.edit', $s->id_subkriteria) }}">Edit</a>
+            <a href="{{ route('admin.subkriteria.edit', $s->id_subkriteria) }}">Edit</a>
 
-            <form action="{{ route('subkriteria.destroy', $s->id_subkriteria) }}" method="POST" style="display:inline;">
+            <form action="{{ route('admin.subkriteria.destroy', $s->id_subkriteria) }}" method="POST" style="display:inline;">
                 @csrf
                 @method('DELETE')
-                <button type="submit">Hapus</button>
+                <button type="submit" onclick="return confirm('Yakin hapus?')">Hapus</button>
             </form>
         </td>
     </tr>

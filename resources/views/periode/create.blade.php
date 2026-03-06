@@ -1,6 +1,6 @@
 <h2>Tambah Periode</h2>
 
-<form action="{{ route('periode.store') }}" method="POST">
+<form action="{{ route('admin.periode.store') }}" method="POST">
     @csrf
 
     <label>Tahun Ajaran</label><br>
@@ -27,4 +27,4 @@
     <button type="submit">Simpan</button>
 </form>
 
-<a href="{{ route('periode.index') }}">Kembali</a>
+<a href="{{ route('admin.periode.index') }}">Kembali</a>

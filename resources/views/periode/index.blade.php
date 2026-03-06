@@ -1,6 +1,6 @@
 <h2>Data Periode Penilaian</h2>
 
-<a href="{{ route('periode.create') }}">Tambah Periode</a>
+<a href="{{ route('admin.periode.create') }}">Tambah Periode</a>
 
 @if(session('success'))
     <p style="color:green">{{ session('success') }}</p>
@@ -32,14 +32,13 @@
             @endif
         </td>
         <td>
-            <a href="{{ route('periode.edit', $p->id_periode) }}">Edit</a>
+            <a href="{{ route('admin.periode.edit', $p->id_periode) }}">Edit</a>
 
-            <form action="{{ route('periode.destroy', $p->id_periode) }}"
+            <form action="{{ route('admin.periode.destroy', $p->id_periode) }}"
                   method="POST" style="display:inline;">
                 @csrf
                 @method('DELETE')
-                <button type="submit"
-                    onclick="return confirm('Yakin hapus periode ini?')">
+                <button type="submit" onclick="return confirm('Yakin hapus periode ini?')">
                     Hapus
                 </button>
             </form>

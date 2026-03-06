@@ -1,6 +1,6 @@
 <h2>Tambah Kelas</h2>
 
-<form action="{{ route('kelas.store') }}" method="POST">
+<form action="{{ route('admin.kelas.store') }}" method="POST">
     @csrf
 
     <div>
@@ -15,5 +15,5 @@
 
     <br>
     <button type="submit">Simpan</button>
-    <a href="{{ route('kelas.index') }}">Kembali</a>
+    <a href="{{ route('admin.kelas.index') }}">Kembali</a>
 </form>

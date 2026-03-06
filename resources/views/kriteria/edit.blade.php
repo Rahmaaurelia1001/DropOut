@@ -1,6 +1,6 @@
 <h2>Edit Kriteria</h2>
 
-<form action="{{ route('kriteria.update', $kriteria->id_kriteria) }}" method="POST">
+<form action="{{ route('admin.kriteria.update', $kriteria->id_kriteria) }}" method="POST">
     @csrf
     @method('PUT')
 
@@ -13,4 +13,4 @@
     <button type="submit">Update</button>
 </form>
 
-<a href="{{ route('kriteria.index') }}">Kembali</a>
+<a href="{{ route('admin.kriteria.index') }}">Kembali</a>

@@ -1,6 +1,6 @@
 <h2>Edit Kelas</h2>
 
-<form action="{{ route('kelas.update', $kelas->id_kelas) }}" method="POST">
+<form action="{{ route('admin.kelas.update', $kelas->id_kelas) }}" method="POST">
     @csrf
     @method('PUT')
 
@@ -16,5 +16,5 @@
 
     <br>
     <button type="submit">Update</button>
-    <a href="{{ route('kelas.index') }}">Kembali</a>
+    <a href="{{ route('admin.kelas.index') }}">Kembali</a>
 </form>

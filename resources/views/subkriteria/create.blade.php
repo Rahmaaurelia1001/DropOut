@@ -1,6 +1,6 @@
 <h2>Tambah Subkriteria</h2>
 
-<form action="{{ route('subkriteria.store') }}" method="POST">
+<form action="{{ route('admin.subkriteria.store') }}" method="POST">
     @csrf
 
     <label>Kriteria</label><br>
@@ -22,4 +22,4 @@
     <button type="submit">Simpan</button>
 </form>
 
-<a href="{{ route('subkriteria.index') }}">Kembali</a>
+<a href="{{ route('admin.subkriteria.index') }}">Kembali</a>
