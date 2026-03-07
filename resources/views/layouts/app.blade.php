@@ -12,21 +12,15 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased bg-slate-50 text-slate-800">
-    <div class="min-h-screen">
+<body class="font-sans antialiased" style="background:#f1f5f9; color:#1e293b; margin:0; padding:0;">
+    <div style="min-height:100vh;">
+
         @include('layouts.navigation')
 
-        @if (isset($header))
-            <header class="border-b border-slate-200 bg-white/90 backdrop-blur sticky top-0 z-20">
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-                    {{ $header }}
-                </div>
-            </header>
-        @endif
-
-        <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <main style="width:100%; padding:0;">
             {{ $slot }}
         </main>
+
     </div>
 </body>
 </html>
