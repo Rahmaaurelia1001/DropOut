@@ -114,6 +114,7 @@
                         <a href="{{ route('admin.user.index') }}" class="spk-nav-link {{ request()->routeIs('admin.user.*') ? 'active' : '' }}">User</a>
                         <a href="{{ route('admin.kelas.index') }}" class="spk-nav-link {{ request()->routeIs('admin.kelas.*') ? 'active' : '' }}">Kelas</a>
                         <a href="{{ route('admin.siswa.index') }}" class="spk-nav-link {{ request()->routeIs('admin.siswa.*') ? 'active' : '' }}">Siswa</a>
+                        <a href="{{ route('admin.mapel.index') }}" class="spk-nav-link {{ request()->routeIs('admin.mapel.*') ? 'active' : '' }}">Mapel</a>
                         <a href="{{ route('admin.kriteria.index') }}" class="spk-nav-link {{ request()->routeIs('admin.kriteria.*') ? 'active' : '' }}">Kriteria</a>
                         <a href="{{ route('admin.subkriteria.index') }}" class="spk-nav-link {{ request()->routeIs('admin.subkriteria.*') ? 'active' : '' }}">Subkriteria</a>
                         <a href="{{ route('admin.periode.index') }}" class="spk-nav-link {{ request()->routeIs('admin.periode.*') ? 'active' : '' }}">Periode</a>
@@ -208,6 +209,7 @@
                 <a href="{{ route('admin.user.index') }}" class="spk-mobile-link {{ request()->routeIs('admin.user.*') ? 'active' : '' }}">User</a>
                 <a href="{{ route('admin.kelas.index') }}" class="spk-mobile-link {{ request()->routeIs('admin.kelas.*') ? 'active' : '' }}">Kelas</a>
                 <a href="{{ route('admin.siswa.index') }}" class="spk-mobile-link {{ request()->routeIs('admin.siswa.*') ? 'active' : '' }}">Siswa</a>
+                <a href="{{ route('admin.mapel.index') }}" class="spk-mobile-link {{ request()->routeIs('admin.mapel.*') ? 'active' : '' }}">Mapel</a>
                 <a href="{{ route('admin.kriteria.index') }}" class="spk-mobile-link {{ request()->routeIs('admin.kriteria.*') ? 'active' : '' }}">Kriteria</a>
                 <a href="{{ route('admin.subkriteria.index') }}" class="spk-mobile-link {{ request()->routeIs('admin.subkriteria.*') ? 'active' : '' }}">Subkriteria</a>
                 <a href="{{ route('admin.periode.index') }}" class="spk-mobile-link {{ request()->routeIs('admin.periode.*') ? 'active' : '' }}">Periode</a>

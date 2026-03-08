@@ -82,6 +82,7 @@ Route::middleware(['auth', 'role:admin'])
         Route::resource('kriteria', KriteriaController::class);
         Route::resource('subkriteria', SubkriteriaController::class);
         Route::resource('periode', PeriodePenilaianController::class);
+        Route::resource('mapel', \App\Http\Controllers\MataPelajaranController::class);
 });
 
 
@@ -101,6 +102,7 @@ Route::middleware(['auth', 'role:wali_kelas'])
         })->name('dashboard');
 
         Route::get('/import', [FileImportController::class, 'index'])->name('import.index');
+        Route::post('/import/preview', [FileImportController::class, 'preview'])->name('import.preview');
         Route::get('/import/create', [FileImportController::class, 'create'])->name('import.create');
         Route::post('/import', [FileImportController::class, 'store'])->name('import.store');
 });

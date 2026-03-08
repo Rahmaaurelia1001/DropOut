@@ -23,7 +23,7 @@
         @endif
 
         <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-6">
-            <form action="{{ route('walas.import.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
+            <form action="{{ route('walas.import.preview') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div>
