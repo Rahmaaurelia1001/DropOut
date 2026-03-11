@@ -33,12 +33,12 @@
 <select name="jenis_data" id="jenis_data"
     class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
     <option value="">-- Pilih Jenis Data Import --</option>
-    <option value="rapor" {{ old('jenis_data') == 'rapor' ? 'selected' : '' }}>
-        Rapor / Evaluasi Siswa
-    </option>
-    <option value="presensi" {{ old('jenis_data') == 'presensi' ? 'selected' : '' }}>
-        Presensi
-    </option>
+<option value="nilai_mapel" {{ old('jenis_data') == 'nilai_mapel' ? 'selected' : '' }}>
+    Nilai Mapel
+</option>
+<option value="evaluasi" {{ old('jenis_data') == 'evaluasi' ? 'selected' : '' }}>
+    Evaluasi Siswa
+</option>
 </select>
 <p class="mt-2 text-sm text-gray-500">
     Gunakan opsi <b>Rapor / Evaluasi Siswa</b> untuk file gabungan yang berisi nilai rata-rata, pekerjaan ortu, pendidikan ortu, dan data S/I/A.
