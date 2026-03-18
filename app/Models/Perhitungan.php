@@ -4,17 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Penilaian extends Model
+class Perhitungan extends Model
 {
-    protected $table = 'penilaian';
-    protected $primaryKey = 'id_penilaian';
+    protected $table = 'perhitungan';
+    protected $primaryKey = 'id_perhitungan';
     public $timestamps = false;
 
     protected $fillable = [
         'id_siswa',
         'id_kriteria',
         'id_periode',
-        'nilai_penilaian',
+        'nilai_bobot',
+        'nilai_skala',
+        'hasil_perkalian',
     ];
 
     public function siswa()

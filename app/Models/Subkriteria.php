@@ -6,18 +6,18 @@ use Illuminate\Database\Eloquent\Model;
 
 class Subkriteria extends Model
 {
-    protected $table = 'Subkriteria';
+    protected $table = 'subkriteria';
     protected $primaryKey = 'id_subkriteria';
     public $timestamps = false;
 
     protected $fillable = [
         'id_kriteria',
         'nama_subkriteria',
-        'nilai_skala'
+        'nilai_skala',
     ];
 
     public function kriteria()
     {
-        return $this->belongsTo(Kriteria::class, 'id_kriteria');
+        return $this->belongsTo(Kriteria::class, 'id_kriteria', 'id_kriteria');
     }
 }

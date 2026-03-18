@@ -4,7 +4,6 @@ namespace App\Imports;
 
 use App\Models\Siswa;
 use App\Models\NilaiMapel;
-use App\Models\PeriodePenilaian;
 use App\Models\MataPelajaran;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\ToCollection;
@@ -12,29 +11,33 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 class NilaiMapelImport implements ToCollection
 {
     protected $idFile;
+    protected $idPeriode;
 
-    public function __construct($idFile)
+    public function __construct($idFile, $idPeriode)
     {
         $this->idFile = $idFile;
+        $this->idPeriode = $idPeriode;
     }
 
     public function collection(Collection $rows)
     {
-        $header = $rows[0];
-
-        $periode = PeriodePenilaian::where('status', 'aktif')->first();
-
-        if (!$periode) {
+        if ($rows->isEmpty()) {
             return;
         }
 
-        foreach ($rows as $index => $row) {
+        $header = $rows[0];
 
+        foreach ($rows as $index => $row) {
             if ($index == 0) {
                 continue; // skip header
             }
 
-            $nisn = $row[0];
+            $nisn = trim((string) ($row[0] ?? ''));
+
+            if (!$nisn) {
+                continue;
+            }
+
             $siswa = Siswa::where('nisn', $nisn)->first();
 
             if (!$siswa) {
@@ -42,11 +45,25 @@ class NilaiMapelImport implements ToCollection
             }
 
             for ($i = 2; $i < count($header); $i++) {
+                $namaMapel = trim((string) ($header[$i] ?? ''));
+                $nilai = $row[$i] ?? null;
 
-                $namaMapel = $header[$i];
-                $nilai = $row[$i];
+                if ($namaMapel === '' || $nilai === null || $nilai === '') {
+                    continue;
+                }
 
-                $mapel = MataPelajaran::where('nama_mapel', $namaMapel)->first();
+                // normalisasi nama mapel dari header Excel
+                $namaMapelLookup = strtoupper($namaMapel);
+
+                if ($namaMapelLookup === 'SB' || $namaMapelLookup === 'SBDP') {
+                    $namaMapelLookup = 'Seni Budaya';
+                } elseif ($namaMapelLookup === 'BINDO') {
+                    $namaMapelLookup = 'B.Indo';
+                } elseif ($namaMapelLookup === 'MATEMATIKA') {
+                    $namaMapelLookup = 'MTK';
+                }
+
+                $mapel = MataPelajaran::where('nama_mapel', $namaMapelLookup)->first();
 
                 if (!$mapel) {
                     continue;
@@ -56,7 +73,7 @@ class NilaiMapelImport implements ToCollection
                     [
                         'id_siswa' => $siswa->id_siswa,
                         'id_mapel' => $mapel->id_mapel,
-                        'id_periode' => $periode->id_periode,
+                        'id_periode' => $this->idPeriode,
                     ],
                     [
                         'nilai_akhir' => $nilai,

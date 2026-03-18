@@ -12,6 +12,9 @@ use App\Http\Controllers\SubkriteriaController;
 use App\Http\Controllers\PeriodePenilaianController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FileImportController;
+use App\Http\Controllers\MfepController;
+use App\Http\Controllers\RekomendasiController;
+use App\Http\Controllers\MasterRekomendasiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -83,6 +86,7 @@ Route::middleware(['auth', 'role:admin'])
         Route::resource('subkriteria', SubkriteriaController::class);
         Route::resource('periode', PeriodePenilaianController::class);
         Route::resource('mapel', \App\Http\Controllers\MataPelajaranController::class);
+        Route::resource('master-rekomendasi', MasterRekomendasiController::class)->except(['show']);
 });
 
 
@@ -105,6 +109,15 @@ Route::middleware(['auth', 'role:wali_kelas'])
         Route::post('/import/preview', [FileImportController::class, 'preview'])->name('import.preview');
         Route::get('/import/create', [FileImportController::class, 'create'])->name('import.create');
         Route::post('/import', [FileImportController::class, 'store'])->name('import.store');
+
+        // MFEP - proses oleh wali kelas
+        Route::get('/mfep', [MfepController::class, 'index'])->name('mfep.index');
+        Route::post('/mfep/proses', [MfepController::class, 'proses'])->name('mfep.proses');
+        Route::get('/mfep/hasil', [MfepController::class, 'hasil'])->name('mfep.hasil');
+
+        // Update status rekomendasi
+        Route::patch('/rekomendasi/{id}/status', [RekomendasiController::class, 'updateStatus'])
+            ->name('rekomendasi.updateStatus');
 });
 
 
@@ -122,6 +135,9 @@ Route::middleware(['auth', 'role:kepsek'])
         Route::get('/dashboard', function () {
             return view('kepsek.dashboard');
         })->name('dashboard');
+
+        // Lihat hasil analisis
+        Route::get('/mfep/hasil', [MfepController::class, 'hasil'])->name('mfep.hasil');
 });
 
 

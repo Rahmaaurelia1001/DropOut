@@ -5,7 +5,7 @@
                 Import Data Akademik
             </h2>
             <p class="text-sm text-gray-500 mt-1">
-                Kelola file import rapor dan presensi untuk kelas yang Anda ampu.
+                Kelola file import nilai dan data pendukung untuk analisis risiko putus sekolah.
             </p>
         </div>
     </x-slot>
@@ -17,6 +17,22 @@
             </div>
         @endif
 
+        @if(session('error'))
+            <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if($errors->any())
+            <div class="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-red-700">
+                <ul class="list-disc pl-5">
+                    @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-5">
                 <p class="text-sm text-gray-500">Total File Import</p>
@@ -24,18 +40,23 @@
             </div>
 
             <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-5">
-                <p class="text-sm text-gray-500">Import Rapor</p>
+                <p class="text-sm text-gray-500">Import Nilai Mapel</p>
                 <h3 class="mt-2 text-3xl font-bold text-blue-600">
-                    {{ $imports->where('jenis_data', 'rapor')->count() }}
+                    {{ $imports->where('jenis_data', 'nilai_mapel')->count() }}
                 </h3>
             </div>
 
             <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-5">
-                <p class="text-sm text-gray-500">Import Presensi</p>
+                <p class="text-sm text-gray-500">Import Evaluasi</p>
                 <h3 class="mt-2 text-3xl font-bold text-emerald-600">
-                    {{ $imports->where('jenis_data', 'presensi')->count() }}
+                    {{ $imports->where('jenis_data', 'evaluasi')->count() }}
                 </h3>
             </div>
+        </div>
+
+        
+</form>
+
         </div>
 
         <div class="bg-white border border-gray-100 shadow-sm rounded-2xl">
@@ -47,9 +68,10 @@
                     </p>
                 </div>
 
-                <a href="{{ route('walas.import.create') }}" style="display:inline-block; padding:10px 16px; background:#4f46e5; color:white; border-radius:8px; text-decoration:none;">
-    Upload File
-</a>
+                <a href="{{ route('walas.import.create') }}"
+                   class="inline-block rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700 transition">
+                    Upload File
+                </a>
             </div>
 
             <div class="overflow-x-auto">
@@ -69,13 +91,17 @@
                                 <td class="px-6 py-4 text-sm text-gray-700">{{ $index + 1 }}</td>
                                 <td class="px-6 py-4 text-sm font-semibold text-gray-800">{{ $item->nama_file }}</td>
                                 <td class="px-6 py-4 text-sm">
-                                    @if($item->jenis_data == 'rapor')
+                                    @if($item->jenis_data == 'nilai_mapel')
                                         <span class="inline-flex rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
-                                            Rapor
+                                            Nilai Mapel
+                                        </span>
+                                    @elseif($item->jenis_data == 'evaluasi')
+                                        <span class="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                            Evaluasi
                                         </span>
                                     @else
-                                        <span class="inline-flex rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
-                                            Presensi
+                                        <span class="inline-flex rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">
+                                            {{ ucfirst($item->jenis_data) }}
                                         </span>
                                     @endif
                                 </td>

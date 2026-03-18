@@ -118,6 +118,7 @@
                         <a href="{{ route('admin.kriteria.index') }}" class="spk-nav-link {{ request()->routeIs('admin.kriteria.*') ? 'active' : '' }}">Kriteria</a>
                         <a href="{{ route('admin.subkriteria.index') }}" class="spk-nav-link {{ request()->routeIs('admin.subkriteria.*') ? 'active' : '' }}">Subkriteria</a>
                         <a href="{{ route('admin.periode.index') }}" class="spk-nav-link {{ request()->routeIs('admin.periode.*') ? 'active' : '' }}">Periode</a>
+                        <a href="{{ route('admin.master-rekomendasi.index') }}" class="spk-nav-link {{ request()->routeIs('admin.master-rekomendasi.*') ? 'active' : '' }}">Rekomendasi</a>
                     @endif
                     @if(Auth::user()->role === 'wali_kelas')
                         <a href="{{ route('walas.dashboard') }}" class="spk-nav-link {{ request()->routeIs('walas.dashboard') ? 'active' : '' }}">Dashboard</a>
@@ -213,6 +214,7 @@
                 <a href="{{ route('admin.kriteria.index') }}" class="spk-mobile-link {{ request()->routeIs('admin.kriteria.*') ? 'active' : '' }}">Kriteria</a>
                 <a href="{{ route('admin.subkriteria.index') }}" class="spk-mobile-link {{ request()->routeIs('admin.subkriteria.*') ? 'active' : '' }}">Subkriteria</a>
                 <a href="{{ route('admin.periode.index') }}" class="spk-mobile-link {{ request()->routeIs('admin.periode.*') ? 'active' : '' }}">Periode</a>
+                <a href="{{ route('admin.master-rekomendasi.index') }}" class="spk-mobile-link {{ request()->routeIs('admin.master-rekomendasi.*') ? 'active' : '' }}">Rekomendasi</a>
             @endif
             @if(Auth::user()->role === 'wali_kelas')
                 <a href="{{ route('walas.dashboard') }}" class="spk-mobile-link">Dashboard</a>
