@@ -55,12 +55,12 @@ class MfepController extends Controller
 
     public function hasil(Request $request)
     {
-        $periodes = \App\Models\PeriodePenilaian::orderBy('id_periode', 'desc')->get();
+        $periodes = PeriodePenilaian::orderBy('id_periode', 'desc')->get();
 
         $idPeriode = $request->id_periode;
 
         if (!$idPeriode) {
-            $periodeAktif = \App\Models\PeriodePenilaian::where('status', 'Aktif')->first();
+            $periodeAktif = PeriodePenilaian::where('status', 'Aktif')->first();
             $idPeriode = $periodeAktif?->id_periode;
         }
 
@@ -68,14 +68,33 @@ class MfepController extends Controller
         $hasil = collect();
 
         if ($idPeriode) {
-            $periode = \App\Models\PeriodePenilaian::where('id_periode', $idPeriode)->first();
+            $periode = PeriodePenilaian::where('id_periode', $idPeriode)->first();
 
-            $hasil = \App\Models\HasilKeputusan::with('siswa')
+            $hasil = HasilKeputusan::with(['siswa', 'rekomendasi'])
                 ->where('id_periode', $idPeriode)
                 ->orderBy('total_nilai_preferensi', 'asc')
                 ->get();
         }
 
+        if (auth()->check() && auth()->user()->role === 'kepsek') {
+            return view('kepsek.mfep.hasil', compact('hasil', 'periode', 'periodes', 'idPeriode'));
+        }
+
         return view('mfep.hasil', compact('hasil', 'periode', 'periodes', 'idPeriode'));
+    }
+
+    public function pilihRekomendasi(Request $request)
+    {
+        $request->validate([
+            'id_hasil' => 'required|exists:hasil_keputusan,id_hasil',
+            'rekomendasi' => 'required|string',
+        ]);
+
+        $hasil = HasilKeputusan::findOrFail($request->id_hasil);
+        $hasil->tindak_lanjut_final = $request->rekomendasi;
+        $hasil->tanggal_keputusan = now();
+        $hasil->save();
+
+        return back()->with('success', 'Keputusan berhasil disimpan');
     }
 }

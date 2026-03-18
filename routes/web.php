@@ -136,9 +136,9 @@ Route::middleware(['auth', 'role:kepsek'])
             return view('kepsek.dashboard');
         })->name('dashboard');
 
-        // Lihat hasil analisis
         Route::get('/mfep/hasil', [MfepController::class, 'hasil'])->name('mfep.hasil');
-});
+        Route::post('/pilih-rekomendasi', [MfepController::class, 'pilihRekomendasi'])->name('pilih.rekomendasi');
+    });
 
 
 /*
