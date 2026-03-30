@@ -14,6 +14,7 @@ class Rekomendasi extends Model
         'id_hasil',
         'deskripsi_rekomendasi',
         'status',
+        'is_selected',
         'tanggal_dibuat',
         'tanggal_update',
     ];

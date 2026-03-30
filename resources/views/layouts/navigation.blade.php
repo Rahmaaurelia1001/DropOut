@@ -123,9 +123,11 @@
                     @if(Auth::user()->role === 'wali_kelas')
                         <a href="{{ route('walas.dashboard') }}" class="spk-nav-link {{ request()->routeIs('walas.dashboard') ? 'active' : '' }}">Dashboard</a>
                         <a href="{{ route('walas.import.index') }}" class="spk-nav-link {{ request()->routeIs('walas.import.*') ? 'active' : '' }}">Import Data</a>
+                        <a href="{{ route('walas.riwayat') }}" class="spk-nav-link {{ request()->routeIs('walas.riwayat.*') ? 'active' : '' }}">Riwayat Analisis</a>
                     @endif
                     @if(Auth::user()->role === 'kepsek')
                         <a href="{{ route('kepsek.dashboard') }}" class="spk-nav-link {{ request()->routeIs('kepsek.dashboard') ? 'active' : '' }}">Dashboard</a>
+                        <a href="{{ route('kepsek.mfep.hasil') }}"class="text-gray-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Hasil Analisis</a>
                     @endif
                 </div>
             </div>

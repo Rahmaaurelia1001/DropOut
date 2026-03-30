@@ -24,32 +24,59 @@
         @endif
 
         <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-6">
-            <form method="GET" action="{{ route('walas.mfep.hasil') }}" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-                <div class="md:col-span-3">
-                    <label for="id_periode" class="block text-sm font-medium text-gray-700 mb-2">
-                        Filter Periode Penilaian
-                    </label>
-                    <select name="id_periode" id="id_periode"
-                        class="w-full rounded-xl border-gray-300 focus:border-indigo-500 focus:ring-indigo-500">
-                        <option value="">-- Pilih Periode --</option>
-                        @foreach($periodes as $item)
-                            <option value="{{ $item->id_periode }}" {{ (string) $idPeriode === (string) $item->id_periode ? 'selected' : '' }}>
-                                {{ $item->tahun_ajaran ?? '' }} - Semester {{ $item->semester ?? '' }}
-                                @if(($item->status ?? '') === 'Aktif')
-                                    (Aktif)
-                                @endif
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+            <form method="GET" action="{{ route('kepsek.mfep.hasil') }}" class="bg-white p-4 rounded-lg shadow">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div>
+            <label class="block text-sm font-medium mb-2">Pilih Periode</label>
+            <select name="id_periode" class="border rounded p-2 w-full">
+                <option value="">-- Pilih Periode --</option>
+                @foreach($periodes as $p)
+                    <option value="{{ $p->id_periode }}" {{ $idPeriode == $p->id_periode ? 'selected' : '' }}>
+                        {{ $p->tahun_ajaran }} - Semester {{ $p->semester }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
 
-                <div>
-                    <button type="submit"
-                        class="w-full inline-flex items-center justify-center rounded-xl bg-indigo-600 px-4 py-3 text-sm font-semibold text-white shadow hover:bg-indigo-700 transition">
-                        Tampilkan
-                    </button>
-                </div>
-            </form>
+        <div>
+            <label class="block text-sm font-medium mb-2">Pilih Kelas</label>
+            <select name="id_kelas" class="border rounded p-2 w-full">
+                <option value="">-- Semua Kelas --</option>
+                @foreach($kelasList as $kelas)
+                    <option value="{{ $kelas->id_kelas }}" {{ (string) $idKelas === (string) $kelas->id_kelas ? 'selected' : '' }}>
+                        {{ $kelas->nama_kelas }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="flex items-end">
+            <button class="bg-indigo-600 text-white px-4 py-2 rounded w-full">
+                Tampilkan
+            </button>
+        </div>
+    </div>
+</form>
+
+<div class="bg-white rounded-lg shadow p-4">
+    <p class="text-sm text-gray-600">
+        <span class="font-semibold">Periode:</span>
+        @if($periode)
+            {{ $periode->tahun_ajaran }} - Semester {{ $periode->semester }}
+        @else
+            -
+        @endif
+
+        <span class="mx-2">|</span>
+
+        <span class="font-semibold">Kelas:</span>
+        @if(!empty($idKelas))
+            {{ optional($kelasList->firstWhere('id_kelas', $idKelas))->nama_kelas ?? '-' }}
+        @else
+            Semua Kelas
+        @endif
+    </p>
+</div>
         </div>
 
         <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-6">
@@ -84,6 +111,7 @@
                             <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Kategori Risiko</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Faktor Dominan</th>
                             <th class="px-6 py-4 text-left text-xs font-semibold uppercase tracking-wider text-gray-500">Rekomendasi Tindak Lanjut</th>
+                            
                         </tr>
                     </thead>
 
@@ -121,46 +149,60 @@
                                 <td class="px-6 py-4 text-sm text-gray-700">
                                     {{ $item->faktor_dominan }}
                                 </td>
-                                
-<td class="px-6 py-4 text-sm text-gray-700 min-w-[320px]">
-    @if($item->rekomendasi && $item->rekomendasi->count() > 0)
+                            
+<td class="px-6 py-4 text-sm text-gray-700" style="min-width: 360px;">
+    @php
+        $rekomendasiTerpilih = $item->rekomendasi->where('is_selected', 1);
+    @endphp
+
+    @if($rekomendasiTerpilih->count() > 0)
         <div class="space-y-3">
-            @foreach($item->rekomendasi as $rek)
-                <div class="rounded-xl border border-gray-200 p-3">
-                    <div class="text-sm text-gray-800 mb-3">
+            @foreach($rekomendasiTerpilih as $rek)
+                <div class="border border-gray-200 rounded-xl p-3 bg-white">
+                    <div class="mb-3 text-sm text-gray-800">
                         {{ $rek->deskripsi_rekomendasi }}
                     </div>
+                    
 
-                    <form action="{{ route('walas.rekomendasi.updateStatus', $rek->id_rekomendasi) }}" method="POST" class="space-y-2">
+                    @if($rek->status === 'belum_diproses')
+                        <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Belum</span>
+                    @elseif($rek->status === 'sedang_diproses')
+                        <span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">Diproses</span>
+                    @else
+                        <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Selesai</span>
+                    @endif
+
+
+                    <form action="{{ route('walas.rekomendasi.updateStatus', $rek->id_rekomendasi) }}" method="POST">
                         @csrf
                         @method('PATCH')
 
-                                           <select name="status"
-    class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm">
-    <option value="belum_diproses" {{ $rek->status === 'belum_diproses' ? 'selected' : '' }}>
-        Belum Diproses
-    </option>
-    <option value="sedang_diproses" {{ $rek->status === 'sedang_diproses' ? 'selected' : '' }}>
-        Diproses
-    </option>
-    <option value="selesai" {{ $rek->status === 'selesai' ? 'selected' : '' }}>
-        Selesai
-    </option>
-</select>
+                        <div class="space-y-2">
+                            <select name="status" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm">
+                                <option value="belum_diproses" {{ $rek->status === 'belum_diproses' ? 'selected' : '' }}>
+                                    Belum Diproses
+                                </option>
+                                <option value="sedang_diproses" {{ $rek->status === 'sedang_diproses' ? 'selected' : '' }}>
+                                    Sedang Diproses
+                                </option>
+                                <option value="selesai" {{ $rek->status === 'selesai' ? 'selected' : '' }}>
+                                    Selesai
+                                </option>
+                            </select>
 
-                        <button type="submit"
-                            class="w-full inline-flex items-center justify-center rounded-lg bg-indigo-600 px-3 py-2 text-xs font-semibold text-white hover:bg-indigo-700 transition">
-                            Update Status
-                        </button>
+                            <button type="submit"
+                                class="w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition">
+                                Update Status
+                            </button>
+                        </div>
                     </form>
                 </div>
             @endforeach
         </div>
     @else
-        <span class="text-gray-400 italic">Belum ada rekomendasi</span>
+        <span class="text-gray-400 italic">Belum ada keputusan final dari kepala sekolah</span>
     @endif
-</td>
-                            </tr>
+</td>                            </tr>
                         @empty
                             <tr>
                                 <td colspan="6" class="px-6 py-10 text-center text-gray-500">

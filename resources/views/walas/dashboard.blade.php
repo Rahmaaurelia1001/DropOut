@@ -36,6 +36,8 @@
             </div>
         </div>
 
+        
+
         <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-6">
             <h3 class="text-lg font-semibold text-gray-800">Menu Utama</h3>
             <p class="text-sm text-gray-500 mt-1">
@@ -50,6 +52,8 @@
                         Upload data nilai mapel dan data pendukung untuk periode penilaian.
                     </p>
                 </a>
+
+                
 
                 <a href="{{ route('walas.mfep.index') }}"
                    class="block rounded-2xl border border-emerald-100 bg-emerald-50 p-5 hover:bg-emerald-100 transition">
@@ -66,6 +70,8 @@
                         Lihat hasil identifikasi risiko putus sekolah siswa.
                     </p>
                 </a>
+
+                
             </div>
         </div>
 

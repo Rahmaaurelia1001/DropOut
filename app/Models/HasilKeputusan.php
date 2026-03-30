@@ -30,4 +30,9 @@ class HasilKeputusan extends Model
 {
     return $this->hasMany(Rekomendasi::class, 'id_hasil', 'id_hasil');
 }
+
+public function periode()
+{
+    return $this->belongsTo(\App\Models\PeriodePenilaian::class, 'id_periode', 'id_periode');
+}
 }

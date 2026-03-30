@@ -118,6 +118,8 @@ Route::middleware(['auth', 'role:wali_kelas'])
         // Update status rekomendasi
         Route::patch('/rekomendasi/{id}/status', [RekomendasiController::class, 'updateStatus'])
             ->name('rekomendasi.updateStatus');
+
+        Route::get('/riwayat-analisis', [MfepController::class, 'riwayat'])->name('riwayat');
 });
 
 

@@ -45,6 +45,7 @@
                         <th class="px-4 py-3">Faktor Dominan</th>
                         <th class="px-4 py-3">Rekomendasi</th>
                         <th class="px-4 py-3">Keputusan Final</th>
+                        <th class="px-4 py-3">Kelas</th>
                     </tr>
                 </thead>
 
@@ -91,16 +92,22 @@
                 {{ $rek->deskripsi_rekomendasi }}
             </div>
 
-            <form method="POST" action="{{ route('kepsek.pilih.rekomendasi') }}">
-                @csrf
-                <input type="hidden" name="id_hasil" value="{{ $item->id_hasil }}">
-                <input type="hidden" name="rekomendasi" value="{{ $rek->deskripsi_rekomendasi }}">
+            <<form method="POST" action="{{ route('kepsek.pilih.rekomendasi') }}">
+    @csrf
+    <input type="hidden" name="id_hasil" value="{{ $item->id_hasil }}">
+    <input type="hidden" name="id_rekomendasi" value="{{ $rek->id_rekomendasi }}">
 
-                <button type="submit"
-                    class="w-full rounded-lg bg-green-600 px-3 py-2 text-sm font-semibold text-white hover:bg-green-700 transition">
-                    Pilih sebagai Keputusan Final
-                </button>
-            </form>
+    @if($rek->is_selected)
+        <span class="inline-block w-full rounded-lg bg-green-100 px-3 py-2 text-center text-sm font-semibold text-green-700">
+            Terpilih
+        </span>
+    @else
+        <button type="submit"
+            class="w-full rounded-lg bg-green-600 px-3 py-2 text-sm font-semibold text-white hover:bg-green-700 transition">
+            Pilih sebagai Keputusan Final
+        </button>
+    @endif
+</form>
         </div>
     @empty
         <span class="text-gray-400 text-xs">Tidak ada rekomendasi</span>
@@ -124,6 +131,10 @@
                                 @endif
                             </td>
 
+                            <td class="px-4 py-3">
+                                {{ $item->siswa->kelas->nama_kelas ?? '-' }}
+                            </td>
+                            
                         </tr>
                     @empty
                         <tr>
@@ -131,6 +142,8 @@
                                 Data belum tersedia
                             </td>
                         </tr>
+
+                        
                     @endforelse
                 </tbody>
             </table>

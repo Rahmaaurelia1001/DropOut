@@ -19,17 +19,30 @@ class KriteriaController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'nama_kriteria' => 'required',
-            'bobot' => 'required|numeric'
-        ]);
+{
+    $request->validate([
+        'nama_kriteria' => 'required|string|max:255',
+        'bobot' => 'required|numeric|min:0|max:1',
+    ]);
 
-        Kriteria::create($request->all());
+    $bobotBaru = (float) $request->bobot;
+    $totalBobot = \App\Models\Kriteria::sum('bobot');
 
-        return redirect()->route('admin.kriteria.index')
-            ->with('success', 'Data kriteria berhasil ditambahkan');
+    if (($totalBobot + $bobotBaru) > 1) {
+        return back()
+            ->withInput()
+            ->with('error', 'Total bobot kriteria tidak boleh lebih dari 1.');
     }
+
+    \App\Models\Kriteria::create([
+        'nama_kriteria' => $request->nama_kriteria,
+        'bobot' => $bobotBaru,
+    ]);
+
+    return redirect()->route('admin.kriteria.index')
+        ->with('success', 'Data kriteria berhasil ditambahkan.');
+}
+
 
     public function edit($id)
     {
@@ -38,18 +51,32 @@ class KriteriaController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'nama_kriteria' => 'required',
-            'bobot' => 'required|numeric'
-        ]);
+{
+    $request->validate([
+        'nama_kriteria' => 'required|string|max:255',
+        'bobot' => 'required|numeric|min:0|max:1',
+    ]);
 
-        $kriteria = Kriteria::findOrFail($id);
-        $kriteria->update($request->all());
+    $kriteria = \App\Models\Kriteria::findOrFail($id);
+    $bobotBaru = (float) $request->bobot;
 
-        return redirect()->route('admin.kriteria.index')
-            ->with('success', 'Data kriteria berhasil diupdate');
+    $totalBobotSelainIni = \App\Models\Kriteria::where('id_kriteria', '!=', $kriteria->id_kriteria)
+        ->sum('bobot');
+
+    if (($totalBobotSelainIni + $bobotBaru) > 1) {
+        return back()
+            ->withInput()
+            ->with('error', 'Total bobot kriteria tidak boleh lebih dari 1.');
     }
+
+    $kriteria->update([
+        'nama_kriteria' => $request->nama_kriteria,
+        'bobot' => $bobotBaru,
+    ]);
+
+    return redirect()->route('admin.kriteria.index')
+        ->with('success', 'Data kriteria berhasil diperbarui.');
+}
 
     public function destroy($id)
     {
