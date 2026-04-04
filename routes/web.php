@@ -43,7 +43,6 @@ Route::get('/dashboard', function () {
 */
 
 Route::get('/redirect', function () {
-
     if (Auth::user()->role == 'admin') {
         return redirect()->route('admin.dashboard');
     }
@@ -57,9 +56,7 @@ Route::get('/redirect', function () {
     }
 
     abort(403);
-
 })->middleware('auth');
-
 
 /*
 |--------------------------------------------------------------------------
@@ -87,12 +84,11 @@ Route::middleware(['auth', 'role:admin'])
         Route::resource('periode', PeriodePenilaianController::class);
         Route::resource('mapel', \App\Http\Controllers\MataPelajaranController::class);
         Route::resource('master-rekomendasi', MasterRekomendasiController::class)->except(['show']);
-});
-
+    });
 
 /*
 |--------------------------------------------------------------------------
-| WALIKELAS AREA
+| WALI KELAS AREA
 |--------------------------------------------------------------------------
 */
 
@@ -105,27 +101,28 @@ Route::middleware(['auth', 'role:wali_kelas'])
             return view('walas.dashboard');
         })->name('dashboard');
 
+        // Import data
         Route::get('/import', [FileImportController::class, 'index'])->name('import.index');
         Route::post('/import/preview', [FileImportController::class, 'preview'])->name('import.preview');
         Route::get('/import/create', [FileImportController::class, 'create'])->name('import.create');
         Route::post('/import', [FileImportController::class, 'store'])->name('import.store');
 
-        // MFEP - proses oleh wali kelas
+        // MFEP
         Route::get('/mfep', [MfepController::class, 'index'])->name('mfep.index');
         Route::post('/mfep/proses', [MfepController::class, 'proses'])->name('mfep.proses');
         Route::get('/mfep/hasil', [MfepController::class, 'hasil'])->name('mfep.hasil');
 
+        // Riwayat
+        Route::get('/riwayat-analisis', [MfepController::class, 'riwayat'])->name('riwayat');
+
         // Update status rekomendasi
         Route::patch('/rekomendasi/{id}/status', [RekomendasiController::class, 'updateStatus'])
             ->name('rekomendasi.updateStatus');
-
-        Route::get('/riwayat-analisis', [MfepController::class, 'riwayat'])->name('riwayat');
-});
-
+    });
 
 /*
 |--------------------------------------------------------------------------
-| KEPSEK AREA
+| KEPALA SEKOLAH AREA
 |--------------------------------------------------------------------------
 */
 
@@ -138,10 +135,24 @@ Route::middleware(['auth', 'role:kepsek'])
             return view('kepsek.dashboard');
         })->name('dashboard');
 
-        Route::get('/mfep/hasil', [MfepController::class, 'hasil'])->name('mfep.hasil');
-        Route::post('/pilih-rekomendasi', [MfepController::class, 'pilihRekomendasi'])->name('pilih.rekomendasi');
-    });
+        Route::get('/bobot-kriteria', [KriteriaController::class, 'viewKepsek'])
+        ->name('kriteria.index');
 
+        // Hasil perhitungan / hasil analisis
+        Route::get('/hasil-perhitungan', [MfepController::class, 'hasil'])->name('mfep.hasil');
+
+        // Ranking risiko
+        Route::get('/ranking-risiko', [MfepController::class, 'ranking'])->name('ranking');
+
+        // Laporan SPK
+       Route::get('/laporan-spk', [MfepController::class, 'laporan'])->name('laporan');
+        Route::get('/laporan-spk/export-pdf', [MfepController::class, 'exportLaporanPdf'])
+            ->name('laporan.exportPdf');
+
+        // Pilih rekomendasi final
+        Route::post('/pilih-rekomendasi', [MfepController::class, 'pilihRekomendasi'])
+            ->name('pilih.rekomendasi');
+    });
 
 /*
 |--------------------------------------------------------------------------
@@ -150,14 +161,9 @@ Route::middleware(['auth', 'role:kepsek'])
 */
 
 Route::middleware('auth')->group(function () {
-
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
 });
-
 
 require __DIR__.'/auth.php';

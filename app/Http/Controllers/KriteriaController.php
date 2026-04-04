@@ -86,4 +86,11 @@ class KriteriaController extends Controller
         return redirect()->route('admin.kriteria.index')
             ->with('success', 'Data kriteria berhasil dihapus');
     }
+
+    public function viewKepsek()
+{
+    $kriteria = \App\Models\Kriteria::orderBy('id_kriteria')->get();
+
+    return view('kepsek.kriteria.index', compact('kriteria'));
+}
 }

@@ -53,15 +53,15 @@ class NilaiMapelImport implements ToCollection
                 }
 
                 // normalisasi nama mapel dari header Excel
-                $namaMapelLookup = strtoupper($namaMapel);
+                $namaMapelLookup = strtoupper(trim($namaMapel));
 
-                if ($namaMapelLookup === 'SB' || $namaMapelLookup === 'SBDP') {
-                    $namaMapelLookup = 'Seni Budaya';
-                } elseif ($namaMapelLookup === 'BINDO') {
-                    $namaMapelLookup = 'B.Indo';
-                } elseif ($namaMapelLookup === 'MATEMATIKA') {
-                    $namaMapelLookup = 'MTK';
-                }
+                    if ($namaMapelLookup === 'SB' || $namaMapelLookup === 'SBDP') {
+                        $namaMapelLookup = 'SENI BUDAYA';
+                    } elseif ($namaMapelLookup === 'BINDO' || $namaMapelLookup === 'B.INDO') {
+                        $namaMapelLookup = 'B.INDO';
+                    } elseif ($namaMapelLookup === 'MATEMATIKA') {
+                        $namaMapelLookup = 'MTK';
+                    }
 
                 $mapel = MataPelajaran::where('nama_mapel', $namaMapelLookup)->first();
 

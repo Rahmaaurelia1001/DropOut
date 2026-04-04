@@ -126,8 +126,11 @@
                         <a href="{{ route('walas.riwayat') }}" class="spk-nav-link {{ request()->routeIs('walas.riwayat.*') ? 'active' : '' }}">Riwayat Analisis</a>
                     @endif
                     @if(Auth::user()->role === 'kepsek')
-                        <a href="{{ route('kepsek.dashboard') }}" class="spk-nav-link {{ request()->routeIs('kepsek.dashboard') ? 'active' : '' }}">Dashboard</a>
-                        <a href="{{ route('kepsek.mfep.hasil') }}"class="text-gray-700 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Hasil Analisis</a>
+                        <a href="{{ route('kepsek.dashboard') }}"class="spk-nav-link {{ request()->routeIs('kepsek.dashboard') ? 'active' : '' }}"> Dashboard</a>
+                        <a href="{{ route('kepsek.kriteria.index') }}"class="spk-nav-link {{ request()->routeIs('kepsek.kriteria.*') ? 'active' : '' }}">Bobot Kriteria</a>
+                        <a href="{{ route('kepsek.mfep.hasil') }}"class="spk-nav-link {{ request()->routeIs('kepsek.mfep.hasil') ? 'active' : '' }}">Hasil Perhitungan</a>
+                        <a href="{{ route('kepsek.ranking') }}"class="spk-nav-link {{ request()->routeIs('kepsek.ranking') ? 'active' : '' }}">Ranking Risiko</a>
+                        <a href="{{ route('kepsek.laporan') }}"class="spk-nav-link {{ request()->routeIs('kepsek.laporan') ? 'active' : '' }}">Laporan SPK </a>
                     @endif
                 </div>
             </div>
@@ -223,8 +226,14 @@
                 <a href="{{ route('walas.import.index') }}" class="spk-mobile-link">Import Data</a>
             @endif
             @if(Auth::user()->role === 'kepsek')
-                <a href="{{ route('kepsek.dashboard') }}" class="spk-mobile-link">Dashboard</a>
+        
+            <a href="{{ route('kepsek.dashboard') }}"class="spk-mobile-link {{ request()->routeIs('kepsek.dashboard') ? 'active' : '' }}"> Dashboard </a>
+            <a href="{{ route('kepsek.kriteria.index') }}" class="spk-mobile-link {{ request()->routeIs('kepsek.kriteria.*') ? 'active' : '' }}"> Bobot Kriteria</a>
+            <a href="{{ route('kepsek.mfep.hasil') }}" class="spk-mobile-link {{ request()->routeIs('kepsek.mfep.hasil') ? 'active' : '' }}">Hasil Perhitungan</a>
+            <a href="{{ route('kepsek.ranking') }}" class="spk-mobile-link {{ request()->routeIs('kepsek.ranking') ? 'active' : '' }}"> Ranking Risiko </a>
+            <a href="{{ route('kepsek.laporan') }}" class="spk-mobile-link {{ request()->routeIs('kepsek.laporan') ? 'active' : '' }}"> Laporan SPK </a>    
             @endif
+            
 
             <div style="border-top:1px solid #f1f5f9; margin-top:8px; padding-top:8px;">
                 <a href="{{ route('profile.edit') }}" class="spk-mobile-link">Profile</a>

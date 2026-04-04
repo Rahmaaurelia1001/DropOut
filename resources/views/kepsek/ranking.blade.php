@@ -2,10 +2,10 @@
     <x-slot name="header">
         <div>
             <h2 class="text-xl font-semibold text-gray-800">
-                Hasil Analisis Risiko Putus Sekolah
+                Ranking Risiko Putus Sekolah
             </h2>
             <p class="text-sm text-gray-500 mt-1">
-                Kepala sekolah dapat melihat hasil analisis per periode dan per kelas, lalu memilih rekomendasi tindak lanjut final.
+                Menampilkan urutan tingkat risiko siswa berdasarkan hasil perhitungan MFEP.
             </p>
         </div>
     </x-slot>
@@ -25,7 +25,7 @@
         @endif
 
         <div class="bg-white border border-gray-100 shadow-sm rounded-2xl p-6">
-            <form method="GET" action="{{ route('kepsek.mfep.hasil') }}" class="bg-white p-4 rounded-lg shadow">
+            <form method="GET" action="{{ route('kepsek.ranking') }}" class="bg-white p-4 rounded-lg shadow">
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <div>
                         <label class="block text-sm font-medium mb-2">Pilih Periode</label>
@@ -89,14 +89,12 @@
                         <th class="px-4 py-3 text-left font-semibold">Nilai Preferensi</th>
                         <th class="px-4 py-3 text-left font-semibold">Kategori Risiko</th>
                         <th class="px-4 py-3 text-left font-semibold">Faktor Dominan</th>
-                        <th class="px-4 py-3 text-left font-semibold">Rekomendasi</th>
-                        <th class="px-4 py-3 text-left font-semibold">Keputusan Final</th>
                     </tr>
                 </thead>
 
                 <tbody class="divide-y divide-gray-200">
                     @forelse($hasil as $index => $item)
-                        <tr class="align-top">
+                        <tr>
                             <td class="px-4 py-4 font-semibold text-gray-800">
                                 {{ $index + 1 }}
                             </td>
@@ -132,56 +130,11 @@
                             <td class="px-4 py-4 text-gray-700">
                                 {{ $item->faktor_dominan ?? '-' }}
                             </td>
-
-                            <td class="px-4 py-4" style="min-width: 360px;">
-                                @forelse($item->rekomendasi as $rek)
-                                    <div class="mb-3 rounded-xl border border-gray-200 bg-white p-3">
-                                        <div class="mb-3 text-sm text-gray-800">
-                                            {{ $rek->deskripsi_rekomendasi }}
-                                        </div>
-
-                                        <form method="POST" action="{{ route('kepsek.pilih.rekomendasi') }}">
-                                            @csrf
-                                            <input type="hidden" name="id_hasil" value="{{ $item->id_hasil }}">
-                                            <input type="hidden" name="id_rekomendasi" value="{{ $rek->id_rekomendasi }}">
-
-                                            @if((int) $rek->is_selected === 1)
-                                                <span class="inline-block w-full rounded-lg bg-green-100 px-3 py-2 text-center text-sm font-semibold text-green-700">
-                                                    Terpilih sebagai keputusan final
-                                                </span>
-                                            @else
-                                                <button type="submit"
-                                                    class="w-full rounded-lg bg-green-600 px-3 py-2 text-sm font-semibold text-white hover:bg-green-700 transition">
-                                                    Pilih sebagai Keputusan Final
-                                                </button>
-                                            @endif
-                                        </form>
-                                    </div>
-                                @empty
-                                    <span class="text-xs italic text-gray-400">Tidak ada rekomendasi</span>
-                                @endforelse
-                            </td>
-
-                            <td class="px-4 py-4" style="min-width: 260px;">
-                                @if(!empty($item->tindak_lanjut_final))
-                                    <div class="rounded-lg bg-green-50 p-3 text-xs text-green-700">
-                                        {{ $item->tindak_lanjut_final }}
-                                    </div>
-
-                                    <div class="mt-2 text-xs text-gray-400">
-                                        Dipilih pada: {{ $item->tanggal_keputusan ?? '-' }}
-                                    </div>
-                                @else
-                                    <span class="text-xs italic text-gray-400">
-                                        Belum dipilih
-                                    </span>
-                                @endif
-                            </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="8" class="py-8 text-center text-gray-500">
-                                Data hasil analisis belum tersedia.
+                            <td colspan="6" class="py-8 text-center text-gray-500">
+                                Data ranking belum tersedia.
                             </td>
                         </tr>
                     @endforelse
