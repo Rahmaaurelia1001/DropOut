@@ -128,64 +128,57 @@
                                     {{ $item->faktor_dominan ?? '-' }}
                                 </td>
 
-                                 <td class="px-6 py-4 text-sm text-gray-700" style="min-width: 360px;">
-                                        @php
-                                            $rekomendasiTerpilih = $item->rekomendasi
-                                                ->firstWhere('deskripsi_rekomendasi', $item->tindak_lanjut_final);
+                                <td class="px-6 py-4 text-sm text-gray-700" style="min-width: 380px;">
+    @php
+        $rekomendasiTerpilih = $item->rekomendasi->firstWhere('is_selected', 1);
 
-                                            $rekomendasiFinal = $rekomendasiTerpilih?->deskripsi_rekomendasi ?? $item->tindak_lanjut_final;
-                                            $statusRekomendasi = $rekomendasiTerpilih?->status ?? 'belum_diproses';
-                                            $idRekomendasi = $rekomendasiTerpilih?->id_rekomendasi;
-                                        @endphp
+        if (!$rekomendasiTerpilih && !empty($item->tindak_lanjut_final)) {
+            $rekomendasiTerpilih = $item->rekomendasi
+                ->firstWhere('deskripsi_rekomendasi', $item->tindak_lanjut_final);
+        }
 
-                                        @if($rekomendasiFinal)
-                                            <div class="border border-gray-200 rounded-xl p-3 bg-white">
-                                                <div class="mb-3 text-sm text-gray-800">
-                                                    {{ $rekomendasiFinal }}
-                                                </div>
+        $rekomendasiFinal = $rekomendasiTerpilih?->deskripsi_rekomendasi ?? $item->tindak_lanjut_final;
+        $statusRekomendasi = $rekomendasiTerpilih?->status ?? 'belum_diproses';
+    @endphp
 
-                                                @if($statusRekomendasi === 'belum_diproses')
-                                                    <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Belum Diproses</span>
-                                                @elseif($statusRekomendasi === 'sedang_diproses')
-                                                    <span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">Sedang Diproses</span>
-                                                @else
-                                                    <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Selesai</span>
-                                                @endif
+    @if($rekomendasiFinal)
+        <div class="border border-gray-200 rounded-xl p-3 bg-white">
+            <div class="mb-2 text-sm font-medium text-gray-800">
+                {{ $rekomendasiFinal }}
+            </div>
 
-                                                @if($idRekomendasi)
-                                                    <form action="{{ route('walas.rekomendasi.updateStatus', $idRekomendasi) }}" method="POST" class="mt-3">
-                                                        @csrf
-                                                        @method('PATCH')
+            @if($statusRekomendasi === 'belum_diproses')
+                <span class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded">Belum Diproses</span>
+            @elseif($statusRekomendasi === 'sedang_diproses')
+                <span class="text-xs bg-yellow-100 text-yellow-700 px-2 py-1 rounded">Sedang Diproses</span>
+            @else
+                <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded">Selesai</span>
+            @endif
 
-                                                        <div class="space-y-2">
-                                                            <select name="status" class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm">
-                                                                <option value="belum_diproses" {{ $statusRekomendasi === 'belum_diproses' ? 'selected' : '' }}>
-                                                                    Belum Diproses
-                                                                </option>
-                                                                <option value="sedang_diproses" {{ $statusRekomendasi === 'sedang_diproses' ? 'selected' : '' }}>
-                                                                    Sedang Diproses
-                                                                </option>
-                                                                <option value="selesai" {{ $statusRekomendasi === 'selesai' ? 'selected' : '' }}>
-                                                                    Selesai
-                                                                </option>
-                                                            </select>
+            <form action="{{ route('walas.rekomendasi.updateStatus', $item->id_hasil) }}" method="POST" class="mt-3">
+                @csrf
 
-                                                            <button type="submit"
-                                                                class="w-full rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-700 transition">
-                                                                Update Status
-                                                            </button>
-                                                        </div>
-                                                    </form>
-                                                @else
-                                                    <div class="mt-3 text-xs text-gray-400">
-                                                        Data rekomendasi detail belum ditemukan di tabel rekomendasi.
-                                                    </div>
-                                                @endif
-                                            </div>
-                                        @else
-                                            <span class="text-gray-400 italic">Belum ada rekomendasi yang dipilih kepala sekolah</span>
-                                        @endif
-                                    </td>
+                <div class="space-y-2">
+                    <select name="status"
+                        onchange="this.form.submit()"
+                        class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm">
+                        <option value="belum_diproses" {{ $statusRekomendasi === 'belum_diproses' ? 'selected' : '' }}>
+                            Belum Diproses
+                        </option>
+                        <option value="sedang_diproses" {{ $statusRekomendasi === 'sedang_diproses' ? 'selected' : '' }}>
+                            Sedang Diproses
+                        </option>
+                        <option value="selesai" {{ $statusRekomendasi === 'selesai' ? 'selected' : '' }}>
+                            Selesai
+                        </option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    @else
+        <span class="text-gray-400 italic">Belum ada rekomendasi final yang sinkron dari kepala sekolah</span>
+    @endif
+</td>
                             </tr>
                         @empty
                             <tr>

@@ -115,9 +115,10 @@ Route::middleware(['auth', 'role:wali_kelas'])
         // Riwayat
         Route::get('/riwayat-analisis', [MfepController::class, 'riwayat'])->name('riwayat');
 
-        // Update status rekomendasi
-        Route::patch('/rekomendasi/{id}/status', [RekomendasiController::class, 'updateStatus'])
-            ->name('rekomendasi.updateStatus');
+       // Pilih rekomendasi final
+      Route::post('/rekomendasi/hasil/{id}/status', [RekomendasiController::class, 'updateStatus'])
+    ->name('rekomendasi.updateStatus');
+
     });
 
 /*
@@ -131,29 +132,26 @@ Route::middleware(['auth', 'role:kepsek'])
     ->name('kepsek.')
     ->group(function () {
 
-        Route::get('/dashboard', function () {
-            return view('kepsek.dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [MfepController::class, 'dashboardKepsek'])->name('dashboard');
 
         Route::get('/bobot-kriteria', [KriteriaController::class, 'viewKepsek'])
-        ->name('kriteria.index');
+            ->name('kriteria.index');
 
-        // Hasil perhitungan / hasil analisis
-        Route::get('/hasil-perhitungan', [MfepController::class, 'hasil'])->name('mfep.hasil');
+        Route::get('/hasil-perhitungan', [MfepController::class, 'hasil'])
+            ->name('mfep.hasil');
 
-        // Ranking risiko
-        Route::get('/ranking-risiko', [MfepController::class, 'ranking'])->name('ranking');
+        Route::get('/ranking-risiko', [MfepController::class, 'ranking'])
+            ->name('ranking');
 
-        // Laporan SPK
-       Route::get('/laporan-spk', [MfepController::class, 'laporan'])->name('laporan');
+        Route::get('/laporan-spk', [MfepController::class, 'laporan'])
+            ->name('laporan');
+
         Route::get('/laporan-spk/export-pdf', [MfepController::class, 'exportLaporanPdf'])
             ->name('laporan.exportPdf');
 
-        // Pilih rekomendasi final
         Route::post('/pilih-rekomendasi', [MfepController::class, 'pilihRekomendasi'])
             ->name('pilih.rekomendasi');
     });
-
 /*
 |--------------------------------------------------------------------------
 | PROFILE (BREEZE)

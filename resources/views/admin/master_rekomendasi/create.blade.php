@@ -1,46 +1,457 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-xl font-semibold">Tambah Master Rekomendasi</h2>
-    </x-slot>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-    <div class="p-6">
-        <form action="{{ route('admin.master-rekomendasi.store') }}" method="POST" class="space-y-4">
-            @csrf
+:root {
+    --blue:     #2563eb;
+    --blue-lt:  #eff6ff;
+    --blue-mid: #dbeafe;
+    --white:    #ffffff;
+    --gray-50:  #f9fafb;
+    --gray-100: #f3f4f6;
+    --gray-200: #e5e7eb;
+    --gray-400: #9ca3af;
+    --gray-500: #6b7280;
+    --gray-700: #374151;
+    --gray-800: #1f2937;
+    --gray-900: #111827;
+    --green-lt: #f0fdf4;
+    --green-bd: #bbf7d0;
+    --green-dk: #16a34a;
+    --red:      #ef4444;
+    --red-lt:   #fef2f2;
+    --sidebar-w: 224px;
+}
 
-            <div>
-                <label>Kategori Risiko</label>
-                <select name="kategori_risiko" class="w-full border rounded p-2">
-                    @foreach($kategoriOptions as $k)
-                        <option value="{{ $k }}">{{ $k }}</option>
-                    @endforeach
-                </select>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+nav[x-data] { display: none !important; }
+header { display: none !important; }
+
+.da-root {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+}
+
+/* ── SIDEBAR ── */
+.da-shell { display: flex; min-height: 100vh; }
+
+.da-sidebar {
+    width: var(--sidebar-w);
+    background: var(--white);
+    border-right: 1px solid var(--gray-200);
+    position: fixed; top: 0; left: 0; bottom: 0;
+    z-index: 40;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+}
+.sb-brand {
+    padding: 18px 16px 14px;
+    display: flex; align-items: center; gap: 10px;
+    border-bottom: 1px solid var(--gray-100); flex-shrink: 0;
+}
+.sb-logo {
+    width: 36px; height: 36px; border-radius: 9px;
+    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(37,99,235,.25);
+}
+.sb-brand-name { font-size: 13px; font-weight: 800; color: var(--gray-900); line-height: 1.2; }
+.sb-brand-sub  { font-size: 10px; color: var(--gray-400); font-weight: 500; margin-top: 1px; }
+.sb-nav { padding: 12px 10px; flex: 1; overflow-y: auto; min-height: 0; }
+.sb-nav-section {
+    font-size: 9.5px; font-weight: 700; color: var(--gray-400);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    padding: 0 8px; margin: 14px 0 5px;
+}
+.sb-item {
+    display: flex; align-items: center; gap: 9px;
+    padding: 8px 10px; border-radius: 8px;
+    text-decoration: none; font-size: 12.5px; font-weight: 600;
+    color: var(--gray-500); transition: all .13s; margin-bottom: 1px;
+}
+.sb-item:hover { background: var(--gray-100); color: var(--gray-800); }
+.sb-item.active { background: var(--blue-lt); color: var(--blue); }
+.sb-item svg { flex-shrink: 0; }
+.sb-user {
+    padding: 12px 14px; border-top: 1px solid var(--gray-100);
+    display: flex; align-items: center; gap: 9px;
+    flex-shrink: 0; background: var(--white);
+}
+.sb-user-av {
+    width: 30px; height: 30px; border-radius: 50%;
+    background: linear-gradient(135deg, #2563eb, #38bdf8);
+    color: white; font-size: 11px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.sb-user-name { font-size: 12px; font-weight: 700; color: var(--gray-800); line-height: 1.2; }
+.sb-user-role { font-size: 10.5px; color: var(--gray-400); font-weight: 500; }
+.sb-action-btn {
+    background: none; border: none; cursor: pointer;
+    padding: 5px; color: var(--gray-400); border-radius: 6px;
+    transition: all .13s; display: flex; align-items: center;
+    text-decoration: none; flex-shrink: 0;
+}
+.sb-action-btn:hover { background: var(--gray-100); color: var(--gray-700); }
+.sb-action-logout:hover { background: #fee2e2; color: var(--red); }
+
+/* ── MAIN ── */
+.da-main {
+    margin-left: var(--sidebar-w);
+    flex: 1; display: flex; flex-direction: column; min-width: 0;
+}
+.da-phead {
+    background: var(--white);
+    border-bottom: 1px solid var(--gray-200);
+    padding: 20px 28px;
+    display: flex; align-items: center; justify-content: space-between;
+}
+.da-phead-left { display: flex; align-items: center; gap: 12px; }
+.da-phead-back {
+    width: 32px; height: 32px; border-radius: 8px;
+    border: 1.5px solid var(--gray-200); background: var(--white);
+    display: flex; align-items: center; justify-content: center;
+    text-decoration: none; color: var(--gray-500);
+    transition: all .13s; flex-shrink: 0;
+}
+.da-phead-back:hover { border-color: var(--blue-mid); background: var(--blue-lt); color: var(--blue); }
+.da-phead-title { font-size: 18px; font-weight: 800; color: var(--gray-900); letter-spacing: -0.3px; }
+.da-phead-sub   { font-size: 12px; color: var(--gray-400); font-weight: 500; margin-top: 2px; }
+
+/* ── FORM CONTENT ── */
+.da-content { padding: 28px; max-width: 720px; }
+
+.form-card {
+    background: var(--white);
+    border: 1.5px solid var(--gray-200);
+    border-radius: 14px;
+    overflow: hidden;
+}
+.form-card-head {
+    padding: 16px 22px;
+    border-bottom: 1px solid var(--gray-100);
+    display: flex; align-items: center; gap: 10px;
+}
+.form-card-head-ico {
+    width: 34px; height: 34px; border-radius: 9px;
+    background: var(--blue-lt); border: 1.5px solid var(--blue-mid);
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.form-card-title { font-size: 13px; font-weight: 800; color: var(--gray-900); }
+.form-card-sub   { font-size: 11px; color: var(--gray-400); font-weight: 500; margin-top: 1px; }
+.form-card-body  { padding: 22px; display: flex; flex-direction: column; gap: 18px; }
+
+/* Form fields */
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full { grid-column: 1 / -1; }
+
+.form-label {
+    font-size: 12px; font-weight: 700; color: var(--gray-700);
+    display: flex; align-items: center; gap: 4px;
+}
+.form-label-req { color: var(--red); font-size: 11px; }
+
+.form-control {
+    width: 100%;
+    padding: 9px 12px;
+    font-size: 13px; font-weight: 500;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: var(--gray-800);
+    background: var(--white);
+    border: 1.5px solid var(--gray-200);
+    border-radius: 9px;
+    outline: none;
+    transition: border-color .15s, box-shadow .15s;
+    appearance: none;
+}
+.form-control:focus {
+    border-color: var(--blue);
+    box-shadow: 0 0 0 3px rgba(37,99,235,.1);
+}
+.form-control::placeholder { color: var(--gray-400); }
+
+select.form-control {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%239ca3af' viewBox='0 0 24 24'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    padding-right: 36px;
+    cursor: pointer;
+}
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px;
+    line-height: 1.6;
+}
+
+.form-hint {
+    font-size: 11px; color: var(--gray-400); font-weight: 500; margin-top: 2px;
+}
+
+/* Error */
+.form-error {
+    font-size: 11px; color: var(--red); font-weight: 600; margin-top: 2px;
+    display: flex; align-items: center; gap: 4px;
+}
+.form-control.is-error { border-color: var(--red); }
+.form-control.is-error:focus { box-shadow: 0 0 0 3px rgba(239,68,68,.1); }
+
+/* Divider */
+.form-divider { height: 1px; background: var(--gray-100); margin: 2px 0; }
+
+/* Footer actions */
+.form-card-foot {
+    padding: 16px 22px;
+    border-top: 1px solid var(--gray-100);
+    background: var(--gray-50);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px;
+}
+.btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 9px 18px; border-radius: 9px;
+    font-size: 13px; font-weight: 700;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    border: none; cursor: pointer; text-decoration: none;
+    transition: all .15s;
+}
+.btn-primary {
+    background: var(--blue); color: var(--white);
+}
+.btn-primary:hover { background: #1d4ed8; box-shadow: 0 3px 10px rgba(37,99,235,.25); }
+.btn-secondary {
+    background: var(--white); color: var(--gray-700);
+    border: 1.5px solid var(--gray-200);
+}
+.btn-secondary:hover { background: var(--gray-100); border-color: var(--gray-300); }
+
+/* Status badge preview */
+.status-preview {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 99px;
+}
+.status-aktif    { color: var(--green-dk); background: var(--green-lt); border: 1px solid var(--green-bd); }
+.status-nonaktif { color: var(--gray-500); background: var(--gray-100); border: 1px solid var(--gray-200); }
+</style>
+
+<div class="da-root" id="spk-admin-dash">
+<div class="da-shell">
+
+    {{-- ══ SIDEBAR ══ --}}
+    <aside class="da-sidebar">
+        <div class="sb-brand">
+            <div class="sb-logo">
+                <svg width="20" height="20" fill="none" stroke="white" viewBox="0 0 24 24" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+                </svg>
             </div>
-
             <div>
-                <label>Faktor Dominan</label>
-                <select name="faktor_dominan" class="w-full border rounded p-2">
-                    @foreach($faktorOptions as $f)
-                        <option value="{{ $f }}">{{ $f }}</option>
-                    @endforeach
-                </select>
+                <div class="sb-brand-name">SPK Putus Sekolah</div>
+                <div class="sb-brand-sub">SDN 11 Kampung Batu</div>
             </div>
+        </div>
 
-            <div>
-                <label>Deskripsi Rekomendasi</label>
-                <textarea name="deskripsi_rekomendasi" class="w-full border rounded p-2"></textarea>
+        <div class="sb-nav">
+            <div class="sb-nav-section">Menu</div>
+            <a href="{{ route('dashboard') }}" class="sb-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                Dashboard
+            </a>
+
+            <div class="sb-nav-section">Manajemen</div>
+            <a href="{{ route('admin.user.index') }}" class="sb-item {{ request()->routeIs('admin.user.*') ? 'active' : '' }}">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                Manajemen User
+            </a>
+            <a href="{{ route('admin.kelas.index') }}" class="sb-item {{ request()->routeIs('admin.kelas.*') ? 'active' : '' }}">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                Data Kelas
+            </a>
+            <a href="{{ route('admin.siswa.index') }}" class="sb-item {{ request()->routeIs('admin.siswa.*') ? 'active' : '' }}">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                Data Siswa
+            </a>
+            <a href="{{ route('admin.mapel.index') }}" class="sb-item {{ request()->routeIs('admin.mapel.*') ? 'active' : '' }}">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                Mata Pelajaran
+            </a>
+
+            <div class="sb-nav-section">SPK</div>
+            <a href="{{ route('admin.kriteria.index') }}" class="sb-item {{ request()->routeIs('admin.kriteria.*') ? 'active' : '' }}">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                Data Kriteria
+            </a>
+            <a href="{{ route('admin.subkriteria.index') }}" class="sb-item {{ request()->routeIs('admin.subkriteria.*') ? 'active' : '' }}">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h10M4 18h6"/></svg>
+                Data Subkriteria
+            </a>
+            <a href="{{ route('admin.periode.index') }}" class="sb-item {{ request()->routeIs('admin.periode.*') ? 'active' : '' }}">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                Periode Penilaian
+            </a>
+            <a href="{{ route('admin.master-rekomendasi.index') }}" class="sb-item active">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                Rekomendasi
+            </a>
+        </div>
+
+        <div class="sb-user">
+            <div class="sb-user-av">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
+            <div style="min-width:0; flex:1">
+                <div class="sb-user-name">{{ Auth::user()->name }}</div>
+                <div class="sb-user-role">Administrator</div>
             </div>
-
-            <div>
-                <label>Status</label>
-                <select name="is_active" class="w-full border rounded p-2">
-                    <option value="1">Aktif</option>
-                    <option value="0">Nonaktif</option>
-                </select>
+            <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
+                <a href="{{ route('profile.edit') }}" class="sb-action-btn" title="Profil">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                </a>
+                <form method="POST" action="{{ route('logout') }}" style="margin:0">
+                    @csrf
+                    <button type="submit" class="sb-action-btn sb-action-logout" title="Log Out">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                    </button>
+                </form>
             </div>
+        </div>
+    </aside>
 
-            <button class="bg-indigo-600 text-white px-4 py-2 rounded">
-                Simpan
-            </button>
-        </form>
-    </div>
+    {{-- ══ MAIN ══ --}}
+    <main class="da-main">
+
+        {{-- Page Header --}}
+        <div class="da-phead">
+            <div class="da-phead-left">
+                <a href="{{ route('admin.master-rekomendasi.index') }}" class="da-phead-back" title="Kembali">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </a>
+                <div>
+                    <div class="da-phead-title">Tambah Master Rekomendasi</div>
+                    <div class="da-phead-sub">Tambahkan rekomendasi tindak lanjut berdasarkan kategori risiko dan faktor dominan</div>
+                </div>
+            </div>
+        </div>
+
+        {{-- Form --}}
+        <div class="da-content">
+            <form action="{{ route('admin.master-rekomendasi.store') }}" method="POST">
+                @csrf
+
+                <div class="form-card">
+
+                    {{-- Card Header --}}
+                    <div class="form-card-head">
+                        <div class="form-card-head-ico">
+                            <svg width="16" height="16" fill="none" stroke="#2563eb" viewBox="0 0 24 24" stroke-width="1.8">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="form-card-title">Detail Rekomendasi</div>
+                            <div class="form-card-sub">Isi semua field yang diperlukan</div>
+                        </div>
+                    </div>
+
+                    {{-- Card Body --}}
+                    <div class="form-card-body">
+
+                        {{-- Row 1: Kategori + Faktor --}}
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Kategori Risiko
+                                    <span class="form-label-req">*</span>
+                                </label>
+                                <select name="kategori_risiko" class="form-control {{ $errors->has('kategori_risiko') ? 'is-error' : '' }}">
+                                    <option value="" disabled selected>Pilih kategori...</option>
+                                    @foreach($kategoriOptions as $k)
+                                        <option value="{{ $k }}" {{ old('kategori_risiko') == $k ? 'selected' : '' }}>{{ $k }}</option>
+                                    @endforeach
+                                </select>
+                                @error('kategori_risiko')
+                                    <span class="form-error">
+                                        <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01"/></svg>
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Faktor Dominan
+                                    <span class="form-label-req">*</span>
+                                </label>
+                                <select name="faktor_dominan" class="form-control {{ $errors->has('faktor_dominan') ? 'is-error' : '' }}">
+                                    <option value="" disabled selected>Pilih faktor...</option>
+                                    @foreach($faktorOptions as $f)
+                                        <option value="{{ $f }}" {{ old('faktor_dominan') == $f ? 'selected' : '' }}>{{ $f }}</option>
+                                    @endforeach
+                                </select>
+                                @error('faktor_dominan')
+                                    <span class="form-error">
+                                        <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01"/></svg>
+                                        {{ $message }}
+                                    </span>
+                                @enderror
+                            </div>
+                        </div>
+
+                        {{-- Deskripsi --}}
+                        <div class="form-group full">
+                            <label class="form-label">
+                                Deskripsi Rekomendasi
+                                <span class="form-label-req">*</span>
+                            </label>
+                            <textarea name="deskripsi_rekomendasi"
+                                class="form-control {{ $errors->has('deskripsi_rekomendasi') ? 'is-error' : '' }}"
+                                placeholder="Tuliskan deskripsi tindak lanjut yang direkomendasikan...">{{ old('deskripsi_rekomendasi') }}</textarea>
+                            <span class="form-hint">Jelaskan tindak lanjut yang sesuai untuk kombinasi kategori risiko dan faktor dominan di atas.</span>
+                            @error('deskripsi_rekomendasi')
+                                <span class="form-error">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01"/></svg>
+                                    {{ $message }}
+                                </span>
+                            @enderror
+                        </div>
+
+                        <div class="form-divider"></div>
+
+                        {{-- Status --}}
+                        <div class="form-group" style="max-width: 240px;">
+                            <label class="form-label">Status</label>
+                            <select name="is_active" class="form-control">
+                                <option value="1" {{ old('is_active', '1') == '1' ? 'selected' : '' }}>Aktif</option>
+                                <option value="0" {{ old('is_active') == '0' ? 'selected' : '' }}>Nonaktif</option>
+                            </select>
+                            <span class="form-hint">Rekomendasi aktif akan digunakan dalam sistem analisis.</span>
+                        </div>
+
+                    </div>
+
+                    {{-- Card Footer --}}
+                    <div class="form-card-foot">
+                        <a href="{{ route('admin.master-rekomendasi.index') }}" class="btn btn-secondary">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                            Batal
+                        </a>
+                        <button type="submit" class="btn btn-primary">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            Simpan Rekomendasi
+                        </button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+    </main>
+</div>
+</div>
+
 </x-app-layout>

@@ -54,112 +54,130 @@ class MfepService
     }
 
     public function hitungMfep(int $idPeriode, ?int $idKelas = null): void
-    {
-        $query = Penilaian::with(['kriteria', 'siswa'])
-            ->where('id_periode', $idPeriode);
+{
+    $query = Penilaian::with(['kriteria', 'siswa'])
+        ->where('id_periode', $idPeriode);
 
-        if ($idKelas) {
-            $query->whereHas('siswa', function ($q) use ($idKelas) {
-                $q->where('id_kelas', $idKelas);
-            });
-        }
+    if ($idKelas) {
+        $query->whereHas('siswa', function ($q) use ($idKelas) {
+            $q->where('id_kelas', $idKelas);
+        });
+    }
 
-        $penilaians = $query->get()->groupBy('id_siswa');
+    $penilaians = $query->get()->groupBy('id_siswa');
 
-        $hasilSementara = [];
+    $hasilSementara = [];
 
-        foreach ($penilaians as $idSiswa => $items) {
-            $totalPreferensi = 0;
-            $faktorDominan = null;
-            $nilaiDominan = -1;
+    foreach ($penilaians as $idSiswa => $items) {
+        $totalPreferensi = 0;
+        $faktorDominan = null;
+        $nilaiDominan = -1;
 
-            foreach ($items as $item) {
-                if (!$item->kriteria) {
-                    continue;
-                }
-
-                $bobot = (float) $item->kriteria->bobot;
-                $nilaiSkala = (int) $item->nilai_penilaian;
-
-                // EF = X / Xmax
-                $evaluationFactor = $nilaiSkala / 5;
-
-                // WE = FW * E
-                $hasilPerkalian = $bobot * $evaluationFactor;
-
-                Perhitungan::updateOrCreate(
-                    [
-                        'id_siswa' => $item->id_siswa,
-                        'id_kriteria' => $item->id_kriteria,
-                        'id_periode' => $item->id_periode,
-                    ],
-                    [
-                        'nilai_bobot' => $bobot,
-                        'nilai_skala' => $nilaiSkala,
-                        'hasil_perkalian' => round($hasilPerkalian, 4),
-                    ]
-                );
-
-                $totalPreferensi += $hasilPerkalian;
-
-                if ($hasilPerkalian > $nilaiDominan) {
-                    $nilaiDominan = $hasilPerkalian;
-                    $faktorDominan = $item->kriteria->nama_kriteria;
-                }
+        foreach ($items as $item) {
+            if (!$item->kriteria) {
+                continue;
             }
 
-            $hasilSementara[] = [
-                'id_siswa' => $idSiswa,
-                'id_periode' => $idPeriode,
-                'total_nilai_preferensi' => round($totalPreferensi, 4),
-                'faktor_dominan' => $faktorDominan,
-            ];
-        }
+            $bobot = (float) $item->kriteria->bobot;
+            $nilaiSkala = (int) $item->nilai_penilaian;
 
-        if (count($hasilSementara) === 0) {
-            return;
-        }
+            // EF = X / Xmax
+            $evaluationFactor = $nilaiSkala / 5;
 
-        $semuaNilai = collect($hasilSementara)
-            ->pluck('total_nilai_preferensi')
-            ->sort()
-            ->values()
-            ->toArray();
+            // WE = FW * E
+            $hasilPerkalian = $bobot * $evaluationFactor;
 
-        $q1 = $this->quartileExc($semuaNilai, 0.25);
-        $q3 = $this->quartileExc($semuaNilai, 0.75);
-
-        foreach ($hasilSementara as $hasil) {
-        $kategori = $this->kategoriRisikoQuartile(
-                $hasil['total_nilai_preferensi'],
-                $q1,
-                $q3
-            );
-
-            $hasilModel = HasilKeputusan::updateOrCreate(
+            Perhitungan::updateOrCreate(
                 [
-                    'id_siswa' => $hasil['id_siswa'],
-                    'id_periode' => $hasil['id_periode'],
+                    'id_siswa' => $item->id_siswa,
+                    'id_kriteria' => $item->id_kriteria,
+                    'id_periode' => $item->id_periode,
                 ],
                 [
-                    'total_nilai_preferensi' => $hasil['total_nilai_preferensi'],
-                    'kategori_risiko' => $kategori,
-                    'faktor_dominan' => $hasil['faktor_dominan'],
-                    'tanggal_proses' => now(),
+                    'nilai_bobot' => $bobot,
+                    'nilai_skala' => $nilaiSkala,
+                    'hasil_perkalian' => round($hasilPerkalian, 4),
                 ]
             );
 
-            // 🔥 HAPUS rekomendasi lama (biar ga dobel)
-            Rekomendasi::where('id_hasil', $hasilModel->id_hasil)->delete();
+            $totalPreferensi += $hasilPerkalian;
 
-            // 🔥 AMBIL dari master_rekomendasi
-            $masterList = MasterRekomendasi::where('kategori_risiko', $kategori)
-                ->where('faktor_dominan', $hasil['faktor_dominan'])
-                ->where('is_active', 1)
-                ->get();
+            if ($hasilPerkalian > $nilaiDominan) {
+                $nilaiDominan = $hasilPerkalian;
+                $faktorDominan = $item->kriteria->nama_kriteria;
+            }
+        }
 
-            // 🔥 SIMPAN ke tabel rekomendasi
-            foreach ($masterList as $master) {
+        $hasilSementara[] = [
+            'id_siswa' => $idSiswa,
+            'id_periode' => $idPeriode,
+            'total_nilai_preferensi' => round($totalPreferensi, 4),
+            'faktor_dominan' => $faktorDominan,
+        ];
+    }
+
+    if (count($hasilSementara) === 0) {
+        return;
+    }
+
+    $semuaNilai = collect($hasilSementara)
+        ->pluck('total_nilai_preferensi')
+        ->sort()
+        ->values()
+        ->toArray();
+
+    $q1 = $this->quartileExc($semuaNilai, 0.25);
+    $q3 = $this->quartileExc($semuaNilai, 0.75);
+
+    foreach ($hasilSementara as $hasil) {
+        $kategori = $this->kategoriRisikoQuartile(
+            $hasil['total_nilai_preferensi'],
+            $q1,
+            $q3
+        );
+
+        $hasilModel = HasilKeputusan::updateOrCreate(
+            [
+                'id_siswa' => $hasil['id_siswa'],
+                'id_periode' => $hasil['id_periode'],
+            ],
+            [
+                'total_nilai_preferensi' => $hasil['total_nilai_preferensi'],
+                'kategori_risiko' => $kategori,
+                'faktor_dominan' => $hasil['faktor_dominan'],
+                'tanggal_proses' => now(),
+            ]
+        );
+
+        // Ambil dari master_rekomendasi
+        $masterList = MasterRekomendasi::where('kategori_risiko', $kategori)
+            ->where('faktor_dominan', $hasil['faktor_dominan'])
+            ->where('is_active', 1)
+            ->get();
+
+        // Ambil deskripsi rekomendasi yang sudah ada di DB
+        $rekomendasiSudahAda = Rekomendasi::where('id_hasil', $hasilModel->id_hasil)
+            ->pluck('deskripsi_rekomendasi')
+            ->toArray();
+
+        // Tentukan mana yang selected saat ini
+        $rekomendasiSelected = Rekomendasi::where('id_hasil', $hasilModel->id_hasil)
+            ->where('is_selected', 1)
+            ->first();
+
+        $deskripsiSelected = $rekomendasiSelected?->deskripsi_rekomendasi
+            ?? $hasilModel->tindak_lanjut_final;
+
+        // Hapus rekomendasi lama yang sudah tidak ada di master (kecuali yang dipilih)
+        $deskripsiMaster = $masterList->pluck('deskripsi_rekomendasi')->toArray();
+        Rekomendasi::where('id_hasil', $hasilModel->id_hasil)
+            ->whereNotIn('deskripsi_rekomendasi', $deskripsiMaster)
+            ->where('is_selected', 0)
+            ->delete();
+
+        // Simpan hanya yang belum ada
+        foreach ($masterList as $master) {
+            if (!in_array($master->deskripsi_rekomendasi, $rekomendasiSudahAda)) {
                 Rekomendasi::create([
                     'id_hasil' => $hasilModel->id_hasil,
                     'deskripsi_rekomendasi' => $master->deskripsi_rekomendasi,
@@ -168,7 +186,18 @@ class MfepService
                 ]);
             }
         }
+
+        // Pastikan is_selected tetap terjaga sesuai tindak_lanjut_final
+        if ($deskripsiSelected) {
+            Rekomendasi::where('id_hasil', $hasilModel->id_hasil)
+                ->update(['is_selected' => 0]);
+
+            Rekomendasi::where('id_hasil', $hasilModel->id_hasil)
+                ->where('deskripsi_rekomendasi', $deskripsiSelected)
+                ->update(['is_selected' => 1]);
+        }
     }
+}
 
     private function simpanPenilaian($evaluasi, string $namaKriteria, int $nilaiSkala, int $idPeriode): void
     {
