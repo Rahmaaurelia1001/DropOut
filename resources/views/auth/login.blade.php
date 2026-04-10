@@ -1,285 +1,554 @@
 <x-guest-layout>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
-:root {
-    --blue:     #2563eb;
-    --blue-dk:  #1d4ed8;
-    --blue-lt:  #eff6ff;
-    --blue-mid: #dbeafe;
-    --white:    #ffffff;
-    --gray-50:  #f9fafb;
-    --gray-100: #f3f4f6;
-    --gray-200: #e5e7eb;
-    --gray-400: #9ca3af;
-    --gray-500: #6b7280;
-    --gray-700: #374151;
-    --gray-800: #1f2937;
-    --gray-900: #111827;
-    --red:      #ef4444;
-    --red-lt:   #fef2f2;
-    --red-bd:   #fecaca;
-}
+    :root {
+        --blue:     #2563eb;
+        --blue-dk:  #1d4ed8;
+        --blue-lt:  #eff6ff;
+        --blue-mid: #dbeafe;
+        --white:    #ffffff;
+        --gray-50:  #f8fafc;
+        --gray-100: #f1f5f9;
+        --gray-200: #e2e8f0;
+        --gray-400: #94a3b8;
+        --gray-500: #64748b;
+        --gray-600: #475569;
+        --gray-700: #334155;
+        --gray-800: #1e293b;
+        --gray-900: #0f172a;
+        --red:      #ef4444;
+        --red-lt:   #fef2f2;
+    }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background: var(--gray-50);
-    min-height: 100vh;
-    display: flex; align-items: center; justify-content: center;
-    padding: 24px;
-    -webkit-font-smoothing: antialiased;
-}
+    html, body { height: 100%; margin: 0; }
 
-/* ── CARD ── */
-.login-card {
-    width: 100%; max-width: 420px;
-    background: var(--white);
-    border: 1.5px solid var(--gray-200);
-    border-radius: 18px;
-    box-shadow: 0 4px 24px rgba(0,0,0,.06), 0 1px 4px rgba(0,0,0,.04);
-    overflow: hidden;
-}
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background-color: var(--gray-100);
+        background-image: radial-gradient(circle at 2px 2px, var(--gray-200) 1px, transparent 0);
+        background-size: 40px 40px;
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        padding: 24px;
+        -webkit-font-smoothing: antialiased;
+    }
 
-/* Header */
-.login-head {
-    padding: 32px 32px 24px;
-    text-align: center;
-    border-bottom: 1px solid var(--gray-100);
-}
-.login-logo {
-    width: 52px; height: 52px; border-radius: 14px;
-    background: linear-gradient(135deg, #1d4ed8, #2563eb);
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 16px;
-    box-shadow: 0 4px 14px rgba(37,99,235,.3);
-}
-.login-title {
-    font-size: 20px; font-weight: 800;
-    color: var(--gray-900); letter-spacing: -0.4px;
-    margin-bottom: 4px;
-}
-.login-sub {
-    font-size: 12px; color: var(--gray-400); font-weight: 500;
-}
+    /* ── LOGIN CARD (dua kolom) ── */
+    .login-card {
+        width: 100%;
+        max-width: 820px;
+        background: var(--white);
+        border: 1px solid var(--gray-200);
+        border-radius: 24px;
+        box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.08), 0 8px 16px -8px rgba(0, 0, 0, 0.04);
+        overflow: hidden;
+        display: flex;          /* ← horizontal */
+        min-height: 480px;
+        animation: fadeIn 0.45s ease-out;
+    }
 
-/* Body */
-.login-body { padding: 28px 32px; display: flex; flex-direction: column; gap: 18px; }
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(12px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
 
-/* Alert */
-.login-alert {
-    padding: 10px 14px;
-    background: var(--blue-lt); border: 1px solid var(--blue-mid);
-    border-radius: 9px;
-    font-size: 12.5px; font-weight: 600; color: var(--blue);
-    display: flex; align-items: center; gap: 8px;
-}
+    /* ══════════════════════════════
+       PANEL KIRI — Branding
+    ══════════════════════════════ */
+    .login-panel-left {
+        flex: 0 0 320px;
+        background: linear-gradient(145deg, #1d4ed8 0%, #2563eb 55%, #3b82f6 100%);
+        padding: 40px 36px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        position: relative;
+        overflow: hidden;
+    }
 
-/* Form group */
-.form-group { display: flex; flex-direction: column; gap: 6px; }
-.form-label {
-    font-size: 12px; font-weight: 700; color: var(--gray-700);
-}
-.form-input-wrap { position: relative; }
-.form-input-ico {
-    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-    color: var(--gray-400); pointer-events: none;
-    display: flex; align-items: center;
-}
-.form-control {
-    width: 100%;
-    padding: 10px 12px 10px 38px;
-    font-size: 13px; font-weight: 500;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    color: var(--gray-800);
-    background: var(--white);
-    border: 1.5px solid var(--gray-200);
-    border-radius: 9px;
-    outline: none;
-    transition: border-color .15s, box-shadow .15s;
-}
-.form-control:focus {
-    border-color: var(--blue);
-    box-shadow: 0 0 0 3px rgba(37,99,235,.1);
-}
-.form-control::placeholder { color: var(--gray-400); }
-.form-control.is-error {
-    border-color: var(--red);
-    background: var(--red-lt);
-}
-.form-control.is-error:focus {
-    box-shadow: 0 0 0 3px rgba(239,68,68,.1);
-}
+    /* Dekorasi lingkaran di background panel kiri */
+    .login-panel-left::before {
+        content: '';
+        position: absolute;
+        top: -70px;
+        right: -70px;
+        width: 240px;
+        height: 240px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.07);
+        pointer-events: none;
+    }
 
-/* Toggle password */
-.btn-toggle-pw {
-    position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
-    background: none; border: none; cursor: pointer; padding: 4px;
-    color: var(--gray-400); border-radius: 5px;
-    display: flex; align-items: center;
-    transition: color .13s;
-}
-.btn-toggle-pw:hover { color: var(--gray-600); }
+    .login-panel-left::after {
+        content: '';
+        position: absolute;
+        bottom: -50px;
+        left: -50px;
+        width: 180px;
+        height: 180px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.05);
+        pointer-events: none;
+    }
 
-/* Error message */
-.form-error {
-    font-size: 11px; color: var(--red); font-weight: 600;
-    display: flex; align-items: center; gap: 4px;
-}
+    .brand-logo {
+        width: 52px;
+        height: 52px;
+        background: rgba(255, 255, 255, 0.18);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 22px;
+    }
 
-/* Remember + forgot */
-.form-footer-row {
-    display: flex; align-items: center; justify-content: space-between;
-}
-.remember-label {
-    display: flex; align-items: center; gap: 7px;
-    font-size: 12.5px; font-weight: 600; color: var(--gray-600);
-    cursor: pointer;
-}
-.remember-check {
-    width: 15px; height: 15px; border-radius: 4px;
-    border: 1.5px solid var(--gray-300);
-    accent-color: var(--blue);
-    cursor: pointer;
-}
-.forgot-link {
-    font-size: 12px; font-weight: 600; color: var(--blue);
-    text-decoration: none; transition: color .13s;
-}
-.forgot-link:hover { color: var(--blue-dk); text-decoration: underline; }
+    .brand-title {
+        font-size: 21px;
+        font-weight: 800;
+        color: #ffffff;
+        letter-spacing: -0.03em;
+        line-height: 1.2;
+        margin-bottom: 6px;
+    }
 
-/* Submit btn */
-.btn-login {
-    width: 100%;
-    padding: 11px;
-    background: var(--blue); color: var(--white);
-    border: none; border-radius: 10px;
-    font-size: 14px; font-weight: 700;
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    cursor: pointer; transition: all .15s;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-.btn-login:hover {
-    background: var(--blue-dk);
-    box-shadow: 0 4px 14px rgba(37,99,235,.3);
-    transform: translateY(-1px);
-}
-.btn-login:active { transform: translateY(0); }
+    .brand-sub {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.68);
+        font-weight: 500;
+        line-height: 1.5;
+    }
 
-/* Footer */
-.login-foot {
-    padding: 14px 32px;
-    border-top: 1px solid var(--gray-100);
-    background: var(--gray-50);
-    text-align: center;
-    font-size: 11px; color: var(--gray-400); font-weight: 500;
-}
+    .brand-divider {
+        width: 40px;
+        height: 3px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 2px;
+        margin: 22px 0;
+    }
+
+    .brand-features {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .feat-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .feat-icon {
+        width: 32px;
+        height: 32px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .feat-text {
+        font-size: 13px;
+        color: rgba(255, 255, 255, 0.85);
+        font-weight: 600;
+    }
+
+    .brand-footer {
+        font-size: 11px;
+        color: rgba(255, 255, 255, 0.4);
+        font-weight: 500;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ══════════════════════════════
+       PANEL KANAN — Form Login
+    ══════════════════════════════ */
+    .login-panel-right {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 44px 40px;
+    }
+
+    .right-head {
+        margin-bottom: 28px;
+    }
+
+    .right-title {
+        font-size: 20px;
+        font-weight: 800;
+        color: var(--gray-900);
+        letter-spacing: -0.025em;
+        margin-bottom: 4px;
+    }
+
+    .right-sub {
+        font-size: 13px;
+        color: var(--gray-500);
+        font-weight: 500;
+    }
+
+    /* ── FORM ELEMENTS ── */
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    .form-label {
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--gray-700);
+        margin-bottom: 7px;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+    }
+
+    .input-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .input-icon {
+        position: absolute;
+        left: 13px;
+        color: var(--gray-400);
+        display: flex;
+        pointer-events: none;
+    }
+
+    .form-input {
+        width: 100%;
+        height: 46px;
+        background: var(--white);
+        border: 1.5px solid var(--gray-200);
+        border-radius: 12px;
+        padding: 0 14px 0 41px;
+        font-family: inherit;
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--gray-900);
+        transition: border-color 0.2s, box-shadow 0.2s;
+        outline: none;
+    }
+
+    .form-input:focus {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 4px var(--blue-lt);
+    }
+
+    .form-input::placeholder {
+        color: var(--gray-400);
+        font-weight: 500;
+    }
+
+    .form-input.is-invalid {
+        border-color: var(--red);
+        background-color: var(--red-lt);
+    }
+
+    /* Password Toggle */
+    .btn-toggle {
+        position: absolute;
+        right: 8px;
+        padding: 8px;
+        background: none;
+        border: none;
+        color: var(--gray-400);
+        cursor: pointer;
+        display: flex;
+        border-radius: 8px;
+    }
+    .btn-toggle:hover { color: var(--gray-700); background: var(--gray-100); }
+
+    /* Error Message */
+    .error-msg {
+        font-size: 11px;
+        color: var(--red);
+        font-weight: 700;
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    /* Status / Alert */
+    .alert-info {
+        background: var(--blue-lt);
+        border: 1px solid var(--blue-mid);
+        color: var(--blue);
+        padding: 12px;
+        border-radius: 12px;
+        font-size: 13px;
+        font-weight: 600;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    /* Footer Row */
+    .footer-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 22px;
+    }
+
+    .remember-me {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--gray-600);
+        cursor: pointer;
+    }
+
+    .checkbox-custom {
+        width: 17px;
+        height: 17px;
+        accent-color: var(--blue);
+        cursor: pointer;
+    }
+
+    .forgot-link {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--blue);
+        text-decoration: none;
+    }
+    .forgot-link:hover { text-decoration: underline; }
+
+    /* Submit Button */
+    .btn-submit {
+        width: 100%;
+        height: 48px;
+        background: var(--blue);
+        color: white;
+        border: none;
+        border-radius: 13px;
+        font-size: 15px;
+        font-weight: 800;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    }
+
+    .btn-submit:hover {
+        background: var(--blue-dk);
+        transform: translateY(-1px);
+        box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+    }
+
+    .btn-submit:active { transform: translateY(0); }
+
+    /* ── RESPONSIVE: Kembali ke satu kolom di layar kecil ── */
+    @media (max-width: 640px) {
+        .login-card {
+            flex-direction: column;
+            max-width: 400px;
+        }
+
+        .login-panel-left {
+            flex: none;
+            padding: 32px 28px;
+            min-height: auto;
+        }
+
+        .brand-features { display: none; } /* sembunyikan fitur di mobile */
+
+        .login-panel-right {
+            padding: 32px 28px;
+        }
+    }
 </style>
 
 <div class="login-card">
 
-    {{-- Header --}}
-    <div class="login-head">
-        <div class="login-logo">
-            <svg width="26" height="26" fill="none" stroke="white" viewBox="0 0 24 24" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
-            </svg>
+    {{-- ═══════════════════════════════
+         PANEL KIRI — Branding
+    ═══════════════════════════════ --}}
+    <div class="login-panel-left">
+        <div>
+            <div class="brand-logo">
+                <svg width="26" height="26" fill="none" stroke="white" viewBox="0 0 24 24" stroke-width="2.5">
+                    <path d="M12 14l9-5-9-5-9 5 9 5z"/>
+                    <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+                </svg>
+            </div>
+
+            <div class="brand-title">SPK Putus Sekolah</div>
+            <div class="brand-sub">SDN 11 Kampung Batu Dalam</div>
+
+            <div class="brand-divider"></div>
+
+            <div class="brand-features">
+                <div class="feat-item">
+                    <div class="feat-icon">
+                        <svg width="16" height="16" fill="none" stroke="white" viewBox="0 0 24 24" stroke-width="2">
+                            <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                    </div>
+                    <span class="feat-text">Analisis Data Siswa</span>
+                </div>
+                <div class="feat-item">
+                    <div class="feat-icon">
+                        <svg width="16" height="16" fill="none" stroke="white" viewBox="0 0 24 24" stroke-width="2">
+                            <path d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </div>
+                    <span class="feat-text">Laporan Keputusan</span>
+                </div>
+                <div class="feat-item">
+                    <div class="feat-icon">
+                        <svg width="16" height="16" fill="none" stroke="white" viewBox="0 0 24 24" stroke-width="2">
+                            <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                    <span class="feat-text">Akses Aman & Terenkripsi</span>
+                </div>
+            </div>
         </div>
-        <div class="login-title">SPK Putus Sekolah</div>
-        <div class="login-sub">SDN 11 Kampung Batu — Masuk untuk melanjutkan</div>
+
+        <div class="brand-footer">
+            &copy; {{ date('Y') }} Sistem Pendukung Keputusan &mdash; SDN 11
+        </div>
     </div>
 
-    {{-- Body --}}
-    <div class="login-body">
+    {{-- ═══════════════════════════════
+         PANEL KANAN — Form Login
+    ═══════════════════════════════ --}}
+    <div class="login-panel-right">
 
-        {{-- Session status --}}
+        <div class="right-head">
+            <h1 class="right-title">Selamat Datang</h1>
+            <p class="right-sub">Masuk menggunakan akun yang terdaftar</p>
+        </div>
+
+        {{-- Alert Status (misalnya setelah reset password) --}}
         @if(session('status'))
-            <div class="login-alert">
-                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <div class="alert-info">
+                <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                    <path d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
                 {{ session('status') }}
             </div>
         @endif
 
-        <form method="POST" action="{{ route('login') }}" style="display:flex; flex-direction:column; gap:18px;">
+        <form method="POST" action="{{ route('login') }}">
             @csrf
 
             {{-- Email --}}
             <div class="form-group">
-                <label class="form-label" for="email">Email</label>
-                <div class="form-input-wrap">
-                    <span class="form-input-ico">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                <label class="form-label" for="email">Email Pengguna</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">
+                        <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.206"/>
+                        </svg>
                     </span>
-                    <input id="email" type="email" name="email"
-                        class="form-control {{ $errors->has('email') ? 'is-error' : '' }}"
+                    <input
+                        id="email"
+                        type="email"
+                        name="email"
                         value="{{ old('email') }}"
-                        placeholder="nama@email.com"
-                        required autofocus autocomplete="username">
+                        required
+                        autofocus
+                        autocomplete="username"
+                        placeholder="Masukkan email anda"
+                        class="form-input @error('email') is-invalid @enderror"
+                    >
                 </div>
                 @error('email')
-                    <span class="form-error">
-                        <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01"/></svg>
+                    <div class="error-msg">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 8v4m0 4h.01"/>
+                        </svg>
                         {{ $message }}
-                    </span>
+                    </div>
                 @enderror
             </div>
 
             {{-- Password --}}
             <div class="form-group">
-                <label class="form-label" for="password">Password</label>
-                <div class="form-input-wrap">
-                    <span class="form-input-ico">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                <label class="form-label" for="password">Kata Sandi</label>
+                <div class="input-wrapper">
+                    <span class="input-icon">
+                        <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
                     </span>
-                    <input id="password" type="password" name="password"
-                        class="form-control {{ $errors->has('password') ? 'is-error' : '' }}"
+                    <input
+                        id="password"
+                        type="password"
+                        name="password"
+                        required
+                        autocomplete="current-password"
                         placeholder="••••••••"
-                        required autocomplete="current-password">
-                    <button type="button" class="btn-toggle-pw" onclick="togglePw()" title="Tampilkan password">
-                        <svg id="ico-eye" width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                        <svg id="ico-eye-off" width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" style="display:none"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+                        class="form-input @error('password') is-invalid @enderror"
+                    >
+                    <button type="button" class="btn-toggle" onclick="togglePw()">
+                        <svg id="ico-eye" width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                            <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                        <svg id="ico-eye-off" width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" style="display:none">
+                            <path d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/>
+                        </svg>
                     </button>
                 </div>
                 @error('password')
-                    <span class="form-error">
-                        <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01"/></svg>
+                    <div class="error-msg">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 8v4m0 4h.01"/>
+                        </svg>
                         {{ $message }}
-                    </span>
+                    </div>
                 @enderror
             </div>
 
-            {{-- Remember + Forgot --}}
-            <div class="form-footer-row">
-                <label class="remember-label">
-                    <input type="checkbox" id="remember_me" name="remember" class="remember-check">
-                    Ingat saya
+            {{-- Remember Me & Forgot Password --}}
+            <div class="footer-row">
+                <label class="remember-me">
+                    <input type="checkbox" name="remember" class="checkbox-custom" {{ old('remember') ? 'checked' : '' }}>
+                    <span>Ingat Saya</span>
                 </label>
-                @if(Route::has('password.request'))
-                    <a href="{{ route('password.request') }}" class="forgot-link">Lupa password?</a>
+                @if (Route::has('password.request'))
+                    <a class="forgot-link" href="{{ route('password.request') }}">Lupa sandi?</a>
                 @endif
             </div>
 
             {{-- Submit --}}
-            <button type="submit" class="btn-login">
-                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/></svg>
-                Masuk
+            <button type="submit" class="btn-submit">
+                Masuk ke Sistem
+                <svg width="17" height="17" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5">
+                    <path d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                </svg>
             </button>
 
         </form>
-    </div>
-
-    {{-- Footer --}}
-    <div class="login-foot">
-        © {{ date('Y') }} SPK Risiko Putus Sekolah &mdash; SDN 11 Kampung Batu
     </div>
 
 </div>
 
 <script>
 function togglePw() {
-    const input = document.getElementById('password');
+    const input  = document.getElementById('password');
     const eyeOn  = document.getElementById('ico-eye');
     const eyeOff = document.getElementById('ico-eye-off');
     if (input.type === 'password') {
@@ -293,5 +562,4 @@ function togglePw() {
     }
 }
 </script>
-
 </x-guest-layout>

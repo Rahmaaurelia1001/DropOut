@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
+// Import Controllers
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\KelasController;
 use App\Http\Controllers\SiswaController;
@@ -15,6 +16,8 @@ use App\Http\Controllers\FileImportController;
 use App\Http\Controllers\MfepController;
 use App\Http\Controllers\RekomendasiController;
 use App\Http\Controllers\MasterRekomendasiController;
+use App\Http\Controllers\WalasController; // Tambahkan ini
+use App\Http\Controllers\MataPelajaranController;
 
 /*
 |--------------------------------------------------------------------------
@@ -82,7 +85,7 @@ Route::middleware(['auth', 'role:admin'])
         Route::resource('kriteria', KriteriaController::class);
         Route::resource('subkriteria', SubkriteriaController::class);
         Route::resource('periode', PeriodePenilaianController::class);
-        Route::resource('mapel', \App\Http\Controllers\MataPelajaranController::class);
+        Route::resource('mapel', MataPelajaranController::class);
         Route::resource('master-rekomendasi', MasterRekomendasiController::class)->except(['show']);
     });
 
@@ -97,14 +100,13 @@ Route::middleware(['auth', 'role:wali_kelas'])
     ->name('walas.')
     ->group(function () {
 
-        Route::get('/dashboard', function () {
-            return view('walas.dashboard');
-        })->name('dashboard');
+        // Dashboard (Sekarang terhubung ke Controller untuk Chart)
+        Route::get('/dashboard', [WalasController::class, 'dashboard'])->name('dashboard');
 
         // Import data
         Route::get('/import', [FileImportController::class, 'index'])->name('import.index');
-        Route::post('/import/preview', [FileImportController::class, 'preview'])->name('import.preview');
         Route::get('/import/create', [FileImportController::class, 'create'])->name('import.create');
+        Route::post('/import/preview', [FileImportController::class, 'preview'])->name('import.preview');
         Route::post('/import', [FileImportController::class, 'store'])->name('import.store');
 
         // MFEP
@@ -115,10 +117,9 @@ Route::middleware(['auth', 'role:wali_kelas'])
         // Riwayat
         Route::get('/riwayat-analisis', [MfepController::class, 'riwayat'])->name('riwayat');
 
-       // Pilih rekomendasi final
-      Route::post('/rekomendasi/hasil/{id}/status', [RekomendasiController::class, 'updateStatus'])
-    ->name('rekomendasi.updateStatus');
-
+        // Pilih rekomendasi final
+        Route::post('/rekomendasi/hasil/{id}/status', [RekomendasiController::class, 'updateStatus'])
+            ->name('rekomendasi.updateStatus');
     });
 
 /*
@@ -152,6 +153,7 @@ Route::middleware(['auth', 'role:kepsek'])
         Route::post('/pilih-rekomendasi', [MfepController::class, 'pilihRekomendasi'])
             ->name('pilih.rekomendasi');
     });
+
 /*
 |--------------------------------------------------------------------------
 | PROFILE (BREEZE)
