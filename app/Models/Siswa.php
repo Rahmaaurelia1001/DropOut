@@ -42,4 +42,5 @@ class Siswa extends Model
     {
         return $this->hasMany(Penilaian::class, 'id_siswa', 'id_siswa');
     }
+    
 }
