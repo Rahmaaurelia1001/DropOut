@@ -102,10 +102,14 @@ public function importStore(Request $request)
 {
     $request->validate([
         'id_kelas' => 'required',
-        'file_excel' => 'required|mimes:xls,xlsx',
+        'file_excel' => 'required|mimes:xls,xlsx,csv', // Tambahkan csv jika perlu
     ]);
 
+    // Proses Import
     Excel::import(new SiswaImport($request->id_kelas), $request->file('file_excel'));
-    dd('file excel siswa terbaca');
+
+    // Hapus dd() tadi, ganti dengan redirect
+    return redirect()->route('admin.siswa.index')
+        ->with('success', 'Data siswa berhasil di-import sebanyak ' . \App\Models\Siswa::where('id_kelas', $request->id_kelas)->count() . ' siswa.');
 }
 }

@@ -27,16 +27,18 @@ class SiswaImport implements ToCollection
             $nama = $row[1];
 
             Siswa::updateOrCreate(
-                [
-                    'nisn' => $nisn
-                ],
-                [
-                    'nama_siswa' => $nama,
-                    'jenis_kelamin' => $row[2] ?? null,
-                    'tanggal_lahir' => $row[3] ?? null,
-                    'id_kelas' => $this->id_kelas,
-                ]
-            );
+    [
+        'nisn' => $nisn
+    ],
+    [
+        'nama_siswa'    => $nama,
+        'id_kelas'      => $this->id_kelas,
+        // PAKSA JADI NULL jika di excel tidak ada datanya
+        // Atau ganti 'L' jika ingin default laki-laki
+        'jenis_kelamin' => null, 
+        'tanggal_lahir' => null,
+    ]
+);
         }
     }
 }
