@@ -27,7 +27,7 @@
 
     .da-shell { display: flex; height: 100vh; }
 
-    /* ── SIDEBAR WALAS (KONSISTEN 5 MENU) ── */
+    /* ── SIDEBAR ── */
     .da-sidebar {
         width: var(--sidebar-w); background: var(--white); border-right: 1px solid var(--gray-200);
         display: flex; flex-direction: column; flex-shrink: 0;
@@ -59,7 +59,6 @@
     /* ── MAIN AREA ── */
     .da-main { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100vh; overflow-y: auto; }
     .da-phead { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 16px 32px; flex-shrink: 0; }
-    
     .da-body { padding: 24px 32px; }
 
     /* ── FILTER CARD ── */
@@ -83,17 +82,18 @@
     .badge-yellow { background: #fffbeb; color: #d97706; }
     .badge-green { background: #ecfdf5; color: #10b981; }
     .badge-gray { background: #f3f4f6; color: var(--gray-500); }
-
     .status-dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
     
-    .rekom-box { border: 1.5px solid var(--gray-100); border-radius: 12px; padding: 12px; background: white; max-width: 400px; }
-    .rekom-select { width: 100%; margin-top: 10px; border-radius: 8px; border: 1px solid var(--gray-200); padding: 6px 10px; font-size: 12px; font-weight: 600; }
+    /* ── REKOMENDASI BOX REVISED ── */
+    .rekom-box { border: 1.5px solid var(--gray-100); border-radius: 16px; padding: 16px; background: white; max-width: 420px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+    .rekom-select { width: 100%; margin-top: 8px; border-radius: 8px; border: 1.5px solid var(--gray-200); padding: 8px 10px; font-size: 12px; font-weight: 600; color: var(--gray-800); outline: none; transition: 0.2s; }
+    .rekom-select:focus { border-color: var(--blue); }
+    .date-info { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--gray-500); font-size: 11.5px; font-weight: 600; }
 </style>
 
 <div class="da-root">
 <div class="da-shell">
     
-    {{-- SIDEBAR --}}
     <aside class="da-sidebar">
         <div class="sb-brand">
             <div class="sb-logo"><svg width="20" height="20" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg></div>
@@ -134,7 +134,6 @@
         </div>
 
         <div class="da-body">
-            {{-- Filter --}}
             <form method="GET" action="{{ route('walas.mfep.hasil') }}" class="filter-card">
                 <div style="display:flex; align-items:center">
                     <span class="f-label">Filter Periode:</span>
@@ -150,7 +149,6 @@
                 <button type="submit" class="btn-show">Tampilkan Data</button>
             </form>
 
-            {{-- Table --}}
             <div class="table-card">
                 <div class="t-header">
                     <div>
@@ -171,7 +169,7 @@
                                 <th>Preferensi</th>
                                 <th>Risiko</th>
                                 <th>Faktor Dominan</th>
-                                <th>Rekomendasi & Status</th>
+                                <th>Rekomendasi & Status Pelaksanaan</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -198,33 +196,56 @@
                                         }
                                         $rekomendasiFinal = $rekomendasiTerpilih?->deskripsi_rekomendasi ?? $item->tindak_lanjut_final;
                                         $statusRekomendasi = $rekomendasiTerpilih?->status ?? 'belum_diproses';
+                                        $tglPelaksanaan = optional($rekomendasiTerpilih)->tanggal_dilaksanakan;
                                     @endphp
 
                                     @if($rekomendasiFinal)
                                         <div class="rekom-box">
-                                            <div style="font-size:12px; font-weight:700; color:var(--gray-800); line-height:1.4">{{ $rekomendasiFinal }}</div>
+                                            <div style="font-size:12px; font-weight:700; color:var(--gray-800); line-height:1.5; margin-bottom:12px;">
+                                                {{ $rekomendasiFinal }}
+                                            </div>
                                             
-                                            <div style="margin-top:8px">
-                                                @if($statusRekomendasi === 'belum_diproses')
-                                                    <span class="badge badge-gray"><span class="status-dot" style="background:#9ca3af"></span>Menunggu</span>
-                                                @elseif($statusRekomendasi === 'sedang_diproses')
-                                                    <span class="badge badge-yellow"><span class="status-dot" style="background:#f59e0b"></span>Proses</span>
-                                                @else
-                                                    <span class="badge badge-green"><span class="status-dot" style="background:#10b981"></span>Selesai</span>
-                                                @endif
+                                            {{-- Display Area (Tanggal & Status Terpilih) --}}
+                                            <div style="background: var(--gray-50); border-radius:10px; padding:10px; margin-bottom:15px; border:1px solid var(--gray-100);">
+                                                <div class="date-info">
+                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                                                    <span>Jadwal: <span style="color:var(--gray-900)">{{ $tglPelaksanaan ? \Carbon\Carbon::parse($tglPelaksanaan)->translatedFormat('d M Y') : 'Belum ditentukan' }}</span></span>
+                                                </div>
+                                                <div>
+                                                    @if($statusRekomendasi === 'belum_diproses')
+                                                        <span class="badge badge-gray"><span class="status-dot" style="background:#9ca3af"></span>Menunggu</span>
+                                                    @elseif($statusRekomendasi === 'sedang_diproses')
+                                                        <span class="badge badge-yellow"><span class="status-dot" style="background:#f59e0b"></span>Dalam Proses</span>
+                                                    @else
+                                                        <span class="badge badge-green"><span class="status-dot" style="background:#10b981"></span>Selesai</span>
+                                                    @endif
+                                                </div>
                                             </div>
 
+                                            {{-- Form Update --}}
                                             <form action="{{ route('walas.rekomendasi.updateStatus', $item->id_hasil) }}" method="POST">
                                                 @csrf
-                                                <select name="status" onchange="this.form.submit()" class="rekom-select">
-                                                    <option value="belum_diproses" {{ $statusRekomendasi === 'belum_diproses' ? 'selected' : '' }}>Set Belum Diproses</option>
-                                                    <option value="sedang_diproses" {{ $statusRekomendasi === 'sedang_diproses' ? 'selected' : '' }}>Set Sedang Diproses</option>
-                                                    <option value="selesai" {{ $statusRekomendasi === 'selesai' ? 'selected' : '' }}>Set Selesai</option>
+                                                <p style="font-size:10px; font-weight:800; color:var(--gray-400); text-transform:uppercase; margin-bottom:4px;">Update Status & Tanggal</p>
+                                                
+                                                <select name="status" class="rekom-select" required>
+                                                    <option value="belum_diproses" {{ $statusRekomendasi === 'belum_diproses' ? 'selected' : '' }}>Belum Diproses</option>
+                                                    <option value="sedang_diproses" {{ $statusRekomendasi === 'sedang_diproses' ? 'selected' : '' }}>Sedang Diproses</option>
+                                                    <option value="selesai" {{ $statusRekomendasi === 'selesai' ? 'selected' : '' }}>Selesai</option>
                                                 </select>
+
+                                                <input type="date" name="tanggal_pelaksanaan" 
+                                                    value="{{ $tglPelaksanaan ? \Carbon\Carbon::parse($tglPelaksanaan)->format('Y-m-d') : date('Y-m-d') }}"
+                                                    class="rekom-select" required>
+
+                                                <button type="submit" class="btn-show" style="margin-top:10px; width:100%; justify-content:center; display:flex;">
+                                                    Simpan Perubahan
+                                                </button>
                                             </form>
                                         </div>
                                     @else
-                                        <span style="font-size:11px; color:var(--gray-400); font-style:italic;">Menunggu validasi Kepsek</span>
+                                        <div style="padding:10px; border:1px dashed var(--gray-200); border-radius:10px; text-align:center;">
+                                            <span style="font-size:11px; color:var(--gray-400); font-style:italic;">Menunggu validasi Kepala Sekolah</span>
+                                        </div>
                                     @endif
                                 </td>
                             </tr>

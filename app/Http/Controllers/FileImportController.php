@@ -123,6 +123,14 @@ class FileImportController extends Controller
             Excel::import(new RaporImport($idFile, $idPeriode), $fullTempPath);
         }
 
+        // 📝 LOG ACTIVITY
+DB::table('log_activities')->insert([
+    'user_id'    => Auth::id(),
+    'role'       => Auth::user()->role,
+    'activity'   => 'Import data ' . $jenisData . ' - file: ' . $originalName . ' pada periode: ' . $periodeAktif->tahun_ajaran . ' Semester ' . $periodeAktif->semester,
+    'created_at' => now(),
+]);
+
         Storage::disk('public')->delete($tempPath);
 
         session()->forget([

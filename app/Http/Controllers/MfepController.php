@@ -83,109 +83,123 @@ class MfepController extends Controller
         $mfepService->generatePenilaian($idPeriode, $idKelasWalas);
         $mfepService->hitungMfep($idPeriode, $idKelasWalas);
 
+        // 📝 LOG ACTIVITY
+        DB::table('log_activities')->insert([
+            'user_id'    => auth()->id(),
+            'role'       => auth()->user()->role,
+            'activity'   => 'Menjalankan analisis MFEP pada periode: ' . $periodeAktif->tahun_ajaran . ' Semester ' . $periodeAktif->semester,
+            'created_at' => now(),
+        ]);
+
         return redirect()->route('walas.mfep.hasil', ['id_periode' => $idPeriode])
             ->with('success', 'Proses analisis MFEP berhasil dijalankan untuk periode aktif.');
     }
 
     public function hasil(Request $request)
-{
-    $periodes = \App\Models\PeriodePenilaian::orderBy('id_periode', 'desc')->get();
-    $kelasList = \App\Models\Kelas::orderBy('nama_kelas', 'asc')->get();
+    {
+        $periodes = \App\Models\PeriodePenilaian::orderBy('id_periode', 'desc')->get();
+        $kelasList = \App\Models\Kelas::orderBy('nama_kelas', 'asc')->get();
 
-    $idPeriode = $request->id_periode;
-    $idKelas = $request->id_kelas;
+        $idPeriode = $request->id_periode;
+        $idKelas = $request->id_kelas;
 
-    if (!$idPeriode) {
-        $periodeAktif = \App\Models\PeriodePenilaian::where('status', 'aktif')->first();
-        $idPeriode = $periodeAktif?->id_periode;
-    }
-
-    $periode = null;
-    $hasil = collect();
-
-    if ($idPeriode) {
-        $periode = \App\Models\PeriodePenilaian::where('id_periode', $idPeriode)->first();
-
-        $query = \App\Models\HasilKeputusan::with([
-                'siswa.kelas',
-                'rekomendasi' => function ($q) {
-                    $q->orderBy('id_rekomendasi', 'asc');
-                }
-            ])
-            ->where('id_periode', $idPeriode)
-            ->orderBy('total_nilai_preferensi', 'asc');
-
-        // kalau wali kelas, batasi sesuai kelas yang diampu
-        if (auth()->check() && auth()->user()->role === 'wali_kelas') {
-            $idKelasWalas = auth()->user()->id_kelas;
-
-            $query->whereHas('siswa', function ($q) use ($idKelasWalas) {
-                $q->where('id_kelas', $idKelasWalas);
-            });
+        if (!$idPeriode) {
+            $periodeAktif = \App\Models\PeriodePenilaian::where('status', 'aktif')->first();
+            $idPeriode = $periodeAktif?->id_periode;
         }
 
-        // kalau kepsek dan pilih kelas tertentu
-        if (auth()->check() && auth()->user()->role === 'kepsek' && $idKelas) {
-            $query->whereHas('siswa', function ($q) use ($idKelas) {
-                $q->where('id_kelas', $idKelas);
-            });
+        $periode = null;
+        $hasil = collect();
+
+        if ($idPeriode) {
+            $periode = \App\Models\PeriodePenilaian::where('id_periode', $idPeriode)->first();
+
+            $query = \App\Models\HasilKeputusan::with([
+                    'siswa.kelas',
+                    'rekomendasi' => function ($q) {
+                        $q->orderBy('id_rekomendasi', 'asc');
+                    }
+                ])
+                ->where('id_periode', $idPeriode)
+                ->orderBy('total_nilai_preferensi', 'asc');
+
+            if (auth()->check() && auth()->user()->role === 'wali_kelas') {
+                $idKelasWalas = auth()->user()->id_kelas;
+
+                $query->whereHas('siswa', function ($q) use ($idKelasWalas) {
+                    $q->where('id_kelas', $idKelasWalas);
+                });
+            }
+
+            if (auth()->check() && auth()->user()->role === 'kepsek' && $idKelas) {
+                $query->whereHas('siswa', function ($q) use ($idKelas) {
+                    $q->where('id_kelas', $idKelas);
+                });
+            }
+
+            $hasil = $query->get();
         }
 
-        $hasil = $query->get();
-    }
+        if (auth()->check() && auth()->user()->role === 'kepsek') {
+            return view('kepsek.mfep.hasil', compact(
+                'hasil',
+                'periode',
+                'periodes',
+                'idPeriode',
+                'kelasList',
+                'idKelas'
+            ));
+        }
 
-    if (auth()->check() && auth()->user()->role === 'kepsek') {
-        return view('kepsek.mfep.hasil', compact(
+        return view('mfep.hasil', compact(
             'hasil',
             'periode',
             'periodes',
-            'idPeriode',
-            'kelasList',
-            'idKelas'
+            'idPeriode'
         ));
     }
 
-    return view('mfep.hasil', compact(
-        'hasil',
-        'periode',
-        'periodes',
-        'idPeriode'
-    ));
-}
-
     public function pilihRekomendasi(Request $request)
-{
-    $request->validate([
-        'id_hasil' => 'required|integer|exists:hasil_keputusan,id_hasil',
-        'id_rekomendasi' => 'required|integer|exists:rekomendasi,id_rekomendasi',
-    ]);
+    {
+        $request->validate([
+            'id_hasil' => 'required|integer|exists:hasil_keputusan,id_hasil',
+            'id_rekomendasi' => 'required|integer|exists:rekomendasi,id_rekomendasi',
+        ]);
 
-    DB::transaction(function () use ($request) {
-        $rekomendasiDipilih = \App\Models\Rekomendasi::where('id_rekomendasi', $request->id_rekomendasi)
-            ->where('id_hasil', $request->id_hasil)
-            ->firstOrFail();
+        DB::transaction(function () use ($request) {
+            $rekomendasiDipilih = \App\Models\Rekomendasi::where('id_rekomendasi', $request->id_rekomendasi)
+                ->where('id_hasil', $request->id_hasil)
+                ->firstOrFail();
 
-        \App\Models\Rekomendasi::where('id_hasil', $request->id_hasil)
-            ->update([
-                'is_selected' => 0,
-                'tanggal_update' => now(),
+            \App\Models\Rekomendasi::where('id_hasil', $request->id_hasil)
+                ->update([
+                    'is_selected' => 0,
+                    'tanggal_update' => now(),
+                ]);
+
+            \App\Models\Rekomendasi::where('id_rekomendasi', $request->id_rekomendasi)
+                ->update([
+                    'is_selected' => 1,
+                    'tanggal_update' => now(),
+                ]);
+
+            \App\Models\HasilKeputusan::where('id_hasil', $request->id_hasil)
+                ->update([
+                    'tindak_lanjut_final' => $rekomendasiDipilih->deskripsi_rekomendasi,
+                    'tanggal_keputusan' => now(),
+                ]);
+
+            // 📝 LOG ACTIVITY
+            DB::table('log_activities')->insert([
+                'user_id'    => auth()->id(),
+                'role'       => auth()->user()->role,
+                'activity'   => 'Memilih rekomendasi final: "' . $rekomendasiDipilih->deskripsi_rekomendasi . '" untuk id_hasil: ' . $request->id_hasil,
+                'created_at' => now(),
             ]);
+        });
 
-        \App\Models\Rekomendasi::where('id_rekomendasi', $request->id_rekomendasi)
-            ->update([
-                'is_selected' => 1,
-                'tanggal_update' => now(),
-            ]);
-
-        \App\Models\HasilKeputusan::where('id_hasil', $request->id_hasil)
-            ->update([
-                'tindak_lanjut_final' => $rekomendasiDipilih->deskripsi_rekomendasi,
-                'tanggal_keputusan' => now(),
-            ]);
-    });
-
-    return back()->with('success', 'Rekomendasi final berhasil dipilih.');
-}
+        return back()->with('success', 'Rekomendasi final berhasil dipilih.');
+    }
 
     public function riwayat(Request $request)
     {
@@ -222,201 +236,236 @@ class MfepController extends Controller
     }
 
     public function ranking(Request $request)
-{
-    $periodes = PeriodePenilaian::orderBy('id_periode', 'desc')->get();
-    $kelasList = Kelas::orderBy('nama_kelas', 'asc')->get();
+    {
+        $periodes = PeriodePenilaian::orderBy('id_periode', 'desc')->get();
+        $kelasList = Kelas::orderBy('nama_kelas', 'asc')->get();
 
-    $idPeriode = $request->id_periode;
-    $idKelas = $request->id_kelas;
+        $idPeriode = $request->id_periode;
+        $idKelas = $request->id_kelas;
 
-    if (!$idPeriode) {
-        $periodeAktif = PeriodePenilaian::where('status', 'aktif')->first();
-        $idPeriode = $periodeAktif?->id_periode;
-    }
-
-    $periode = null;
-    $hasil = collect();
-
-    if ($idPeriode) {
-        $periode = PeriodePenilaian::where('id_periode', $idPeriode)->first();
-
-        $query = HasilKeputusan::with(['siswa.kelas'])
-            ->where('id_periode', $idPeriode)
-            ->orderBy('total_nilai_preferensi', 'asc');
-
-        if ($idKelas) {
-            $query->whereHas('siswa', function ($q) use ($idKelas) {
-                $q->where('id_kelas', $idKelas);
-            });
+        if (!$idPeriode) {
+            $periodeAktif = PeriodePenilaian::where('status', 'aktif')->first();
+            $idPeriode = $periodeAktif?->id_periode;
         }
 
-        $hasil = $query->get();
-    }
+        $periode = null;
+        $hasil = collect();
 
-    return view('kepsek.ranking', compact(
-        'hasil',
-        'periode',
-        'periodes',
-        'kelasList',
-        'idPeriode',
-        'idKelas'
-    ));
-}
+        if ($idPeriode) {
+            $periode = PeriodePenilaian::where('id_periode', $idPeriode)->first();
 
-public function exportLaporanPdf(Request $request)
-{
-    $idPeriode = $request->id_periode;
-    $idKelas = $request->id_kelas;
+            $query = HasilKeputusan::with(['siswa.kelas'])
+                ->where('id_periode', $idPeriode)
+                ->orderBy('total_nilai_preferensi', 'asc');
 
-    if (!$idPeriode) {
-        $periodeAktif = PeriodePenilaian::where('status', 'aktif')->first();
-        $idPeriode = $periodeAktif?->id_periode;
-    }
+            if ($idKelas) {
+                $query->whereHas('siswa', function ($q) use ($idKelas) {
+                    $q->where('id_kelas', $idKelas);
+                });
+            }
 
-    $periode = null;
-    $kelas = null;
-    $hasil = collect();
-
-    if ($idPeriode) {
-        $periode = PeriodePenilaian::where('id_periode', $idPeriode)->first();
-
-        $query = HasilKeputusan::with(['siswa.kelas'])
-            ->where('id_periode', $idPeriode)
-            ->orderBy('total_nilai_preferensi', 'asc');
-
-        if ($idKelas) {
-            $kelas = Kelas::where('id_kelas', $idKelas)->first();
-
-            $query->whereHas('siswa', function ($q) use ($idKelas) {
-                $q->where('id_kelas', $idKelas);
-            });
+            $hasil = $query->get();
         }
 
-        $hasil = $query->get();
+        return view('kepsek.ranking', compact(
+            'hasil',
+            'periode',
+            'periodes',
+            'kelasList',
+            'idPeriode',
+            'idKelas'
+        ));
     }
 
-    $pdf = Pdf::loadView('kepsek.laporan_pdf', [
-        'hasil' => $hasil,
-        'periode' => $periode,
-        'kelas' => $kelas,
-    ])->setPaper('a4', 'landscape');
+    public function exportLaporanPdf(Request $request)
+    {
+        $idPeriode = $request->id_periode;
+        $idKelas = $request->id_kelas;
 
-    $namaFile = 'laporan-spk'
-    . ($periode ? '-' . str_replace('/', '-', $periode->tahun_ajaran) . '-semester-' . $periode->semester : '')
-    . ($kelas ? '-' . str_replace(' ', '-', $kelas->nama_kelas) : '')
-    . '.pdf';
-
-    return $pdf->download($namaFile);
-}
-public function laporan(Request $request)
-{
-    $periodes = PeriodePenilaian::orderBy('id_periode', 'desc')->get();
-    $kelasList = Kelas::orderBy('nama_kelas', 'asc')->get();
-
-    $idPeriode = $request->id_periode;
-    $idKelas = $request->id_kelas;
-
-    if (!$idPeriode) {
-        $periodeAktif = PeriodePenilaian::where('status', 'aktif')->first();
-        $idPeriode = $periodeAktif?->id_periode;
-    }
-
-    $periode = null;
-    $hasil = collect();
-
-    if ($idPeriode) {
-        $periode = PeriodePenilaian::where('id_periode', $idPeriode)->first();
-
-        $query = HasilKeputusan::with(['siswa.kelas'])
-            ->where('id_periode', $idPeriode)
-            ->orderBy('total_nilai_preferensi', 'asc');
-
-        if ($idKelas) {
-            $query->whereHas('siswa', function ($q) use ($idKelas) {
-                $q->where('id_kelas', $idKelas);
-            });
+        if (!$idPeriode) {
+            $periodeAktif = PeriodePenilaian::where('status', 'aktif')->first();
+            $idPeriode = $periodeAktif?->id_periode;
         }
 
-        $hasil = $query->get();
+        $periode = null;
+        $kelas = null;
+        $hasil = collect();
+
+        if ($idPeriode) {
+            $periode = PeriodePenilaian::where('id_periode', $idPeriode)->first();
+
+            $query = HasilKeputusan::with(['siswa.kelas'])
+                ->where('id_periode', $idPeriode)
+                ->orderBy('total_nilai_preferensi', 'asc');
+
+            if ($idKelas) {
+                $kelas = Kelas::where('id_kelas', $idKelas)->first();
+
+                $query->whereHas('siswa', function ($q) use ($idKelas) {
+                    $q->where('id_kelas', $idKelas);
+                });
+            }
+
+            $hasil = $query->get();
+        }
+
+        $pdf = Pdf::loadView('kepsek.laporan_pdf', [
+            'hasil' => $hasil,
+            'periode' => $periode,
+            'kelas' => $kelas,
+        ])->setPaper('a4', 'landscape');
+
+        $namaFile = 'laporan-spk'
+        . ($periode ? '-' . str_replace('/', '-', $periode->tahun_ajaran) . '-semester-' . $periode->semester : '')
+        . ($kelas ? '-' . str_replace(' ', '-', $kelas->nama_kelas) : '')
+        . '.pdf';
+
+        // 📝 LOG ACTIVITY
+        DB::table('log_activities')->insert([
+            'user_id'    => auth()->id(),
+            'role'       => auth()->user()->role,
+            'activity'   => 'Export laporan PDF periode: ' . ($periode ? $periode->tahun_ajaran . ' Semester ' . $periode->semester : '-') . ($kelas ? ' kelas: ' . $kelas->nama_kelas : ' semua kelas'),
+            'created_at' => now(),
+        ]);
+
+        return $pdf->download($namaFile);
     }
 
-    return view('kepsek.laporan', compact(
-        'hasil',
-        'periode',
-        'periodes',
-        'kelasList',
-        'idPeriode',
-        'idKelas'
-    ));
-}
-public function dashboardKepsek(Request $request)
-{
-    $periodes = PeriodePenilaian::orderBy('id_periode', 'desc')->get();
+    public function laporan(Request $request)
+    {
+        $periodes = PeriodePenilaian::orderBy('id_periode', 'desc')->get();
+        $kelasList = Kelas::orderBy('nama_kelas', 'asc')->get();
 
-    $idPeriode = $request->id_periode;
+        $idPeriode = $request->id_periode;
+        $idKelas = $request->id_kelas;
 
-    if (!$idPeriode) {
-        $periodeAktif = PeriodePenilaian::where('status', 'aktif')->first();
-        $idPeriode = $periodeAktif?->id_periode;
+        if (!$idPeriode) {
+            $periodeAktif = PeriodePenilaian::where('status', 'aktif')->first();
+            $idPeriode = $periodeAktif?->id_periode;
+        }
+
+        $periode = null;
+        $hasil = collect();
+
+        if ($idPeriode) {
+            $periode = PeriodePenilaian::where('id_periode', $idPeriode)->first();
+
+            $query = HasilKeputusan::with(['siswa.kelas'])
+                ->where('id_periode', $idPeriode)
+                ->orderBy('total_nilai_preferensi', 'asc');
+
+            if ($idKelas) {
+                $query->whereHas('siswa', function ($q) use ($idKelas) {
+                    $q->where('id_kelas', $idKelas);
+                });
+            }
+
+            $hasil = $query->get();
+        }
+
+        return view('kepsek.laporan', compact(
+            'hasil',
+            'periode',
+            'periodes',
+            'kelasList',
+            'idPeriode',
+            'idKelas'
+        ));
     }
 
-    $periode = null;
-    $hasil = collect();
+    public function dashboardKepsek(Request $request)
+    {
+        $periodes = PeriodePenilaian::orderBy('id_periode', 'desc')->get();
 
-    if ($idPeriode) {
-        $periode = PeriodePenilaian::where('id_periode', $idPeriode)->first();
+        $idPeriode = $request->id_periode;
 
-        $hasil = HasilKeputusan::with(['siswa.kelas'])
-            ->where('id_periode', $idPeriode)
-            ->get();
+        if (!$idPeriode) {
+            $periodeAktif = PeriodePenilaian::where('status', 'aktif')->first();
+            $idPeriode = $periodeAktif?->id_periode;
+        }
+
+        $periode = null;
+        $hasil = collect();
+
+        if ($idPeriode) {
+            $periode = PeriodePenilaian::where('id_periode', $idPeriode)->first();
+
+            $hasil = HasilKeputusan::with(['siswa.kelas'])
+                ->where('id_periode', $idPeriode)
+                ->get();
+        }
+
+        $totalSiswa = $hasil->count();
+        $jumlahTinggi = $hasil->where('kategori_risiko', 'Tinggi')->count();
+        $jumlahSedang = $hasil->where('kategori_risiko', 'Sedang')->count();
+        $jumlahRendah = $hasil->where('kategori_risiko', 'Rendah')->count();
+
+        $faktorDominanTerbanyak = $hasil
+            ->groupBy('faktor_dominan')
+            ->map->count()
+            ->sortDesc()
+            ->keys()
+            ->first();
+
+        $topSiswaTinggi = collect();
+
+        if ($idPeriode) {
+            $topSiswaTinggi = HasilKeputusan::with(['siswa.kelas'])
+                ->where('id_periode', $idPeriode)
+                ->where('kategori_risiko', 'Tinggi')
+                ->orderBy('total_nilai_preferensi', 'desc')
+                ->limit(5)
+                ->get();
+        }
+
+        $statusPerKelas = HasilKeputusan::select(
+            'siswa.id_kelas',
+            'kelas.nama_kelas',
+            DB::raw("SUM(CASE 
+                        WHEN rekomendasi.id_rekomendasi IS NULL THEN 1
+                        WHEN rekomendasi.status = 'belum_diproses' THEN 1
+                        ELSE 0
+                    END) as belum"),
+            DB::raw("SUM(CASE WHEN rekomendasi.status = 'sedang_diproses' THEN 1 ELSE 0 END) as proses"),
+            DB::raw("SUM(CASE WHEN rekomendasi.status = 'selesai' THEN 1 ELSE 0 END) as selesai"),
+            DB::raw("COUNT(hasil_keputusan.id_hasil) as total")
+        )
+        ->join('siswa', 'hasil_keputusan.id_siswa', '=', 'siswa.id_siswa')
+        ->join('kelas', 'siswa.id_kelas', '=', 'kelas.id_kelas')
+        ->leftJoin('rekomendasi', function ($join) {
+            $join->on('hasil_keputusan.id_hasil', '=', 'rekomendasi.id_hasil')
+                 ->where('rekomendasi.is_selected', 1);
+        })
+        ->where('hasil_keputusan.id_periode', $idPeriode)
+        ->groupBy('siswa.id_kelas', 'kelas.nama_kelas')
+        ->orderBy('kelas.nama_kelas', 'asc')
+        ->get();
+
+        $risikoPerKelas = \App\Models\Kelas::select(
+            'kelas.nama_kelas',
+            DB::raw("COUNT(CASE WHEN hasil_keputusan.kategori_risiko = 'Tinggi' THEN 1 END) as total_risiko_tinggi")
+        )
+        ->leftJoin('siswa', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+        ->leftJoin('hasil_keputusan', function ($join) use ($idPeriode) {
+            $join->on('siswa.id_siswa', '=', 'hasil_keputusan.id_siswa')
+                ->where('hasil_keputusan.id_periode', $idPeriode);
+        })
+        ->groupBy('kelas.nama_kelas')
+        ->orderBy('kelas.nama_kelas', 'asc')
+        ->get();
+
+        return view('kepsek.dashboard', compact(
+            'periodes',
+            'idPeriode',
+            'periode',
+            'totalSiswa',
+            'jumlahTinggi',
+            'jumlahSedang',
+            'jumlahRendah',
+            'faktorDominanTerbanyak',
+            'statusPerKelas',
+            'topSiswaTinggi',
+            'risikoPerKelas'
+        ));
     }
-
-    $totalSiswa = $hasil->count();
-    $jumlahTinggi = $hasil->where('kategori_risiko', 'Tinggi')->count();
-    $jumlahSedang = $hasil->where('kategori_risiko', 'Sedang')->count();
-    $jumlahRendah = $hasil->where('kategori_risiko', 'Rendah')->count();
-
-    $faktorDominanTerbanyak = $hasil
-        ->groupBy('faktor_dominan')
-        ->map->count()
-        ->sortDesc()
-        ->keys()
-        ->first();
-
-    $statusPerKelas = \App\Models\HasilKeputusan::select(
-        'siswa.id_kelas',
-        'kelas.nama_kelas',
-        DB::raw("SUM(CASE 
-                    WHEN rekomendasi.id_rekomendasi IS NULL THEN 1
-                    WHEN rekomendasi.status = 'belum_diproses' THEN 1
-                    ELSE 0
-                END) as belum"),
-        DB::raw("SUM(CASE WHEN rekomendasi.status = 'sedang_diproses' THEN 1 ELSE 0 END) as proses"),
-        DB::raw("SUM(CASE WHEN rekomendasi.status = 'selesai' THEN 1 ELSE 0 END) as selesai"),
-        DB::raw("COUNT(hasil_keputusan.id_hasil) as total")
-    )
-    ->join('siswa', 'hasil_keputusan.id_siswa', '=', 'siswa.id_siswa')
-    ->join('kelas', 'siswa.id_kelas', '=', 'kelas.id_kelas')
-    ->leftJoin('rekomendasi', function ($join) {
-        $join->on('hasil_keputusan.id_hasil', '=', 'rekomendasi.id_hasil')
-             ->where('rekomendasi.is_selected', 1);
-    })
-    ->where('hasil_keputusan.id_periode', $idPeriode)
-    ->groupBy('siswa.id_kelas', 'kelas.nama_kelas')
-    ->orderBy('kelas.nama_kelas', 'asc')
-    ->get();
-
-    return view('kepsek.dashboard', compact(
-    'periodes',
-    'idPeriode',
-    'periode',
-    'totalSiswa',
-    'jumlahTinggi',
-    'jumlahSedang',
-    'jumlahRendah',
-    'faktorDominanTerbanyak',
-    'statusPerKelas'
-));
-    
-}
 }

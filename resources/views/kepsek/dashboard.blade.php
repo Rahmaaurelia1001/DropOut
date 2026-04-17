@@ -193,6 +193,70 @@
             </div>
 
             <div class="card">
+            <div class="card-title">Top 5 Siswa Risiko Tinggi</div>
+
+                @if($topSiswaTinggi->count() > 0)
+                    <div style="overflow-x:auto;">
+                        <table style="width:100%; border-collapse: collapse; font-size:13px;">
+                            <thead>
+                                <tr style="background:#f9fafb; text-align:left;">
+                                    <th style="padding:10px;">No</th>
+                                    <th style="padding:10px;">Nama Siswa</th>
+                                    <th style="padding:10px;">Kelas</th>
+                                    <th style="padding:10px;">Nilai Preferensi</th>
+                                    <th style="padding:10px;">Kategori</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($topSiswaTinggi as $index => $item)
+                                    <tr style="border-top:1px solid #e5e7eb;">
+                                        <td style="padding:10px;">{{ $index + 1 }}</td>
+
+                                        <td style="padding:10px; font-weight:600;">
+                                            {{ $item->siswa->nama_siswa ?? 'Tidak ada data' }}
+                                        </td>
+
+                                        <td style="padding:10px;">
+                                            {{ $item->siswa->kelas->nama_kelas ?? '-' }}
+                                        </td>
+
+                                        <td style="padding:10px; color:#ef4444; font-weight:700;">
+                                            {{ number_format($item->total_nilai_preferensi, 4) }}
+                                        </td>
+
+                                        {{-- ✅ TAMBAHAN KATEGORI --}}
+                                        <td style="padding:10px;">
+                                            <span style="
+                                                background:#fee2e2;
+                                                color:#b91c1c;
+                                                padding:4px 10px;
+                                                border-radius:8px;
+                                                font-size:11px;
+                                                font-weight:700;">
+                                                {{ $item->kategori_risiko }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                @else
+                    <p style="text-align:center; color:#9ca3af; font-size:13px;">
+                        Tidak ada siswa dengan risiko tinggi.
+                    </p>
+                @endif
+            </div>
+
+<div class="card">
+    <div class="card-title">Kelas dengan Risiko Tertinggi</div>
+
+    <canvas id="chartKelas"></canvas>
+</div>
+
+
+
+            <div class="card">
                 <div class="card-title">Status Rekomendasi per Kelas</div>
                 <div class="kelas-grid">
                     @forelse($statusPerKelas as $item)
@@ -253,5 +317,41 @@
             }
         }
     });
+</script>
+
+<script>
+    const dataKelas = @json($risikoPerKelas);
+
+    const labelsKelas = dataKelas.map(item => item.nama_kelas);
+    const dataJumlah = dataKelas.map(item => item.total_risiko_tinggi);
+
+    const ctxKelas = document.getElementById('chartKelas');
+
+    if (ctxKelas) {
+        new Chart(ctxKelas, {
+            type: 'bar',
+            data: {
+                labels: labelsKelas,
+                datasets: [{
+                    label: 'Jumlah Risiko Tinggi',
+                    data: dataJumlah,
+                    backgroundColor: '#ef4444'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
 </script>
 </x-app-layout>
