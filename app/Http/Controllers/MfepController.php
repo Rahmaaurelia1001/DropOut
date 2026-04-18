@@ -20,11 +20,48 @@ use Barryvdh\DomPDF\Facade\Pdf;
 class MfepController extends Controller
 {
     public function index()
-    {
-        $periodeAktif = PeriodePenilaian::where('status', 'aktif')->first();
+{
+    $periodeAktif = PeriodePenilaian::where('status', 'aktif')->first();
 
-        return view('mfep.index', compact('periodeAktif'));
+    $jumlahSiswa    = 0;
+    $jumlahKriteria = 0;
+    $sudahAdaHasil  = false;
+
+    if ($periodeAktif) {
+        $idKelasWalas = auth()->user()->id_kelas ?? null;
+
+        if ($idKelasWalas) {
+            $idSiswaKelas = Siswa::where('id_kelas', $idKelasWalas)->pluck('id_siswa');
+
+            // Cek apakah ada nilai mapel DAN (presensi atau evaluasi)
+            $adaNilai    = NilaiMapel::where('id_periode', $periodeAktif->id_periode)
+                               ->whereIn('id_siswa', $idSiswaKelas)->exists();
+            $adaPresensi = Presensi::where('id_periode', $periodeAktif->id_periode)
+                               ->whereIn('id_siswa', $idSiswaKelas)->exists();
+            $adaEvaluasi = EvaluasiSiswa::where('id_periode', $periodeAktif->id_periode)
+                               ->whereIn('id_siswa', $idSiswaKelas)->exists();
+
+            if ($adaNilai && ($adaPresensi || $adaEvaluasi)) {
+                $jumlahSiswa = $idSiswaKelas->count();
+            }
+        }
+
+        $totalBobot     = \App\Models\Kriteria::sum('bobot');
+        $jumlahKriteria = abs((float) $totalBobot - 1) <= 0.0001
+                          ? \App\Models\Kriteria::count()
+                          : 0;
+
+        $sudahAdaHasil  = HasilKeputusan::where('id_periode', $periodeAktif->id_periode)->exists();
     }
+
+    return view('mfep.index', compact(
+        'periodeAktif',
+        'jumlahSiswa',
+        'jumlahKriteria',
+        'sudahAdaHasil'
+    ));
+}
+
 
     public function proses(EvaluasiSiswaService $evaluasiSiswaService, MfepService $mfepService)
     {
