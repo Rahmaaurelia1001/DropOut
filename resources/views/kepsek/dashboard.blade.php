@@ -128,9 +128,129 @@
 
     <main class="da-main">
         <div class="da-phead">
-            <h2 style="font-size:18px; font-weight:800; letter-spacing:-0.5px;">Dashboard Monitoring Sekolah</h2>
-            <div style="font-size:10px; font-weight:700; color:var(--gray-500); background:var(--gray-100); padding:6px 12px; border-radius:8px;" id="date-indo"></div>
+    <h2 style="font-size:18px; font-weight:800; letter-spacing:-0.5px;">Dashboard Monitoring Sekolah</h2>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <div style="font-size:10px; font-weight:700; color:var(--gray-500); background:var(--gray-100); padding:6px 12px; border-radius:8px;" id="date-indo"></div>
+
+        {{-- 🔔 BELL ICON --}}
+<div style="position:relative;" id="kepsekBellWrap">
+    <button id="kepsekBellBtn" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#64748b; transition:.15s;"
+        onmouseover="this.style.background='#eff6ff'; this.style.borderColor='#93c5fd'; this.style.color='#2563eb';"
+        onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'; this.style.color='#64748b';">
+        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+        </svg>
+        <span id="kepsekBellBadge" style="display:none; position:absolute; top:-4px; right:-4px; background:#ef4444; color:white; font-size:10px; font-weight:700; border-radius:999px; min-width:18px; height:18px; align-items:center; justify-content:center; padding:0 4px; border:2px solid white;"></span>
+    </button>
+    <div id="kepsekBellPanel" style="display:none; position:absolute; right:0; top:calc(100% + 10px); width:360px; background:#fff; border:1px solid #e2e8f0; border-radius:16px; box-shadow:0 12px 32px rgba(0,0,0,0.12); z-index:999; overflow:hidden;">
+        <div style="padding:14px 16px; border-bottom:1px solid #f1f5f9; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:13px; font-weight:800; color:#1e293b;">🔔 Aktivitas Terbaru</span>
+            <button onclick="kepsekMarkAllRead()" style="font-size:11px; font-weight:600; color:#2563eb; background:none; border:none; cursor:pointer;">Tandai semua dibaca</button>
         </div>
+        <div id="kepsekBellList" style="max-height:320px; overflow-y:auto;">
+            <div style="padding:32px 16px; text-align:center; color:#94a3b8; font-size:13px;">Memuat aktivitas...</div>
+        </div>
+    </div>
+</div>
+
+
+    </div>
+</div>
+
+<script>
+    var kepsekBellBtn   = document.getElementById('kepsekBellBtn');
+    var kepsekBellPanel = document.getElementById('kepsekBellPanel');
+    var kepsekBellBadge = document.getElementById('kepsekBellBadge');
+    var kepsekBellList  = document.getElementById('kepsekBellList');
+
+    function getReadIds() { return JSON.parse(localStorage.getItem('spk_read_logs') || '[]'); }
+    function saveReadIds(ids) { localStorage.setItem('spk_read_logs', JSON.stringify(ids)); }
+
+    kepsekBellBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var isOpen = kepsekBellPanel.style.display === 'block';
+        kepsekBellPanel.style.display = isOpen ? 'none' : 'block';
+        if (!isOpen) kepsekLoadBellLogs();
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!document.getElementById('kepsekBellWrap').contains(e.target)) {
+            kepsekBellPanel.style.display = 'none';
+        }
+    });
+
+    function kepsekTimeAgo(dateStr) {
+        var diff = Math.floor((new Date() - new Date(dateStr)) / 1000);
+        if (diff < 60) return diff + ' detik lalu';
+        if (diff < 3600) return Math.floor(diff / 60) + ' menit lalu';
+        if (diff < 86400) return Math.floor(diff / 3600) + ' jam lalu';
+        return Math.floor(diff / 86400) + ' hari lalu';
+    }
+
+    function kepsekRoleLabel(role) {
+        if (role === 'wali_kelas') return 'Wali Kelas';
+        if (role === 'kepsek') return 'Kepsek';
+        return 'Admin';
+    }
+
+    function kepsekLoadBellLogs() {
+        fetch('{{ route("log.activities") }}')
+            .then(function(r) { return r.json(); })
+            .then(function(logs) {
+                var readIds = getReadIds();
+                if (!logs.length) {
+                    kepsekBellList.innerHTML = '<div style="padding:32px 16px; text-align:center; color:#94a3b8; font-size:13px;">Belum ada aktivitas.</div>';
+                    kepsekBellBadge.style.display = 'none';
+                    return;
+                }
+                var unread = logs.filter(function(l){ return !readIds.includes(l.id); }).length;
+                if (unread > 0) {
+                    kepsekBellBadge.textContent = unread > 9 ? '9+' : unread;
+                    kepsekBellBadge.style.display = 'flex';
+                } else {
+                    kepsekBellBadge.style.display = 'none';
+                }
+                kepsekBellList.innerHTML = logs.map(function(log) {
+                    var isRead = readIds.includes(log.id);
+                    return '<div onclick="kepsekMarkRead(' + log.id + ')" style="padding:12px 16px; border-bottom:1px solid #f8fafc; display:flex; gap:10px; cursor:pointer; background:' + (isRead ? '#fff' : '#eff6ff') + ';">'
+                        + '<div style="width:8px; height:8px; border-radius:50%; background:' + (isRead ? 'transparent' : '#2563eb') + '; flex-shrink:0; margin-top:5px;"></div>'
+                        + '<div style="flex:1; min-width:0;">'
+                        + '<span style="background:#eff6ff; color:#2563eb; font-size:10px; font-weight:800; padding:2px 7px; border-radius:6px; text-transform:uppercase;">' + kepsekRoleLabel(log.role) + '</span>'
+                        + '<div style="font-size:12px; font-weight:600; color:#334155; margin-top:3px; line-height:1.4;">' + log.activity + '</div>'
+                        + '<div style="font-size:11px; color:#94a3b8; margin-top:2px;">oleh ' + log.nama_user + '</div>'
+                        + '<div style="font-size:10px; color:#cbd5e1; margin-top:2px;">' + kepsekTimeAgo(log.created_at) + '</div>'
+                        + '</div></div>';
+                }).join('');
+            })
+            .catch(function() {
+                kepsekBellList.innerHTML = '<div style="padding:32px 16px; text-align:center; color:#94a3b8; font-size:13px;">Gagal memuat aktivitas.</div>';
+            });
+    }
+
+    function kepsekMarkRead(id) {
+        var ids = getReadIds();
+        if (!ids.includes(id)) { ids.push(id); saveReadIds(ids); kepsekLoadBellLogs(); }
+    }
+
+    function kepsekMarkAllRead() {
+        fetch('{{ route("log.activities") }}')
+            .then(function(r) { return r.json(); })
+            .then(function(logs) { saveReadIds(logs.map(function(l){ return l.id; })); kepsekLoadBellLogs(); });
+    }
+
+    // Auto load badge
+    window.addEventListener('DOMContentLoaded', function() {
+        fetch('{{ route("log.activities") }}')
+            .then(function(r) { return r.json(); })
+            .then(function(logs) {
+                var unread = logs.filter(function(l){ return !getReadIds().includes(l.id); }).length;
+                if (unread > 0) {
+                    kepsekBellBadge.textContent = unread > 9 ? '9+' : unread;
+                    kepsekBellBadge.style.display = 'flex';
+                }
+            });
+    });
+</script>
 
         <div class="da-body">
             {{-- FILTER --}}
@@ -256,7 +376,7 @@
 
 
 
-            <div class="card">
+ <div class="card">
                 <div class="card-title">Status Rekomendasi per Kelas</div>
                 <div class="kelas-grid">
                     @forelse($statusPerKelas as $item)
@@ -283,7 +403,53 @@
                     @empty
                         <p style="grid-column: span 2; text-align:center; padding:20px; color:var(--gray-400); font-size:13px;">Belum ada data progres kelas.</p>
                     @endforelse
+                </div>  {{-- ← TUTUP kelas-grid DULU --}}
+            </div>      {{-- ← TUTUP card status rekomendasi --}}
+
+            {{-- 📋 LOG ACTIVITY — di luar card sebelumnya --}}
+            <div class="card" style="margin-top:24px;">
+                <div class="card-title">Aktivitas Terbaru</div>
+                <div id="dashLogList">
+                    <p style="text-align:center; color:#94a3b8; font-size:13px;">Memuat aktivitas...</p>
                 </div>
+            </div>
+
+            <script>
+                fetch('{{ route("log.activities") }}')
+                    .then(r => r.json())
+                    .then(logs => {
+                        const el = document.getElementById('dashLogList');
+                        if (!logs.length) {
+                            el.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size:13px;">Belum ada aktivitas.</p>';
+                            return;
+                        }
+                        el.innerHTML = `
+                            <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                                <thead>
+                                    <tr style="background:#f9fafb; text-align:left;">
+                                        <th style="padding:10px; font-size:11px; color:#64748b; text-transform:uppercase;">User</th>
+                                        <th style="padding:10px; font-size:11px; color:#64748b; text-transform:uppercase;">Role</th>
+                                        <th style="padding:10px; font-size:11px; color:#64748b; text-transform:uppercase;">Aktivitas</th>
+                                        <th style="padding:10px; font-size:11px; color:#64748b; text-transform:uppercase;">Waktu</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${logs.map(log => `
+                                        <tr style="border-top:1px solid #f1f5f9;">
+                                            <td style="padding:10px; font-weight:700; color:#1e293b;">${log.nama_user}</td>
+                                            <td style="padding:10px;">
+                                                <span style="background:#eff6ff; color:#2563eb; font-size:10px; font-weight:700; padding:3px 8px; border-radius:6px; text-transform:uppercase;">
+                                                    ${log.role === 'wali_kelas' ? 'Wali Kelas' : log.role === 'kepsek' ? 'Kepsek' : 'Admin'}
+                                                </span>
+                                            </td>
+                                            <td style="padding:10px; color:#475569;">${log.activity}</td>
+                                            <td style="padding:10px; color:#94a3b8; font-size:11px; white-space:nowrap;">${new Date(log.created_at).toLocaleString('id-ID')}</td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>`;
+                    });
+            </script>
             </div>
         </div>
     </main>

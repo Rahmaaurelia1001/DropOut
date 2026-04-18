@@ -22,7 +22,7 @@
     .da-root {
         font-family: 'Plus Jakarta Sans', sans-serif;
         background: var(--gray-50); color: var(--gray-800);
-        height: 100vh; overflow: hidden;
+        height: 100vh;
     }
 
     .da-shell { display: flex; height: 100vh; }
@@ -62,7 +62,7 @@
     .da-main { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100vh; overflow-y: auto; }
     .da-phead { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
     
-    .da-body { padding: 24px 32px; display: grid; grid-template-columns: 1.8fr 1fr; gap: 24px; flex: 1; min-height: 0; }
+    .da-body { padding: 24px 32px; display: grid; grid-template-columns: 1.8fr 1fr; gap: 24px; }
     .card { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 20px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; margin-bottom: 20px; }
     .card-title { font-size: 14px; font-weight: 800; color: var(--gray-900); display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
     .card-title::before { content: ''; width: 4px; height: 14px; background: var(--blue); border-radius: 4px; }
@@ -127,9 +127,32 @@
 
     <main class="da-main">
         <div class="da-phead">
-            <h2 style="font-size:18px; font-weight:800; letter-spacing:-0.5px;">Beranda Wali Kelas</h2>
-            <div style="font-size:10px; font-weight:700; color:var(--gray-500); background:var(--gray-100); padding:6px 12px; border-radius:8px;" id="date"></div>
+    <h2 style="font-size:18px; font-weight:800; letter-spacing:-0.5px;">Beranda Wali Kelas</h2>
+    <div style="display:flex; align-items:center; gap:12px;">
+        <div style="font-size:10px; font-weight:700; color:var(--gray-500); background:var(--gray-100); padding:6px 12px; border-radius:8px;" id="date"></div>
+
+        {{-- 🔔 BELL --}}
+        <div style="position:relative;" id="walasBellWrap">
+            <button id="walasBellBtn" style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:10px; padding:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#64748b; transition:.15s;"
+                onmouseover="this.style.background='#eff6ff'; this.style.borderColor='#93c5fd'; this.style.color='#2563eb';"
+                onmouseout="this.style.background='#f8fafc'; this.style.borderColor='#e2e8f0'; this.style.color='#64748b';">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                </svg>
+                <span id="walasBellBadge" style="display:none; position:absolute; top:-4px; right:-4px; background:#ef4444; color:white; font-size:10px; font-weight:700; border-radius:999px; min-width:18px; height:18px; align-items:center; justify-content:center; padding:0 4px; border:2px solid white;"></span>
+            </button>
+            <div id="walasBellPanel" style="display:none; position:absolute; right:0; top:calc(100% + 10px); width:360px; background:#fff; border:1px solid #e2e8f0; border-radius:16px; box-shadow:0 12px 32px rgba(0,0,0,0.12); z-index:999; overflow:hidden;">
+                <div style="padding:14px 16px; border-bottom:1px solid #f1f5f9; display:flex; justify-content:space-between; align-items:center;">
+                    <span style="font-size:13px; font-weight:800; color:#1e293b;">🔔 Aktivitas Saya</span>
+                    <button onclick="walasMarkAllRead()" style="font-size:11px; font-weight:600; color:#2563eb; background:none; border:none; cursor:pointer;">Tandai semua dibaca</button>
+                </div>
+                <div id="walasBellList" style="max-height:320px; overflow-y:auto;">
+                    <div style="padding:32px 16px; text-align:center; color:#94a3b8; font-size:13px;">Memuat aktivitas...</div>
+                </div>
+            </div>
         </div>
+    </div>
+</div>
 
         <div class="da-body">
             <div>
@@ -166,6 +189,64 @@
                         <canvas id="faktorChart"></canvas>
                     </div>
                 </div>
+
+
+                {{-- TABEL DATA SISWA --}}
+<div class="card">
+    <div class="card-title">
+        Data Siswa Periode Aktif
+        @if($periodeAktif)
+            <span style="font-size:11px; font-weight:600; color:var(--gray-400); margin-left:4px;">
+                ({{ $periodeAktif->tahun_ajaran }} - Semester {{ $periodeAktif->semester }})
+            </span>
+        @endif
+    </div>
+
+    @if($dataSiswa->count() > 0)
+        <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; font-size:12px;">
+                <thead>
+                    <tr style="background:#f9fafb; text-align:left;">
+                        <th style="padding:10px; font-size:10px; color:#64748b; text-transform:uppercase;">No</th>
+                        <th style="padding:10px; font-size:10px; color:#64748b; text-transform:uppercase;">Nama Siswa</th>
+                        <th style="padding:10px; font-size:10px; color:#64748b; text-transform:uppercase;">NISN</th>
+                        <th style="padding:10px; font-size:10px; color:#64748b; text-transform:uppercase; text-align:center;">Nilai Rata-rata</th>
+                        <th style="padding:10px; font-size:10px; color:#64748b; text-transform:uppercase; text-align:center;">Ketidakhadiran</th>
+                        <th style="padding:10px; font-size:10px; color:#64748b; text-transform:uppercase;">Pekerjaan Ortu</th>
+                        <th style="padding:10px; font-size:10px; color:#64748b; text-transform:uppercase;">Pendidikan Ortu</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($dataSiswa as $i => $s)
+                    <tr style="border-top:1px solid #f1f5f9;">
+                        <td style="padding:10px; color:#94a3b8;">{{ $i + 1 }}</td>
+                        <td style="padding:10px; font-weight:700; color:#1e293b;">{{ $s->nama_siswa }}</td>
+                        <td style="padding:10px; color:#64748b; font-size:11px;">{{ $s->nisn }}</td>
+                        <td style="padding:10px; text-align:center;">
+                            <span style="font-weight:700; color:{{ $s->nilai_rata_rata < 60 ? '#ef4444' : ($s->nilai_rata_rata < 75 ? '#f59e0b' : '#10b981') }};">
+                                {{ number_format($s->nilai_rata_rata, 2) }}
+                            </span>
+                        </td>
+                        <td style="padding:10px; text-align:center;">
+                            <span style="font-weight:700; color:{{ $s->total_ketidakhadiran > 10 ? '#ef4444' : ($s->total_ketidakhadiran > 5 ? '#f59e0b' : '#10b981') }};">
+                                {{ $s->total_ketidakhadiran }} hari
+                            </span>
+                        </td>
+                        <td style="padding:10px; color:#475569;">{{ $s->pekerjaan_ortu }}</td>
+                        <td style="padding:10px; color:#475569;">{{ $s->pendidikan_ortu }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @else
+        <div style="text-align:center; padding:32px; color:#94a3b8;">
+            <svg width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 12px; display:block; color:#cbd5e1;"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            <p style="font-size:13px; font-weight:600;">Belum ada data siswa</p>
+            <p style="font-size:11px; margin-top:4px;">Data akan muncul setelah admin mengimport evaluasi siswa untuk periode aktif.</p>
+        </div>
+    @endif
+</div>
             </div>
 
             <div>
@@ -187,6 +268,16 @@
                     <div class="step-item"><div class="step-num">2</div><div style="font-size:12px; color:var(--gray-600);">Buka <b>Analisis Risiko</b> & pilih periode.</div></div>
                     <div class="step-item"><div class="step-num">3</div><div style="font-size:12px; color:var(--gray-600);">Klik proses untuk menjalankan <b>MFEP</b>.</div></div>
                     <div class="step-item"><div class="step-num">4</div><div style="font-size:12px; color:var(--gray-600);">Pantau hasil di menu <b>Hasil Analisis</b>.</div></div>
+                </div>
+            </div>
+        </div>
+
+        {{-- 📋 TABEL AKTIVITAS SAYA --}}
+        <div style="padding: 0 32px 32px;">
+            <div class="card">
+                <div class="card-title">Aktivitas Saya</div>
+                <div id="walasDashLogList">
+                    <p style="text-align:center; color:#94a3b8; font-size:13px;">Memuat aktivitas...</p>
                 </div>
             </div>
         </div>
@@ -233,4 +324,118 @@
         }
     });
 </script>
+
+<script>
+    var walasBellBtn   = document.getElementById('walasBellBtn');
+    var walasBellPanel = document.getElementById('walasBellPanel');
+    var walasBellBadge = document.getElementById('walasBellBadge');
+    var walasBellList  = document.getElementById('walasBellList');
+
+    function getReadIds() { return JSON.parse(localStorage.getItem('spk_read_logs') || '[]'); }
+    function saveReadIds(ids) { localStorage.setItem('spk_read_logs', JSON.stringify(ids)); }
+
+    walasBellBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var isOpen = walasBellPanel.style.display === 'block';
+        walasBellPanel.style.display = isOpen ? 'none' : 'block';
+        if (!isOpen) walasLoadBellLogs();
+    });
+
+    document.addEventListener('click', function(e) {
+        if (!document.getElementById('walasBellWrap').contains(e.target)) {
+            walasBellPanel.style.display = 'none';
+        }
+    });
+
+    function walasTimeAgo(dateStr) {
+        var diff = Math.floor((new Date() - new Date(dateStr)) / 1000);
+        if (diff < 60) return diff + ' detik lalu';
+        if (diff < 3600) return Math.floor(diff / 60) + ' menit lalu';
+        if (diff < 86400) return Math.floor(diff / 3600) + ' jam lalu';
+        return Math.floor(diff / 86400) + ' hari lalu';
+    }
+
+    function walasLoadBellLogs() {
+        fetch('{{ route("log.activities") }}')
+            .then(function(r) { return r.json(); })
+            .then(function(logs) {
+                var readIds = getReadIds();
+                if (!logs.length) {
+                    walasBellList.innerHTML = '<div style="padding:32px 16px; text-align:center; color:#94a3b8; font-size:13px;">Belum ada aktivitas.</div>';
+                    walasBellBadge.style.display = 'none';
+                    return;
+                }
+                var unread = logs.filter(function(l){ return !readIds.includes(l.id); }).length;
+                if (unread > 0) {
+                    walasBellBadge.textContent = unread > 9 ? '9+' : unread;
+                    walasBellBadge.style.display = 'flex';
+                } else {
+                    walasBellBadge.style.display = 'none';
+                }
+                walasBellList.innerHTML = logs.map(function(log) {
+                    var isRead = readIds.includes(log.id);
+                    return '<div onclick="walasMarkRead(' + log.id + ')" style="padding:12px 16px; border-bottom:1px solid #f8fafc; display:flex; gap:10px; cursor:pointer; background:' + (isRead ? '#fff' : '#eff6ff') + ';">'
+                        + '<div style="width:8px; height:8px; border-radius:50%; background:' + (isRead ? 'transparent' : '#2563eb') + '; flex-shrink:0; margin-top:5px;"></div>'
+                        + '<div style="flex:1; min-width:0;">'
+                        + '<div style="font-size:12px; font-weight:600; color:#334155; line-height:1.4;">' + log.activity + '</div>'
+                        + '<div style="font-size:10px; color:#cbd5e1; margin-top:2px;">' + walasTimeAgo(log.created_at) + '</div>'
+                        + '</div></div>';
+                }).join('');
+            })
+            .catch(function() {
+                walasBellList.innerHTML = '<div style="padding:32px 16px; text-align:center; color:#94a3b8; font-size:13px;">Gagal memuat aktivitas.</div>';
+            });
+    }
+
+    function walasMarkRead(id) {
+        var ids = getReadIds();
+        if (!ids.includes(id)) { ids.push(id); saveReadIds(ids); walasLoadBellLogs(); }
+    }
+
+    function walasMarkAllRead() {
+        fetch('{{ route("log.activities") }}')
+            .then(function(r) { return r.json(); })
+            .then(function(logs) { saveReadIds(logs.map(function(l){ return l.id; })); walasLoadBellLogs(); });
+    }
+
+    // Auto load badge
+    window.addEventListener('DOMContentLoaded', function() {
+        fetch('{{ route("log.activities") }}')
+            .then(function(r) { return r.json(); })
+            .then(function(logs) {
+                var unread = logs.filter(function(l){ return !getReadIds().includes(l.id); }).length;
+                if (unread > 0) {
+                    walasBellBadge.textContent = unread > 9 ? '9+' : unread;
+                    walasBellBadge.style.display = 'flex';
+                }
+            });
+    });
+
+    // Tabel aktivitas
+    fetch('{{ route("log.activities") }}')
+        .then(function(r) { return r.json(); })
+        .then(function(logs) {
+            var el = document.getElementById('walasDashLogList');
+            if (!logs.length) {
+                el.innerHTML = '<p style="text-align:center; color:#94a3b8; font-size:13px;">Belum ada aktivitas.</p>';
+                return;
+            }
+            var rows = logs.map(function(log) {
+                return '<tr style="border-top:1px solid #f1f5f9;">'
+                    + '<td style="padding:10px; color:#475569;">' + log.activity + '</td>'
+                    + '<td style="padding:10px; color:#94a3b8; font-size:11px; white-space:nowrap;">' + new Date(log.created_at).toLocaleString('id-ID') + '</td>'
+                    + '</tr>';
+            }).join('');
+            el.innerHTML = '<div style="overflow-x:auto;">'
+                + '<table style="width:100%; border-collapse:collapse; font-size:13px;">'
+                + '<thead><tr style="background:#f9fafb; text-align:left;">'
+                + '<th style="padding:10px; font-size:11px; color:#64748b; text-transform:uppercase;">Aktivitas</th>'
+                + '<th style="padding:10px; font-size:11px; color:#64748b; text-transform:uppercase;">Waktu</th>'
+                + '</tr></thead>'
+                + '<tbody>' + rows + '</tbody>'
+                + '</table></div>';
+        });
+</script>
+
+
 </x-app-layout>

@@ -18,7 +18,7 @@ use App\Http\Controllers\RekomendasiController;
 use App\Http\Controllers\MasterRekomendasiController;
 use App\Http\Controllers\WalasController; // Tambahkan ini
 use App\Http\Controllers\MataPelajaranController;
-
+use Illuminate\Support\Facades\DB;
 /*
 |--------------------------------------------------------------------------
 | DEFAULT ROUTE
@@ -164,6 +164,23 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// Log Activity (shared semua role)
+Route::middleware('auth')->group(function () {
+    Route::get('/log-activities', function () {
+        $logs = DB::table('log_activities')
+            ->join('users', 'log_activities.user_id', '=', 'users.id')
+            ->select('log_activities.*', 'users.name as nama_user')
+            ->when(auth()->user()->role === 'wali_kelas', function ($q) {
+                $q->where('log_activities.user_id', auth()->id());
+            })
+            ->orderBy('log_activities.created_at', 'desc')
+            ->limit(20)
+            ->get();
+
+        return response()->json($logs);
+    })->name('log.activities');
 });
 
 require __DIR__.'/auth.php';

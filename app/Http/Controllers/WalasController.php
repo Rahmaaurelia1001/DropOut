@@ -11,36 +11,57 @@ use Illuminate\Support\Facades\DB;
 class WalasController extends Controller
 {
     public function dashboard()
-    {
-        // Ambil ID Kelas walas yang sedang login
-        $id_kelas = Auth::user()->id_kelas;
+{
+    $id_kelas = Auth::user()->id_kelas;
 
-        // 1. Data Chart Sebaran Risiko (Gunakan HasilKeputusan)
-        $dataRisiko = [
-            'Tinggi' => HasilKeputusan::whereHas('siswa', function($q) use ($id_kelas) {
-                $q->where('id_kelas', $id_kelas);
-            })->where('kategori_risiko', 'Tinggi')->count(),
-            
-            'Sedang' => HasilKeputusan::whereHas('siswa', function($q) use ($id_kelas) {
-                $q->where('id_kelas', $id_kelas);
-            })->where('kategori_risiko', 'Sedang')->count(),
-            
-            'Rendah' => HasilKeputusan::whereHas('siswa', function($q) use ($id_kelas) {
-                $q->where('id_kelas', $id_kelas);
-            })->where('kategori_risiko', 'Rendah')->count(),
-        ];
+    // Ambil periode aktif
+    $periodeAktif = DB::table('periode_penilaian')
+        ->where('status', 'aktif')
+        ->first();
 
-        // 2. Data Chart Faktor Dominan (Top 5)
-        $faktorDominan = HasilKeputusan::whereHas('siswa', function($q) use ($id_kelas) {
-                $q->where('id_kelas', $id_kelas);
-            })
-            ->select('faktor_dominan', DB::raw('count(*) as total'))
-            ->groupBy('faktor_dominan')
-            ->orderBy('total', 'desc')
-            ->whereNotNull('faktor_dominan')
-            ->limit(5)
-            ->get();
-
-        return view('walas.dashboard', compact('dataRisiko', 'faktorDominan'));
+    // Data siswa dari evaluasi_siswa (periode aktif + kelas walas)
+    $dataSiswa = collect();
+    if ($periodeAktif) {
+        $dataSiswa = DB::table('evaluasi_siswa')
+    ->join('siswa', 'evaluasi_siswa.id_siswa', '=', 'siswa.id_siswa')
+    ->where('evaluasi_siswa.id_kelas', $id_kelas)
+    ->where('evaluasi_siswa.id_periode', $periodeAktif->id_periode)
+    ->select(
+        'siswa.nama_siswa',
+        'siswa.nisn',
+        'evaluasi_siswa.nilai_rata_rata',
+        'evaluasi_siswa.total_ketidakhadiran',
+        'evaluasi_siswa.pekerjaan_ortu',
+        'evaluasi_siswa.pendidikan_ortu'
+    )
+    ->orderBy('siswa.nama_siswa')
+    ->get();
     }
+
+    // Chart Sebaran Risiko
+    $dataRisiko = [
+        'Tinggi' => HasilKeputusan::whereHas('siswa', function($q) use ($id_kelas) {
+            $q->where('id_kelas', $id_kelas);
+        })->where('kategori_risiko', 'Tinggi')->count(),
+        'Sedang' => HasilKeputusan::whereHas('siswa', function($q) use ($id_kelas) {
+            $q->where('id_kelas', $id_kelas);
+        })->where('kategori_risiko', 'Sedang')->count(),
+        'Rendah' => HasilKeputusan::whereHas('siswa', function($q) use ($id_kelas) {
+            $q->where('id_kelas', $id_kelas);
+        })->where('kategori_risiko', 'Rendah')->count(),
+    ];
+
+    // Chart Faktor Dominan
+    $faktorDominan = HasilKeputusan::whereHas('siswa', function($q) use ($id_kelas) {
+            $q->where('id_kelas', $id_kelas);
+        })
+        ->select('faktor_dominan', DB::raw('count(*) as total'))
+        ->groupBy('faktor_dominan')
+        ->orderBy('total', 'desc')
+        ->whereNotNull('faktor_dominan')
+        ->limit(5)
+        ->get();
+
+    return view('walas.dashboard', compact('dataRisiko', 'faktorDominan', 'dataSiswa', 'periodeAktif'));
+}
 }
