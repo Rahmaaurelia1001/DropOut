@@ -27,7 +27,6 @@
 
     .da-shell { display: flex; height: 100vh; }
 
-    /* ── SIDEBAR ── */
     .da-sidebar {
         width: var(--sidebar-w); background: var(--white); border-right: 1px solid var(--gray-200);
         display: flex; flex-direction: column; flex-shrink: 0;
@@ -56,39 +55,62 @@
     .sb-btn-icon { background: none; border: none; cursor: pointer; padding: 6px; color: var(--gray-400); border-radius: 8px; transition: .15s; display: flex; align-items: center; }
     .sb-btn-icon:hover { background: var(--gray-100); color: var(--gray-800); }
 
-    /* ── MAIN AREA ── */
     .da-main { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100vh; overflow-y: auto; }
     .da-phead { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 16px 32px; flex-shrink: 0; }
     .da-body { padding: 24px 32px; }
 
-    /* ── FILTER CARD ── */
     .filter-card { background: white; border: 1.5px solid var(--gray-200); border-radius: 20px; padding: 16px 24px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
     .f-label { font-size: 12px; font-weight: 800; color: var(--gray-400); text-transform: uppercase; margin-right: 12px; }
     .f-select { border-radius: 10px; border: 1.5px solid var(--gray-200); padding: 8px 16px; font-size: 13px; font-weight: 600; min-width: 240px; }
     .btn-show { background: var(--blue); color: white; padding: 9px 20px; border-radius: 10px; font-weight: 700; font-size: 13px; border: none; cursor: pointer; transition: .2s; }
     .btn-show:hover { background: #1d4ed8; }
 
-    /* ── TABLE CARD ── */
     .table-card { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 24px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
     .t-header { padding: 20px 24px; border-bottom: 1px solid var(--gray-100); display: flex; justify-content: space-between; align-items: center; }
     
     table { width: 100%; border-collapse: collapse; }
     th { background: var(--gray-50); padding: 14px 24px; text-align: left; font-size: 11px; font-weight: 800; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--gray-200); }
-    td { padding: 16px 24px; font-size: 13.5px; border-bottom: 1px solid var(--gray-100); vertical-align: top; }
+    td { padding: 14px 24px; font-size: 13px; border-bottom: 1px solid var(--gray-100); vertical-align: middle; }
     
-    /* ── BADGES ── */
     .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; }
     .badge-red { background: #fef2f2; color: #ef4444; }
     .badge-yellow { background: #fffbeb; color: #d97706; }
     .badge-green { background: #ecfdf5; color: #10b981; }
     .badge-gray { background: #f3f4f6; color: var(--gray-500); }
-    .status-dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
-    
-    /* ── REKOMENDASI BOX REVISED ── */
-    .rekom-box { border: 1.5px solid var(--gray-100); border-radius: 16px; padding: 16px; background: white; max-width: 420px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-    .rekom-select { width: 100%; margin-top: 8px; border-radius: 8px; border: 1.5px solid var(--gray-200); padding: 8px 10px; font-size: 12px; font-weight: 600; color: var(--gray-800); outline: none; transition: 0.2s; }
-    .rekom-select:focus { border-color: var(--blue); }
-    .date-info { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; color: var(--gray-500); font-size: 11.5px; font-weight: 600; }
+    .status-dot { width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; }
+
+    /* Action buttons */
+    .btn-aksi { padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; border: none; cursor: pointer; transition: .15s; display: inline-flex; align-items: center; gap: 5px; }
+    .btn-update { background: #eff6ff; color: #2563eb; }
+    .btn-update:hover { background: #dbeafe; }
+    .btn-chat { background: #f0fdf4; color: #10b981; position: relative; }
+    .btn-chat:hover { background: #dcfce7; }
+    .chat-badge { position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; font-size: 9px; font-weight: 800; border-radius: 999px; min-width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; padding: 0 3px; border: 2px solid white; }
+
+    /* Modal */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; align-items: center; justify-content: center; }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: white; border-radius: 20px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
+    .modal-head { padding: 20px 24px; border-bottom: 1px solid var(--gray-100); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: white; z-index: 1; }
+    .modal-title { font-size: 15px; font-weight: 800; color: var(--gray-900); }
+    .modal-close { background: var(--gray-100); border: none; border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--gray-500); }
+    .modal-close:hover { background: var(--gray-200); }
+    .modal-body { padding: 20px 24px; }
+
+    .form-group { margin-bottom: 14px; }
+    .form-label { font-size: 11px; font-weight: 800; color: var(--gray-400); text-transform: uppercase; margin-bottom: 6px; display: block; }
+    .form-control { width: 100%; border-radius: 10px; border: 1.5px solid var(--gray-200); padding: 10px 12px; font-size: 13px; font-weight: 500; font-family: inherit; outline: none; transition: .2s; }
+    .form-control:focus { border-color: var(--blue); }
+
+    /* Chat */
+    .chat-list { max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
+    .chat-bubble { border-radius: 12px; padding: 10px 12px; }
+    .chat-bubble.kepsek { background: #eff6ff; border: 1px solid #bfdbfe; }
+    .chat-bubble.walas { background: var(--gray-50); border: 1px solid var(--gray-100); }
+    .chat-meta { display: flex; justify-content: space-between; margin-bottom: 4px; }
+    .chat-name { font-size: 10px; font-weight: 800; }
+    .chat-time { font-size: 10px; color: var(--gray-400); }
+    .chat-text { font-size: 12px; color: var(--gray-800); line-height: 1.5; }
 </style>
 
 <div class="da-root">
@@ -134,6 +156,13 @@
         </div>
 
         <div class="da-body">
+            @if(session('success'))
+                <div style="background:#ecfdf5; color:#059669; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:600; margin-bottom:20px; border:1px solid #d1fae5;">{{ session('success') }}</div>
+            @endif
+            @if(session('error'))
+                <div style="background:#fef2f2; color:#ef4444; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:600; margin-bottom:20px; border:1px solid #fecaca;">{{ session('error') }}</div>
+            @endif
+
             <form method="GET" action="{{ route('walas.mfep.hasil') }}" class="filter-card">
                 <div style="display:flex; align-items:center">
                     <span class="f-label">Filter Periode:</span>
@@ -169,14 +198,35 @@
                                 <th>Preferensi</th>
                                 <th>Risiko</th>
                                 <th>Faktor Dominan</th>
-                                <th>Rekomendasi & Status Pelaksanaan</th>
+                                <th>Rekomendasi</th>
+                                <th>Status</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($hasil as $index => $item)
+                            @php
+                                $rekomendasiTerpilih = $item->rekomendasi->firstWhere('is_selected', 1);
+                                if (!$rekomendasiTerpilih && !empty($item->tindak_lanjut_final)) {
+                                    $rekomendasiTerpilih = $item->rekomendasi->firstWhere('deskripsi_rekomendasi', $item->tindak_lanjut_final);
+                                }
+                                $rekomendasiFinal = $rekomendasiTerpilih?->deskripsi_rekomendasi ?? $item->tindak_lanjut_final;
+                                $statusRekomendasi = $rekomendasiTerpilih?->status ?? 'belum_diproses';
+                                $tglPelaksanaan = optional($rekomendasiTerpilih)->tanggal_dilaksanakan;
+                                $komentarList = DB::table('rekomendasi_komentar')
+                                    ->where('id_hasil', $item->id_hasil)
+                                    ->orderBy('created_at', 'asc')
+                                    ->get();
+                                $jumlahKomentar = $komentarList->count();
+                            @endphp
                             <tr>
                                 <td style="font-weight:800; color:var(--gray-400)">{{ $index + 1 }}</td>
-                                <td style="font-weight:700; color:var(--gray-900)">{{ $item->siswa->nama_siswa ?? '-' }}</td>
+                                <td>
+                                    <div style="font-weight:700; color:var(--gray-900)">{{ $item->siswa->nama_siswa ?? '-' }}</div>
+                                    @if($tglPelaksanaan)
+                                        <div style="font-size:11px; color:var(--gray-400); margin-top:2px;">📅 {{ \Carbon\Carbon::parse($tglPelaksanaan)->translatedFormat('d M Y') }}</div>
+                                    @endif
+                                </td>
                                 <td style="font-family:monospace; font-weight:600;">{{ number_format((float) $item->total_nilai_preferensi, 4) }}</td>
                                 <td>
                                     @if($item->kategori_risiko === 'Tinggi')
@@ -187,71 +237,171 @@
                                         <span class="badge badge-green">Rendah</span>
                                     @endif
                                 </td>
-                                <td style="font-size:12px; color:var(--gray-500); font-weight:500;">{{ $item->faktor_dominan ?? '-' }}</td>
+                                <td style="font-size:12px; color:var(--gray-500); font-weight:500; max-width:120px;">{{ $item->faktor_dominan ?? '-' }}</td>
+                                
+                                <td style="max-width:200px;">
+    @if($rekomendasiFinal)
+        <span style="font-size:12px; font-weight:600; color:var(--gray-800); line-height:1.4;">{{ $rekomendasiFinal }}</span>
+        
+        @if(!empty($item->deskripsi_tambahan))
+            <div style="margin-top:8px; background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:8px;">
+                <p style="font-size:10px; font-weight:800; color:#92400e; text-transform:uppercase; margin-bottom:3px;">📝 Catatan Kepsek</p>
+                <p style="font-size:11px; color:#78350f; line-height:1.4; margin:0;">{{ $item->deskripsi_tambahan }}</p>
+            </div>
+        @endif
+    @else
+        <span style="font-size:11px; color:var(--gray-400); font-style:italic;">Menunggu validasi Kepsek</span>
+    @endif
+</td>
+
+
+
+
                                 <td>
-                                    @php
-                                        $rekomendasiTerpilih = $item->rekomendasi->firstWhere('is_selected', 1);
-                                        if (!$rekomendasiTerpilih && !empty($item->tindak_lanjut_final)) {
-                                            $rekomendasiTerpilih = $item->rekomendasi->firstWhere('deskripsi_rekomendasi', $item->tindak_lanjut_final);
-                                        }
-                                        $rekomendasiFinal = $rekomendasiTerpilih?->deskripsi_rekomendasi ?? $item->tindak_lanjut_final;
-                                        $statusRekomendasi = $rekomendasiTerpilih?->status ?? 'belum_diproses';
-                                        $tglPelaksanaan = optional($rekomendasiTerpilih)->tanggal_dilaksanakan;
-                                    @endphp
-
+                                    @if($statusRekomendasi === 'belum_diproses')
+                                        <span class="badge badge-gray"><span class="status-dot" style="background:#9ca3af"></span>Menunggu</span>
+                                    @elseif($statusRekomendasi === 'sedang_diproses')
+                                        <span class="badge badge-yellow"><span class="status-dot" style="background:#f59e0b"></span>Dalam Proses</span>
+                                    @else
+                                        <span class="badge badge-green"><span class="status-dot" style="background:#10b981"></span>Selesai</span>
+                                    @endif
+                                </td>
+                                <td>
                                     @if($rekomendasiFinal)
-                                        <div class="rekom-box">
-                                            <div style="font-size:12px; font-weight:700; color:var(--gray-800); line-height:1.5; margin-bottom:12px;">
-                                                {{ $rekomendasiFinal }}
-                                            </div>
-                                            
-                                            {{-- Display Area (Tanggal & Status Terpilih) --}}
-                                            <div style="background: var(--gray-50); border-radius:10px; padding:10px; margin-bottom:15px; border:1px solid var(--gray-100);">
-                                                <div class="date-info">
-                                                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                                                    <span>Jadwal: <span style="color:var(--gray-900)">{{ $tglPelaksanaan ? \Carbon\Carbon::parse($tglPelaksanaan)->translatedFormat('d M Y') : 'Belum ditentukan' }}</span></span>
-                                                </div>
-                                                <div>
-                                                    @if($statusRekomendasi === 'belum_diproses')
-                                                        <span class="badge badge-gray"><span class="status-dot" style="background:#9ca3af"></span>Menunggu</span>
-                                                    @elseif($statusRekomendasi === 'sedang_diproses')
-                                                        <span class="badge badge-yellow"><span class="status-dot" style="background:#f59e0b"></span>Dalam Proses</span>
-                                                    @else
-                                                        <span class="badge badge-green"><span class="status-dot" style="background:#10b981"></span>Selesai</span>
-                                                    @endif
-                                                </div>
-                                            </div>
+                                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                                            {{-- Tombol Update Status --}}
+                                            <button class="btn-aksi btn-update" onclick="openModalUpdate({{ $item->id_hasil }})">
+                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                                Update
+                                            </button>
 
-                                            {{-- Form Update --}}
-                                            <form action="{{ route('walas.rekomendasi.updateStatus', $item->id_hasil) }}" method="POST">
-                                                @csrf
-                                                <p style="font-size:10px; font-weight:800; color:var(--gray-400); text-transform:uppercase; margin-bottom:4px;">Update Status & Tanggal</p>
-                                                
-                                                <select name="status" class="rekom-select" required>
+                                            {{-- Tombol Catatan --}}
+                                            <button class="btn-aksi btn-chat" onclick="openModalChat({{ $item->id_hasil }})">
+                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                                                Catatan
+                                                @if($jumlahKomentar > 0)
+                                                    <span class="chat-badge">{{ $jumlahKomentar }}</span>
+                                                @endif
+                                            </button>
+                                        </div>
+                                    @else
+                                        <span style="font-size:11px; color:var(--gray-400); font-style:italic;">-</span>
+                                    @endif
+                                </td>
+                            </tr>
+
+                            {{-- MODAL UPDATE STATUS --}}
+                            <div id="modal-update-{{ $item->id_hasil }}" class="modal-overlay" onclick="closeModalOnOverlay(event, 'modal-update-{{ $item->id_hasil }}')">
+                                <div class="modal-box">
+                                    <div class="modal-head">
+                                        <span class="modal-title">✏️ Update Status Rekomendasi</span>
+                                        <button class="modal-close" onclick="closeModal('modal-update-{{ $item->id_hasil }}')">✕</button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div style="background:var(--gray-50); border-radius:10px; padding:12px; margin-bottom:16px; border:1px solid var(--gray-100);">
+                                            <p style="font-size:11px; font-weight:800; color:var(--gray-400); text-transform:uppercase; margin-bottom:4px;">Rekomendasi</p>
+                                            <p style="font-size:13px; font-weight:600; color:var(--gray-800);">{{ $rekomendasiFinal }}</p>
+                                        </div>
+
+                                        <form action="{{ route('walas.rekomendasi.updateStatus', $item->id_hasil) }}" method="POST">
+                                            @csrf
+                                            <div class="form-group">
+                                                <label class="form-label">Status</label>
+                                                <select name="status" class="form-control" required id="modal-status-{{ $item->id_hasil }}" onchange="toggleModalChatbox({{ $item->id_hasil }}, this.value)">
                                                     <option value="belum_diproses" {{ $statusRekomendasi === 'belum_diproses' ? 'selected' : '' }}>Belum Diproses</option>
                                                     <option value="sedang_diproses" {{ $statusRekomendasi === 'sedang_diproses' ? 'selected' : '' }}>Sedang Diproses</option>
                                                     <option value="selesai" {{ $statusRekomendasi === 'selesai' ? 'selected' : '' }}>Selesai</option>
                                                 </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Tanggal Pelaksanaan</label>
+                                                <input type="date" name="tanggal_pelaksanaan" class="form-control" required
+                                                    value="{{ $tglPelaksanaan ? \Carbon\Carbon::parse($tglPelaksanaan)->format('Y-m-d') : date('Y-m-d') }}">
+                                            </div>
+                                            <button type="submit" class="btn-show" style="width:100%; justify-content:center; display:flex;">
+                                                Simpan Perubahan
+                                            </button>
+                                        </form>
 
-                                                <input type="date" name="tanggal_pelaksanaan" 
-                                                    value="{{ $tglPelaksanaan ? \Carbon\Carbon::parse($tglPelaksanaan)->format('Y-m-d') : date('Y-m-d') }}"
-                                                    class="rekom-select" required>
+                                        {{-- Chatbox muncul saat selesai --}}
+                                        <div id="modal-chatbox-{{ $item->id_hasil }}" style="{{ $statusRekomendasi === 'selesai' ? '' : 'display:none;' }} margin-top:20px; border-top:1px solid var(--gray-100); padding-top:16px;">
+                                            <p style="font-size:11px; font-weight:800; color:var(--gray-400); text-transform:uppercase; margin-bottom:10px;">💬 Catatan Penyelesaian</p>
+                                            
+                                            @if($jumlahKomentar > 0)
+                                                <div class="chat-list">
+                                                    @foreach($komentarList as $kom)
+                                                        <div class="chat-bubble {{ $kom->role === 'kepsek' ? 'kepsek' : 'walas' }}">
+                                                            <div class="chat-meta">
+                                                                <span class="chat-name" style="color:{{ $kom->role === 'kepsek' ? '#2563eb' : 'var(--gray-500)' }}">
+                                                                    {{ $kom->role === 'kepsek' ? '👤 Kepala Sekolah' : '👤 ' . $kom->nama_user }}
+                                                                </span>
+                                                                <span class="chat-time">{{ \Carbon\Carbon::parse($kom->created_at)->translatedFormat('d M Y, H:i') }}</span>
+                                                            </div>
+                                                            <p class="chat-text">{{ $kom->komentar }}</p>
+                                                        </div>
+                                                    @endforeach
+                                                </div>
+                                            @else
+                                                <p style="font-size:11px; color:var(--gray-400); font-style:italic; margin-bottom:10px;">Belum ada catatan.</p>
+                                            @endif
 
-                                                <button type="submit" class="btn-show" style="margin-top:10px; width:100%; justify-content:center; display:flex;">
-                                                    Simpan Perubahan
+                                            <form action="{{ route('walas.rekomendasi.komentar.simpan', $item->id_hasil) }}" method="POST">
+                                                @csrf
+                                                <textarea name="komentar" rows="3" placeholder="Tulis catatan penyelesaian..." required class="form-control" style="resize:none;"></textarea>
+                                                <button type="submit" style="margin-top:8px; width:100%; background:#10b981; color:white; border:none; padding:10px; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer;">
+                                                    Kirim Catatan
                                                 </button>
                                             </form>
                                         </div>
-                                    @else
-                                        <div style="padding:10px; border:1px dashed var(--gray-200); border-radius:10px; text-align:center;">
-                                            <span style="font-size:11px; color:var(--gray-400); font-style:italic;">Menunggu validasi Kepala Sekolah</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {{-- MODAL CHATBOX --}}
+                            <div id="modal-chat-{{ $item->id_hasil }}" class="modal-overlay" onclick="closeModalOnOverlay(event, 'modal-chat-{{ $item->id_hasil }}')">
+                                <div class="modal-box">
+                                    <div class="modal-head">
+                                        <span class="modal-title">💬 Catatan & Komentar</span>
+                                        <button class="modal-close" onclick="closeModal('modal-chat-{{ $item->id_hasil }}')">✕</button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div style="background:var(--gray-50); border-radius:10px; padding:10px; margin-bottom:14px; border:1px solid var(--gray-100);">
+                                            <p style="font-size:11px; font-weight:800; color:var(--gray-400); text-transform:uppercase; margin-bottom:2px;">Rekomendasi</p>
+                                            <p style="font-size:12px; font-weight:600; color:var(--gray-800);">{{ $rekomendasiFinal }}</p>
                                         </div>
-                                    @endif
-                                </td>
-                            </tr>
+
+                                        @if($jumlahKomentar > 0)
+                                            <div class="chat-list">
+                                                @foreach($komentarList as $kom)
+                                                    <div class="chat-bubble {{ $kom->role === 'kepsek' ? 'kepsek' : 'walas' }}">
+                                                        <div class="chat-meta">
+                                                            <span class="chat-name" style="color:{{ $kom->role === 'kepsek' ? '#2563eb' : 'var(--gray-500)' }}">
+                                                                {{ $kom->role === 'kepsek' ? '👤 Kepala Sekolah' : '👤 ' . $kom->nama_user }}
+                                                            </span>
+                                                            <span class="chat-time">{{ \Carbon\Carbon::parse($kom->created_at)->translatedFormat('d M Y, H:i') }}</span>
+                                                        </div>
+                                                        <p class="chat-text">{{ $kom->komentar }}</p>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @else
+                                            <p style="font-size:12px; color:var(--gray-400); font-style:italic; text-align:center; padding:20px 0;">Belum ada catatan atau komentar.</p>
+                                        @endif
+
+                                        <form action="{{ route('walas.rekomendasi.komentar.simpan', $item->id_hasil) }}" method="POST">
+                                            @csrf
+                                            <textarea name="komentar" rows="3" placeholder="Tulis catatan..." required class="form-control" style="resize:none;"></textarea>
+                                            <button type="submit" style="margin-top:8px; width:100%; background:#10b981; color:white; border:none; padding:10px; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer;">
+                                                Kirim Catatan
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
                             @empty
                             <tr>
-                                <td colspan="6" style="padding:60px; text-align:center; color:var(--gray-400);">Belum ada hasil analisis. Silakan jalankan proses MFEP terlebih dahulu.</td>
+                                <td colspan="8" style="padding:60px; text-align:center; color:var(--gray-400);">Belum ada hasil analisis. Silakan jalankan proses MFEP terlebih dahulu.</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -262,4 +412,31 @@
     </main>
 </div>
 </div>
+
+<script>
+    function openModalUpdate(id) {
+        document.getElementById('modal-update-' + id).classList.add('open');
+    }
+
+    function openModalChat(id) {
+        document.getElementById('modal-chat-' + id).classList.add('open');
+    }
+
+    function closeModal(id) {
+        document.getElementById(id).classList.remove('open');
+    }
+
+    function closeModalOnOverlay(event, id) {
+        if (event.target === document.getElementById(id)) {
+            closeModal(id);
+        }
+    }
+
+    function toggleModalChatbox(idHasil, status) {
+        const chatbox = document.getElementById('modal-chatbox-' + idHasil);
+        if (chatbox) {
+            chatbox.style.display = status === 'selesai' ? 'block' : 'none';
+        }
+    }
+</script>
 </x-app-layout>

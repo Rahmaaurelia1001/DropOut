@@ -120,6 +120,10 @@ Route::middleware(['auth', 'role:wali_kelas'])
         // Pilih rekomendasi final
         Route::post('/rekomendasi/hasil/{id}/status', [RekomendasiController::class, 'updateStatus'])
             ->name('rekomendasi.updateStatus');
+
+        // Chatbox komentar
+        Route::post('/rekomendasi/{id_hasil}/komentar', [RekomendasiController::class, 'simpanKomentar'])
+        ->name('rekomendasi.komentar.simpan');
     });
 
 /*
@@ -152,8 +156,16 @@ Route::middleware(['auth', 'role:kepsek'])
 
         Route::post('/pilih-rekomendasi', [MfepController::class, 'pilihRekomendasi'])
             ->name('pilih.rekomendasi');
-    });
 
+        // Chatbox komentar kepsek
+        Route::post('/rekomendasi/{id_hasil}/komentar', [RekomendasiController::class, 'simpanKomentar'])
+            ->name('rekomendasi.komentar.simpan');
+
+        // Deskripsi tambahan
+        Route::post('/rekomendasi/{id_hasil}/deskripsi', [MfepController::class, 'simpanDeskripsiTambahan'])
+            ->name('rekomendasi.deskripsi.simpan');
+    });
+    
 /*
 |--------------------------------------------------------------------------
 | PROFILE (BREEZE)

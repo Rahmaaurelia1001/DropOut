@@ -468,4 +468,27 @@ class MfepController extends Controller
             'risikoPerKelas'
         ));
     }
+
+    public function simpanDeskripsiTambahan(Request $request, $id_hasil)
+{
+    $request->validate([
+        'deskripsi_tambahan' => 'required|string|max:2000',
+    ]);
+
+    DB::table('hasil_keputusan')
+        ->where('id_hasil', $id_hasil)
+        ->update([
+            'deskripsi_tambahan' => $request->deskripsi_tambahan,
+        ]);
+
+    // 📝 LOG ACTIVITY
+    DB::table('log_activities')->insert([
+        'user_id'    => auth()->id(),
+        'role'       => auth()->user()->role,
+        'activity'   => 'Menambahkan deskripsi tambahan pada id_hasil: ' . $id_hasil,
+        'created_at' => now(),
+    ]);
+
+    return back()->with('success', 'Deskripsi tambahan berhasil disimpan.');
+}
 }
