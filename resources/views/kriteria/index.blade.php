@@ -147,12 +147,7 @@
         </div>
 
         <div class="da-content">
-            {{-- Flash Messages --}}
-            @if(session('success'))
-                <div style="padding: 12px 16px; background: var(--green-lt); border: 1.5px solid var(--green-bd); border-radius: 10px; color: var(--green-dk); font-size: 13px; font-weight: 600;">
-                    {{ session('success') }}
-                </div>
-            @endif
+            
             @if(session('error'))
                 <div style="padding: 12px 16px; background: var(--red-lt); border: 1.5px solid var(--red-bd); border-radius: 10px; color: var(--red); font-size: 13px; font-weight: 600;">
                     {{ session('error') }}
@@ -199,10 +194,10 @@
                                 <td>
                                     <div style="display:flex; justify-content:center; gap:8px">
                                         <a href="{{ route('admin.kriteria.edit', $k->id_kriteria) }}" class="act-btn act-edit">Edit</a>
-                                        <form action="{{ route('admin.kriteria.destroy', $k->id_kriteria) }}" method="POST" style="margin:0">
+                                        <form id="delete-kriteria-{{ $k->id_kriteria }}" action="{{ route('admin.kriteria.destroy', $k->id_kriteria) }}" method="POST" style="margin:0">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="act-btn act-delete" onclick="return confirm('Yakin hapus kriteria ini?')">Hapus</button>
                                         </form>
+                                        <button class="act-btn act-delete" onclick="confirmDelete('delete-kriteria-{{ $k->id_kriteria }}', '{{ $k->nama_kriteria }}')">Hapus</button>
                                     </div>
                                 </td>
                             </tr>

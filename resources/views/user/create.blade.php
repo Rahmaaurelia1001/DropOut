@@ -21,6 +21,9 @@
         --red:      #ef4444;
         --red-lt:   #fef2f2;
         --red-bd:   #fecaca;
+        --yellow-lt: #fffbeb;
+        --yellow-bd: #fde68a;
+        --yellow-dk: #b45309;
         --sidebar-w: 224px;
     }
 
@@ -35,7 +38,7 @@
 
     .da-shell { display: flex; min-height: 100vh; }
 
-    /* ── SIDEBAR LENGKAP 100% ── */
+    /* ── SIDEBAR ── */
     .da-sidebar {
         width: var(--sidebar-w); background: var(--white);
         border-right: 1px solid var(--gray-200);
@@ -49,7 +52,7 @@
 
     .sb-nav { padding: 12px 10px; flex: 1; overflow-y: auto; }
     .sb-nav-section { font-size: 9.5px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.1em; padding: 0 8px; margin: 14px 0 5px; }
-    
+
     .sb-item { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 8px; text-decoration: none; font-size: 12.5px; font-weight: 600; color: var(--gray-500); transition: all .13s; margin-bottom: 1px; }
     .sb-item:hover { background: var(--gray-100); color: var(--gray-800); }
     .sb-item.active { background: var(--blue-lt); color: var(--blue); }
@@ -60,31 +63,73 @@
     .sb-action-btn:hover { background: var(--gray-100); color: var(--gray-700); }
     .sb-action-logout:hover { background: #fee2e2; color: var(--red); }
 
-    /* ── MAIN AREA ── */
+    /* ── MAIN ── */
     .da-main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-width: 0; }
     .da-phead { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 20px 28px; display: flex; align-items: center; gap: 12px; }
     .da-phead-back { width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid var(--gray-200); display: flex; align-items: center; justify-content: center; text-decoration: none; color: var(--gray-500); transition: .13s; }
     .da-phead-back:hover { border-color: var(--blue-mid); background: var(--blue-lt); color: var(--blue); }
     .da-phead-title { font-size: 18px; font-weight: 800; color: var(--gray-900); letter-spacing: -0.3px; }
 
-    /* ── FORM STYLING ── */
+    /* ── FORM ── */
     .da-content { padding: 28px; max-width: 800px; }
     .form-card { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 14px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
     .form-card-head { padding: 16px 22px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; gap: 12px; }
     .form-card-ico { width: 34px; height: 34px; background: var(--blue-lt); border: 1.5px solid var(--blue-mid); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: var(--blue); }
-    
+
     .form-body { padding: 22px; display: flex; flex-direction: column; gap: 18px; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
 
     .form-label { font-size: 12px; font-weight: 700; color: var(--gray-700); }
+    .form-label .required-badge {
+        display: inline-flex; align-items: center; gap: 3px;
+        background: var(--red-lt); color: var(--red);
+        border: 1px solid var(--red-bd);
+        font-size: 9.5px; font-weight: 700;
+        padding: 1px 6px; border-radius: 5px;
+        margin-left: 5px; vertical-align: middle;
+    }
     .form-control {
         width: 100%; padding: 10px 12px; border: 1.5px solid var(--gray-200);
         border-radius: 9px; font-size: 13px; font-weight: 500; font-family: inherit; outline: none; transition: all .15s;
     }
     .form-control:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+    .form-control.is-error { border-color: var(--red); box-shadow: 0 0 0 3px rgba(239,68,68,0.1); }
+    .form-control.is-required-highlight { border-color: var(--yellow-dk); box-shadow: 0 0 0 3px rgba(180,83,9,0.1); }
+
     .form-hint { font-size: 11px; color: var(--gray-400); font-weight: 500; margin-top: 2px; }
-    .text-red { color: var(--red); }
+    .form-error { font-size: 11px; color: var(--red); font-weight: 600; margin-top: 2px; display: flex; align-items: center; gap: 4px; }
+
+    /* ── ALERT BOX ── */
+    .alert-warning {
+        display: none;
+        padding: 12px 16px;
+        background: var(--yellow-lt);
+        border: 1.5px solid var(--yellow-bd);
+        border-radius: 10px;
+        color: var(--yellow-dk);
+        font-size: 12.5px;
+        font-weight: 600;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .alert-warning.show { display: flex; }
+    .alert-warning svg { flex-shrink: 0; margin-top: 1px; }
+
+    .alert-error {
+        padding: 12px 16px;
+        background: var(--red-lt);
+        border: 1.5px solid var(--red-bd);
+        border-radius: 10px;
+        color: var(--red);
+        font-size: 12.5px;
+        font-weight: 600;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        margin-bottom: 18px;
+    }
+    .alert-error svg { flex-shrink: 0; margin-top: 1px; }
 
     .form-foot { padding: 16px 22px; background: var(--gray-50); border-top: 1px solid var(--gray-100); display: flex; justify-content: space-between; align-items: center; }
 
@@ -97,7 +142,7 @@
 <div class="da-root">
 <div class="da-shell">
 
-    {{-- ══ SIDEBAR LENGKAP 100% ══ --}}
+    {{-- ══ SIDEBAR ══ --}}
     <aside class="da-sidebar">
         <div class="sb-brand">
             <div class="sb-logo"><svg width="20" height="20" fill="none" stroke="white" viewBox="0 0 24 24" stroke-width="2"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg></div>
@@ -127,7 +172,7 @@
         <div class="sb-user">
             <div class="sb-user-av">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
             <div style="flex:1; min-width:0">
-                <div class="sb-user-name" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; font-size:12px;">{{ Auth::user()->name }}</div>
+                <div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; font-size:12px;">{{ Auth::user()->name }}</div>
                 <div style="font-size:10px; color:var(--gray-400)">Administrator</div>
             </div>
             <div style="display:flex; gap:2px">
@@ -140,7 +185,6 @@
     </aside>
 
     <main class="da-main">
-        {{-- Header --}}
         <div class="da-phead">
             <a href="{{ route('admin.user.index') }}" class="da-phead-back" title="Kembali">
                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M15 19l-7-7 7-7"/></svg>
@@ -167,54 +211,122 @@
                     </div>
 
                     <div class="form-body">
+
+                        {{-- Alert error dari server (jika ada error id_kelas dari controller) --}}
+                        @if($errors->has('id_kelas'))
+                            <div class="alert-error">
+                                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                                <div>
+                                    <div style="font-weight:800; margin-bottom:2px;">Penugasan Kelas Tidak Valid</div>
+                                    {{ $errors->first('id_kelas') }}
+                                </div>
+                            </div>
+                        @endif
+
+                        {{-- Alert peringatan dinamis (muncul saat pilih role Wali Kelas) --}}
+                        <div class="alert-warning" id="alertWalas">
+                            <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                            <div>
+                                <div style="font-weight:800; margin-bottom:2px;">Penugasan Kelas Wajib Diisi</div>
+                                Akun dengan role <strong>Wali Kelas</strong> harus ditugaskan ke salah satu kelas. Pilih kelas di bawah sebelum menyimpan.
+                            </div>
+                        </div>
+
+                        {{-- Nama & Email --}}
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">Nama Lengkap</label>
-                                <input type="text" name="name" class="form-control" placeholder="Masukkan nama lengkap" required>
+                                <input type="text" name="name" class="form-control @error('name') is-error @enderror"
+                                    placeholder="Masukkan nama lengkap"
+                                    value="{{ old('name') }}" required>
+                                @error('name')
+                                    <span class="form-error">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                                        {{ $message }}
+                                    </span>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Alamat Email</label>
-                                <input type="email" name="email" class="form-control" placeholder="email@contoh.com" required>
+                                <input type="email" name="email" class="form-control @error('email') is-error @enderror"
+                                    placeholder="email@contoh.com"
+                                    value="{{ old('email') }}" required>
+                                @error('email')
+                                    <span class="form-error">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                                        {{ $message }}
+                                    </span>
+                                @enderror
                             </div>
                         </div>
 
+                        {{-- Password & Role --}}
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">Password</label>
-                                <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+                                <input type="password" name="password" class="form-control @error('password') is-error @enderror"
+                                    placeholder="••••••••" required>
+                                @error('password')
+                                    <span class="form-error">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                                        {{ $message }}
+                                    </span>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Role / Jabatan</label>
-                                <select name="role" class="form-control" required>
-                                    <option value="" disabled selected>-- Pilih Role --</option>
-                                    <option value="admin">Administrator</option>
-                                    <option value="wali_kelas">Wali Kelas</option>
-                                    <option value="kepsek">Kepala Sekolah</option>
+                                <select name="role" id="roleSelect" class="form-control @error('role') is-error @enderror" required>
+                                    <option value="" disabled {{ old('role') ? '' : 'selected' }}>-- Pilih Role --</option>
+                                    <option value="admin"      {{ old('role') == 'admin'      ? 'selected' : '' }}>Administrator</option>
+                                    <option value="wali_kelas" {{ old('role') == 'wali_kelas' ? 'selected' : '' }}>Wali Kelas</option>
+                                    <option value="kepsek"     {{ old('role') == 'kepsek'     ? 'selected' : '' }}>Kepala Sekolah</option>
                                 </select>
+                                @error('role')
+                                    <span class="form-error">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                                        {{ $message }}
+                                    </span>
+                                @enderror
                             </div>
                         </div>
 
+                        {{-- Kelas & Status --}}
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Penugasan Kelas</label>
-                                <select name="id_kelas" class="form-control">
-                                    <option value="">-- Pilih Kelas (Opsional) --</option>
+                                <label class="form-label" id="kelasLabel">
+                                    Penugasan Kelas
+                                    <span class="required-badge" id="kelasRequired" style="display:none;">
+                                        <svg width="9" height="9" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path d="M12 9v4m0 4h.01"/></svg>
+                                        Wajib diisi
+                                    </span>
+                                </label>
+                                <select name="id_kelas" id="kelasSelect"
+                                    class="form-control @error('id_kelas') is-error @enderror">
+                                    <option value="">-- Pilih Kelas --</option>
                                     @foreach($kelas as $k)
-                                        <option value="{{ $k->id_kelas }}">
+                                        <option value="{{ $k->id_kelas }}" {{ old('id_kelas') == $k->id_kelas ? 'selected' : '' }}>
                                             {{ $k->nama_kelas }} - {{ $k->tahun_ajaran }}
                                         </option>
                                     @endforeach
                                 </select>
-                                <span class="form-hint text-red">*Pilih jika role adalah Wali Kelas</span>
+                                @error('id_kelas')
+                                    <span class="form-error">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                                        {{ $message }}
+                                    </span>
+                                @else
+                                    <span class="form-hint" id="kelasHint">Hanya wajib diisi untuk role Wali Kelas</span>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Status Akun</label>
                                 <select name="is_active" class="form-control" required>
-                                    <option value="1">Aktif</option>
-                                    <option value="0">Nonaktif</option>
+                                    <option value="1" {{ old('is_active', '1') == '1' ? 'selected' : '' }}>Aktif</option>
+                                    <option value="0" {{ old('is_active') == '0'      ? 'selected' : '' }}>Nonaktif</option>
                                 </select>
                             </div>
                         </div>
+
                     </div>
 
                     <div class="form-foot">
@@ -230,4 +342,68 @@
     </main>
 </div>
 </div>
+
+<script>
+    var roleSelect    = document.getElementById('roleSelect');
+    var kelasSelect   = document.getElementById('kelasSelect');
+    var alertWalas    = document.getElementById('alertWalas');
+    var kelasRequired = document.getElementById('kelasRequired');
+    var kelasHint     = document.getElementById('kelasHint');
+
+    function toggleWalasUI(role) {
+        var isWalas = role === 'wali_kelas';
+
+        alertWalas.classList.toggle('show', isWalas);
+        kelasRequired.style.display = isWalas ? 'inline-flex' : 'none';
+        if (kelasHint) kelasHint.style.display = isWalas ? 'none' : 'block';
+
+        // Set required attribute di select kelas
+        if (isWalas) {
+            kelasSelect.setAttribute('required', 'required');
+        } else {
+            kelasSelect.removeAttribute('required');
+        }
+
+        if (isWalas && !kelasSelect.value) {
+            kelasSelect.classList.add('is-required-highlight');
+        } else {
+            kelasSelect.classList.remove('is-required-highlight');
+        }
+    }
+
+    roleSelect.addEventListener('change', function () {
+        toggleWalasUI(this.value);
+    });
+
+    kelasSelect.addEventListener('change', function () {
+        if (this.value) {
+            this.classList.remove('is-required-highlight');
+        } else if (roleSelect.value === 'wali_kelas') {
+            this.classList.add('is-required-highlight');
+        }
+    });
+
+    // Validasi saat submit
+    document.querySelector('form').addEventListener('submit', function(e) {
+        if (roleSelect.value === 'wali_kelas' && !kelasSelect.value) {
+            e.preventDefault();
+            kelasSelect.classList.add('is-required-highlight');
+            alertWalas.classList.add('show');
+            kelasSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            // Tampilkan pesan error di bawah select kelas
+            var existing = document.getElementById('kelas-error-msg');
+            if (!existing) {
+                var errMsg = document.createElement('span');
+                errMsg.id = 'kelas-error-msg';
+                errMsg.className = 'form-error';
+                errMsg.innerHTML = '<svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg> Wali kelas wajib ditugaskan ke salah satu kelas.';
+                kelasSelect.parentNode.appendChild(errMsg);
+            }
+        }
+    });
+
+    toggleWalasUI(roleSelect.value);
+</script>
+
 </x-app-layout>

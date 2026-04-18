@@ -152,11 +152,7 @@
         </div>
 
         <div class="da-content">
-            @if(session('success'))
-                <div style="margin-bottom: 16px; padding: 12px 16px; background: var(--green-lt); border: 1.5px solid var(--green-bd); border-radius: 10px; color: var(--green-dk); font-size: 13px; font-weight: 600;">
-                    {{ session('success') }}
-                </div>
-            @endif
+            
 
             <div class="table-card">
                 <div class="table-card-head">
@@ -181,10 +177,10 @@
                                 <td>
                                     <div style="display:flex; justify-content:center; gap:8px">
                                         <a href="{{ route('admin.mapel.edit', $item->id_mapel) }}" class="act-btn act-edit">Edit</a>
-                                        <form action="{{ route('admin.mapel.destroy', $item->id_mapel) }}" method="POST" style="margin:0">
+                                        <form id="delete-mapel-{{ $item->id_mapel }}" action="{{ route('admin.mapel.destroy', $item->id_mapel) }}" method="POST" style="margin:0">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="act-btn act-delete" onclick="return confirm('Yakin hapus mata pelajaran ini?')">Hapus</button>
                                         </form>
+                                        <button class="act-btn act-delete" onclick="confirmDelete('delete-mapel-{{ $item->id_mapel }}', '{{ $item->nama_mapel }}')">Hapus</button>
                                     </div>
                                 </td>
                             </tr>

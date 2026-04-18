@@ -215,19 +215,36 @@
                                     <div style="font-size:11px; color:var(--gray-400)">{{ $u->email }}</div>
                                 </td>
                                 <td>
-                                    <span style="font-size:10px; font-weight:800; color:var(--blue); background:var(--blue-lt); padding:4px 8px; border-radius:6px; text-transform:uppercase">
-                                        {{ $u->role }}
-                                    </span>
+                                    @php
+    $roleLabel = match($u->role) {
+        'admin'      => ['label' => 'Admin',         'color' => '#2563eb', 'bg' => '#eff6ff'],
+        'wali_kelas' => ['label' => 'Wali Kelas',    'color' => '#059669', 'bg' => '#ecfdf5'],
+        'kepsek'     => ['label' => 'Kepala Sekolah','color' => '#d97706', 'bg' => '#fffbeb'],
+        default      => ['label' => $u->role,        'color' => '#6b7280', 'bg' => '#f3f4f6'],
+    };
+@endphp
+<span style="font-size:10px; font-weight:800; color:{{ $roleLabel['color'] }}; background:{{ $roleLabel['bg'] }}; padding:4px 10px; border-radius:6px;">
+    {{ $roleLabel['label'] }}
+</span>
                                 </td>
                                 <td style="font-weight:600">{{ $u->kelas->nama_kelas ?? '-' }}</td>
-                                <td><span class="badge-aktif">Aktif</span></td>
+                                <td>
+    @if($u->is_active)
+        <span class="badge-aktif">Aktif</span>
+    @else
+        <span style="color:#b91c1c; background:#fef2f2; border:1px solid #fecaca; padding:3px 9px; border-radius:99px; font-size:10.5px; font-weight:700; display:inline-flex; align-items:center; gap:4px;">
+            <span style="width:5px;height:5px;border-radius:50%;background:#ef4444;display:inline-block"></span>
+            Nonaktif
+        </span>
+    @endif
+</td>
                                 <td>
                                     <div style="display:flex; justify-content:center; gap:8px">
                                         <a href="{{ route('admin.user.edit', $u->id) }}" class="act-btn act-edit">Edit</a>
-                                        <form action="{{ route('admin.user.destroy', $u->id) }}" method="POST" style="margin:0">
+                                        <form id="delete-user-{{ $u->id }}" action="{{ route('admin.user.destroy', $u->id) }}" method="POST" style="margin:0">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="act-btn act-delete" onclick="return confirm('Yakin hapus user?')">Hapus</button>
                                         </form>
+                                        <button class="act-btn act-delete" onclick="confirmDelete('delete-user-{{ $u->id }}', '{{ $u->name }}')">Hapus</button>
                                     </div>
                                 </td>
                             </tr>

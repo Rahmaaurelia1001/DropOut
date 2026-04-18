@@ -148,11 +148,7 @@
         </div>
 
         <div class="da-content">
-            @if(session('success'))
-                <div style="margin-bottom: 16px; padding: 12px 16px; background: var(--green-lt); border: 1.5px solid var(--green-bd); border-radius: 10px; color: var(--green-dk); font-size: 13px; font-weight: 600;">
-                    {{ session('success') }}
-                </div>
-            @endif
+            
 
             <div class="table-card">
                 <div class="table-card-head">
@@ -183,10 +179,10 @@
                                 <td>
                                     <div style="display:flex; justify-content:center; gap:8px">
                                         <a href="{{ route('admin.kelas.edit', $k->id_kelas) }}" class="act-btn act-edit">Edit</a>
-                                        <form action="{{ route('admin.kelas.destroy', $k->id_kelas) }}" method="POST" style="margin:0">
+                                        <form id="delete-kelas-{{ $k->id_kelas }}" action="{{ route('admin.kelas.destroy', $k->id_kelas) }}" method="POST" style="margin:0">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="act-btn act-delete" onclick="return confirm('Yakin hapus data kelas ini?')">Hapus</button>
                                         </form>
+                                        <button class="act-btn act-delete" onclick="confirmDelete('delete-kelas-{{ $k->id_kelas }}', '{{ $k->nama_kelas }}')">Hapus</button>
                                     </div>
                                 </td>
                             </tr>

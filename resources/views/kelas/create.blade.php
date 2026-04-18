@@ -35,7 +35,7 @@
 
     .da-shell { display: flex; min-height: 100vh; }
 
-    /* ── SIDEBAR LENGKAP ── */
+    /* ── SIDEBAR ── */
     .da-sidebar {
         width: var(--sidebar-w); background: var(--white);
         border-right: 1px solid var(--gray-200);
@@ -49,7 +49,7 @@
 
     .sb-nav { padding: 12px 10px; flex: 1; overflow-y: auto; }
     .sb-nav-section { font-size: 9.5px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.1em; padding: 0 8px; margin: 14px 0 5px; }
-    
+
     .sb-item { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 8px; text-decoration: none; font-size: 12.5px; font-weight: 600; color: var(--gray-500); transition: all .13s; margin-bottom: 1px; }
     .sb-item:hover { background: var(--gray-100); color: var(--gray-800); }
     .sb-item.active { background: var(--blue-lt); color: var(--blue); }
@@ -67,12 +67,12 @@
     .da-phead-back:hover { border-color: var(--blue-mid); background: var(--blue-lt); color: var(--blue); }
     .da-phead-title { font-size: 18px; font-weight: 800; color: var(--gray-900); letter-spacing: -0.3px; }
 
-    /* ── FORM STYLING ── */
+    /* ── FORM ── */
     .da-content { padding: 28px; max-width: 800px; }
     .form-card { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 14px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
     .form-card-head { padding: 16px 22px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; gap: 12px; }
     .form-card-ico { width: 34px; height: 34px; background: var(--blue-lt); border: 1.5px solid var(--blue-mid); border-radius: 9px; display: flex; align-items: center; justify-content: center; color: var(--blue); }
-    
+
     .form-body { padding: 22px; display: flex; flex-direction: column; gap: 18px; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
@@ -83,7 +83,9 @@
         border-radius: 9px; font-size: 13px; font-weight: 500; font-family: inherit; outline: none; transition: all .15s;
     }
     .form-control:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+    .form-control.is-error { border-color: var(--red); box-shadow: 0 0 0 3px rgba(239,68,68,0.1); }
     .form-hint { font-size: 11px; color: var(--gray-400); font-weight: 500; margin-top: 2px; }
+    .form-error { font-size: 11px; color: var(--red); font-weight: 600; margin-top: 2px; display: flex; align-items: center; gap: 4px; }
 
     .form-foot { padding: 16px 22px; background: var(--gray-50); border-top: 1px solid var(--gray-100); display: flex; justify-content: space-between; align-items: center; }
 
@@ -96,7 +98,7 @@
 <div class="da-root">
 <div class="da-shell">
 
-    {{-- ══ SIDEBAR LENGKAP 100% ══ --}}
+    {{-- ══ SIDEBAR ══ --}}
     <aside class="da-sidebar">
         <div class="sb-brand">
             <div class="sb-logo"><svg width="20" height="20" fill="none" stroke="white" viewBox="0 0 24 24" stroke-width="2"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg></div>
@@ -126,7 +128,7 @@
         <div class="sb-user">
             <div class="sb-user-av">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
             <div style="flex:1; min-width:0">
-                <div class="sb-user-name" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; font-size:12px;">{{ Auth::user()->name }}</div>
+                <div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; font-size:12px;">{{ Auth::user()->name }}</div>
                 <div style="font-size:10px; color:var(--gray-400)">Administrator</div>
             </div>
             <div style="display:flex; gap:2px">
@@ -167,15 +169,46 @@
 
                     <div class="form-body">
                         <div class="form-row">
+
+                            {{-- Nama Kelas --}}
                             <div class="form-group">
                                 <label class="form-label">Nama Kelas</label>
-                                <input type="text" name="nama_kelas" class="form-control" placeholder="Contoh: Kelas 1A" required autofocus>
+                                <input
+                                    type="text"
+                                    name="nama_kelas"
+                                    class="form-control @error('nama_kelas') is-error @enderror"
+                                    placeholder="Contoh: Kelas 1A"
+                                    value="{{ old('nama_kelas') }}"
+                                    autofocus
+                                >
+                                @error('nama_kelas')
+                                    <span class="form-error">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                                        {{ $message }}
+                                    </span>
+                                @enderror
                             </div>
+
+                            {{-- Tahun Ajaran --}}
                             <div class="form-group">
                                 <label class="form-label">Tahun Ajaran</label>
-                                <input type="text" name="tahun_ajaran" class="form-control" placeholder="Contoh: 2024/2025" required>
-                                <span class="form-hint">Format: YYYY/YYYY (Misal: 2023/2024)</span>
+                                <input
+                                    type="text"
+                                    name="tahun_ajaran"
+                                    class="form-control @error('tahun_ajaran') is-error @enderror"
+                                    placeholder="Contoh: 2024/2025"
+                                    value="{{ old('tahun_ajaran') }}"
+                                >
+                                @error('tahun_ajaran')
+                                    <span class="form-error">
+                                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                                        {{ $message }}
+                                    </span>
+                                @else
+                                    <span class="form-hint">Format: YYYY/YYYY (Misal: 2023/2024)</span>
+                                @enderror
                             </div>
+
                         </div>
                     </div>
 

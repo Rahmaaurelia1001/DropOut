@@ -156,29 +156,33 @@
         </div>
 
         <div class="da-content">
-            @if(session('success'))
-                <div style="padding: 12px 16px; background: var(--green-lt); border: 1.5px solid var(--green-bd); border-radius: 10px; color: var(--green-dk); font-size: 13px; font-weight: 600;">
-                    {{ session('success') }}
-                </div>
-            @endif
+            
 
             {{-- Filter Bar --}}
             <div class="filter-card">
-                <form method="GET" action="{{ route('admin.siswa.index') }}" style="display:flex; align-items:flex-end; gap:12px;">
-                    <div class="form-group">
-                        <label class="form-label">Filter Berdasarkan Kelas</label>
-                        <select name="id_kelas" class="form-select">
-                            <option value="">-- Semua Kelas --</option>
-                            @foreach($kelasList as $kelas)
-                                <option value="{{ $kelas->id_kelas }}" {{ request('id_kelas') == $kelas->id_kelas ? 'selected' : '' }}>
-                                    {{ $kelas->nama_kelas }} - {{ $kelas->tahun_ajaran }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <button type="submit" class="btn btn-primary" style="padding: 8px 16px;">Filter</button>
-                    <a href="{{ route('admin.siswa.index') }}" class="btn btn-white" style="padding: 8px 16px;">Reset</a>
-                </form>
+                <form method="GET" action="{{ route('admin.siswa.index') }}" style="display:flex; align-items:flex-end; gap:12px; flex-wrap:wrap;">
+    <div class="form-group">
+        <label class="form-label">Cari Nama / NISN</label>
+        <input type="text" name="search" value="{{ request('search') }}"
+            placeholder="Ketik nama atau NISN..."
+            style="padding:8px 12px; border-radius:9px; border:1.5px solid var(--gray-200); font-size:13px; font-weight:500; outline:none; min-width:220px; font-family:inherit;">
+    </div>
+    <div class="form-group">
+        <label class="form-label">Filter Kelas</label>
+        <select name="id_kelas" class="form-select">
+            <option value="">-- Semua Kelas --</option>
+            @foreach($kelasList as $kelas)
+                <option value="{{ $kelas->id_kelas }}" {{ request('id_kelas') == $kelas->id_kelas ? 'selected' : '' }}>
+                    {{ $kelas->nama_kelas }} - {{ $kelas->tahun_ajaran }}
+                </option>
+            @endforeach
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary" style="padding:8px 16px;">Cari</button>
+    <a href="{{ route('admin.siswa.index') }}" class="btn btn-white" style="padding:8px 16px;">Reset</a>
+</form>
+
+
             </div>
 
             <div class="table-card">
@@ -194,8 +198,6 @@
                                 <th style="width:50px">No</th>
                                 <th>NISN</th>
                                 <th>Nama Lengkap</th>
-                                <th>JK</th>
-                                <th>Tanggal Lahir</th>
                                 <th>Kelas</th>
                                 <th style="text-align:center">Aksi</th>
                             </tr>
@@ -208,22 +210,20 @@
                                 <td>
                                     <div style="font-weight:700; color:var(--gray-900)">{{ $s->nama_siswa }}</div>
                                 </td>
-                                <td>{{ $s->jenis_kelamin ?? '-' }}</td>
-                                <td style="color:var(--gray-500)">{{ $s->tanggal_lahir ?? '-' }}</td>
                                 <td><span style="font-weight:700; color:var(--blue)">{{ $s->kelas->nama_kelas ?? '-' }}</span></td>
                                 <td>
                                     <div style="display:flex; justify-content:center; gap:6px">
                                         <a href="{{ route('admin.siswa.edit', $s->id_siswa) }}" class="act-btn act-edit">Edit</a>
-                                        <form action="{{ route('admin.siswa.destroy', $s->id_siswa) }}" method="POST" style="margin:0">
+                                        <form id="delete-siswa-{{ $s->id_siswa }}" action="{{ route('admin.siswa.destroy', $s->id_siswa) }}" method="POST" style="margin:0">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="act-btn act-delete" onclick="return confirm('Hapus data siswa ini?')">Hapus</button>
                                         </form>
+                                        <button class="act-btn act-delete" onclick="confirmDelete('delete-siswa-{{ $s->id_siswa }}', '{{ $s->nama_siswa }}')">Hapus</button>
                                     </div>
                                 </td>
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="7" style="text-align:center; padding:40px; color:var(--gray-400); font-style:italic">Belum ada data siswa ditemukan.</td>
+                                <td colspan="5" style="text-align:center; padding:40px; color:var(--gray-400); font-style:italic">Belum ada data siswa ditemukan.</td>
                             </tr>
                             @endforelse
                         </tbody>

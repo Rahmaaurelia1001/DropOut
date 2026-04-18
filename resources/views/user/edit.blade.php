@@ -229,4 +229,57 @@
     </main>
 </div>
 </div>
+
+
+<script>
+    var roleSelect  = document.querySelector('select[name="role"]');
+    var kelasSelect = document.querySelector('select[name="id_kelas"]');
+
+    function toggleWalasUI(role) {
+        var isWalas = role === 'wali_kelas';
+        if (isWalas) {
+            kelasSelect.setAttribute('required', 'required');
+            kelasSelect.style.borderColor = !kelasSelect.value ? '#d97706' : '';
+        } else {
+            kelasSelect.removeAttribute('required');
+            kelasSelect.style.borderColor = '';
+        }
+    }
+
+    roleSelect.addEventListener('change', function() {
+        toggleWalasUI(this.value);
+    });
+
+    kelasSelect.addEventListener('change', function() {
+        if (this.value) {
+            this.style.borderColor = '';
+        } else if (roleSelect.value === 'wali_kelas') {
+            this.style.borderColor = '#d97706';
+        }
+    });
+
+    // Validasi saat submit
+    document.querySelector('form').addEventListener('submit', function(e) {
+        if (roleSelect.value === 'wali_kelas' && !kelasSelect.value) {
+            e.preventDefault();
+            kelasSelect.style.borderColor = '#ef4444';
+            kelasSelect.style.boxShadow = '0 0 0 3px rgba(239,68,68,0.1)';
+            kelasSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+            var existing = document.getElementById('kelas-error-msg');
+            if (!existing) {
+                var errMsg = document.createElement('span');
+                errMsg.id = 'kelas-error-msg';
+                errMsg.style.cssText = 'font-size:11px; color:#ef4444; font-weight:600; margin-top:4px; display:flex; align-items:center; gap:4px;';
+                errMsg.innerHTML = '⚠️ Wali kelas wajib ditugaskan ke salah satu kelas.';
+                kelasSelect.parentNode.appendChild(errMsg);
+            }
+        }
+    });
+
+    // Jalankan saat load
+    toggleWalasUI(roleSelect.value);
+</script>
+
+
 </x-app-layout>

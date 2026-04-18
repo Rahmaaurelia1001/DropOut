@@ -149,11 +149,7 @@
         </div>
 
         <div class="da-content">
-            @if(session('success'))
-                <div style="padding: 12px 16px; background: var(--green-lt); border: 1.5px solid var(--green-bd); border-radius: 10px; color: var(--green-dk); font-size: 13px; font-weight: 600;">
-                    {{ session('success') }}
-                </div>
-            @endif
+            
 
             <div class="table-card">
                 <div class="table-card-head">
@@ -198,10 +194,10 @@
                                 <td>
                                     <div style="display:flex; justify-content:center; gap:8px">
                                         <a href="{{ route('admin.periode.edit', $p->id_periode) }}" class="act-btn act-edit">Edit</a>
-                                        <form action="{{ route('admin.periode.destroy', $p->id_periode) }}" method="POST" style="margin:0">
+                                        <form id="delete-periode-{{ $p->id_periode }}" action="{{ route('admin.periode.destroy', $p->id_periode) }}" method="POST" style="margin:0">
                                             @csrf @method('DELETE')
-                                            <button type="submit" class="act-btn act-delete" onclick="return confirm('Yakin hapus periode ini?')">Hapus</button>
                                         </form>
+                                        <button class="act-btn act-delete" onclick="confirmDelete('delete-periode-{{ $p->id_periode }}', '{{ $p->tahun_ajaran }} Semester {{ $p->semester }}')">Hapus</button>
                                     </div>
                                 </td>
                             </tr>

@@ -180,6 +180,34 @@
             </div>
         </div>
 
+        {{-- ⚠️ ALERT PERIODE AKTIF --}}
+@if(!$periodeAktif)
+<div style="margin: 16px 32px 0; display:flex; align-items:flex-start; gap:12px; background:#fffbeb; border:1.5px solid #fde68a; border-left:4px solid #f59e0b; border-radius:12px; padding:16px 20px;">
+    <div style="width:36px; height:36px; background:#fef3c7; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <svg width="18" height="18" fill="none" stroke="#f59e0b" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+        </svg>
+    </div>
+    <div>
+        <div style="font-size:13px; font-weight:800; color:#92400e; margin-bottom:4px;">Tidak Ada Periode Aktif</div>
+        <div style="font-size:12px; color:#b45309; line-height:1.6;">Saat ini belum ada periode penilaian yang aktif. Kamu tidak dapat menjalankan analisis MFEP sampai admin mengaktifkan periode penilaian. Hubungi administrator untuk mengaktifkan periode.</div>
+    </div>
+</div>
+@else
+<div style="margin: 16px 32px 0; display:flex; align-items:center; gap:12px; background:#f0fdf4; border:1.5px solid #bbf7d0; border-left:4px solid #10b981; border-radius:12px; padding:14px 20px;">
+    <div style="width:36px; height:36px; background:#dcfce7; border-radius:9px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+        <svg width="18" height="18" fill="none" stroke="#10b981" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+    </div>
+    <div>
+        <div style="font-size:13px; font-weight:800; color:#065f46; margin-bottom:2px;">Periode Aktif</div>
+        <div style="font-size:12px; color:#047857; font-weight:600;">{{ $periodeAktif->tahun_ajaran }} — Semester {{ $periodeAktif->semester }}</div>
+    </div>
+</div>
+@endif
+
+
         <div class="da-body">
 
             {{-- ① WELCOME BANNER --}}

@@ -13,7 +13,9 @@ class SiswaController extends Controller
 {
     public function index(Request $request)
 {
-    $kelasList = Kelas::all();
+    $kelasList = Kelas::orderByRaw("CAST(REGEXP_REPLACE(nama_kelas, '[^0-9]', '') AS UNSIGNED) ASC")
+        ->orderByRaw("REGEXP_REPLACE(nama_kelas, '[0-9]', '') ASC")
+        ->get();
 
     $query = Siswa::with('kelas');
 
@@ -25,7 +27,15 @@ class SiswaController extends Controller
         }
     }
 
-    $siswa = $query->get();
+    // Filter search nama / NISN
+    if ($request->filled('search')) {
+        $query->where(function($q) use ($request) {
+            $q->where('nama_siswa', 'like', '%' . $request->search . '%')
+              ->orWhere('nisn', 'like', '%' . $request->search . '%');
+        });
+    }
+
+    $siswa = $query->orderBy('nama_siswa')->get();
 
     return view('siswa.index', compact('siswa', 'kelasList'));
 }
