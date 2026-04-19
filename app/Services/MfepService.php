@@ -175,17 +175,17 @@ class MfepService
             ->where('is_selected', 0)
             ->delete();
 
-        // Simpan hanya yang belum ada
         foreach ($masterList as $master) {
-            if (!in_array($master->deskripsi_rekomendasi, $rekomendasiSudahAda)) {
-                Rekomendasi::create([
-                    'id_hasil' => $hasilModel->id_hasil,
-                    'deskripsi_rekomendasi' => $master->deskripsi_rekomendasi,
-                    'status' => 'belum_diproses',
-                    'tanggal_dibuat' => now(),
-                ]);
-            }
-        }
+    if (!in_array($master->deskripsi_rekomendasi, $rekomendasiSudahAda)) {
+        Rekomendasi::create([
+            'id_hasil' => $hasilModel->id_hasil,
+            'id_master_rekomendasi' => $master->id_master_rekomendasi,
+            'deskripsi_rekomendasi' => $master->deskripsi_rekomendasi,
+            'status' => 'belum_diproses',
+            'tanggal_dibuat' => now(),
+        ]);
+    }
+}
 
         // Pastikan is_selected tetap terjaga sesuai tindak_lanjut_final
         if ($deskripsiSelected) {

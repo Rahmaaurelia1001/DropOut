@@ -23,4 +23,9 @@ class Rekomendasi extends Model
     {
         return $this->belongsTo(HasilKeputusan::class, 'id_hasil', 'id_hasil');
     }
+
+    public function masterRekomendasi()
+{
+    return $this->belongsTo(MasterRekomendasi::class, 'id_master_rekomendasi', 'id_master_rekomendasi');
+}
 }

@@ -15,4 +15,10 @@ class MasterRekomendasi extends Model
         'deskripsi_rekomendasi',
         'is_active',
     ];
+
+    public function rekomendasi()
+{
+    return $this->hasMany(Rekomendasi::class, 'id_master_rekomendasi', 'id_master_rekomendasi');
 }
+}
+
