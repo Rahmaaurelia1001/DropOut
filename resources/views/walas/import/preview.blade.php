@@ -160,18 +160,92 @@
                     </table>
                 </div>
 
-                <div style="padding:24px; display:flex; gap:12px; border-top:1px solid var(--gray-100); background: var(--gray-50)/30;">
-                    <form action="{{ route('walas.import.store') }}" method="POST">
-                        @csrf
-                        <input type="hidden" name="jenis_data" value="{{ $jenis_data }}">
-                        <button type="submit" class="btn-confirm">Konfirmasi & Simpan</button>
-                    </form>
-                    <a href="{{ route('walas.import.create') }}" class="btn-cancel">Batal</a>
+                {{-- Warning NISN tidak cocok --}}
+@if(count($nisnTidakCocok) > 0)
+    <div style="margin: 16px 24px 0; padding: 16px; background: #fef2f2; border: 1.5px solid #fecaca; border-radius: 14px;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+            <span style="font-size:18px;">🚫</span>
+            <span style="font-size:13px; font-weight:800; color:#b91c1c;">Import Diblokir — {{ count($nisnTidakCocok) }} Data Siswa Tidak Cocok</span>
+        </div>
+        <p style="font-size:12px; color:#991b1b; margin-bottom:10px; line-height:1.5;">
+            NISN berikut tidak ditemukan di daftar siswa kelas Anda. Anda <b>tidak dapat menyimpan</b> file ini. Silakan upload ulang file yang benar:
+        </p>
+        <div style="background:#fee2e2; border-radius:8px; padding:10px; max-height:120px; overflow-y:auto;">
+            @foreach($nisnTidakCocok as $item)
+                <div style="font-size:11px; font-weight:600; color:#b91c1c; padding:3px 0; border-bottom:1px solid #fecaca;">
+                    ❌ {{ $item }}
                 </div>
+            @endforeach
+        </div>
+        <p style="font-size:11px; color:#b91c1c; margin-top:8px; font-weight:700;">
+            ⚠️ Pastikan file yang diupload hanya berisi data siswa di kelas Anda.
+        </p>
+    </div>
+@endif
+
+<div style="padding:24px; display:flex; gap:12px; border-top:1px solid var(--gray-100); background:var(--gray-50); margin-top:16px;">
+    @if(count($nisnTidakCocok) === 0)
+        {{-- Tombol simpan hanya muncul kalau semua NISN cocok --}}
+        <form action="{{ route('walas.import.store') }}" method="POST" id="storeForm">
+            @csrf
+            <input type="hidden" name="jenis_data" value="{{ $jenis_data }}">
+            <button type="button" class="btn-confirm" onclick="confirmSimpan()">
+                ✅ Konfirmasi & Simpan
+            </button>
+        </form>
+    @else
+        {{-- Tombol diblokir --}}
+        <button disabled style="background:#e5e7eb; color:#9ca3af; padding:10px 24px; border-radius:12px; font-weight:700; font-size:14px; border:none; cursor:not-allowed;">
+            🚫 Tidak Dapat Disimpan
+        </button>
+    @endif
+    <a href="{{ route('walas.import.create') }}" class="btn-cancel">⬅️ Upload Ulang</a>
+</div>
+
+
             </div>
         </div>
     </main>
 
 </div>
 </div>
+
+{{-- ALERT: Konfirmasi Simpan --}}
+<div id="alertConfirmSimpan" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:300; align-items:center; justify-content:center;">
+    <div style="background:white; border-radius:20px; padding:32px; max-width:400px; width:90%; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.2);">
+        <div style="font-size:48px; margin-bottom:12px;">💾</div>
+        <div style="font-size:16px; font-weight:800; color:#0f172a; margin-bottom:8px;">Konfirmasi Simpan Data</div>
+        <div style="font-size:13px; color:#64748b; line-height:1.5; margin-bottom:20px;" id="alertConfirmMsg"></div>
+        <div style="display:flex; gap:10px; justify-content:center;">
+            <button style="background:#f3f4f6; color:#374151; padding:10px 24px; border-radius:10px; font-weight:700; border:none; cursor:pointer; font-size:13px;"
+                onclick="document.getElementById('alertConfirmSimpan').style.display='none'">Batal</button>
+            <button style="background:#2563eb; color:white; padding:10px 24px; border-radius:10px; font-weight:700; border:none; cursor:pointer; font-size:13px;"
+                onclick="doSimpan()">Ya, Simpan</button>
+        </div>
+    </div>
+</div>
+
+{{-- Loading --}}
+<div id="loadingOverlay" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:400; align-items:center; justify-content:center; flex-direction:column; gap:16px;">
+    <div style="width:48px; height:48px; border:4px solid rgba(255,255,255,0.3); border-top-color:white; border-radius:50%; animation:spin 0.8s linear infinite;"></div>
+    <div style="color:white; font-size:14px; font-weight:700; font-family:'Plus Jakarta Sans',sans-serif;">Menyimpan data, mohon tunggu...</div>
+</div>
+
+<style>
+    @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+<script>
+    function confirmSimpan() {
+        document.getElementById('alertConfirmMsg').innerHTML = 
+            'Semua data siswa cocok. Data akan disimpan secara permanen ke database. Lanjutkan?';
+        document.getElementById('alertConfirmSimpan').style.display = 'flex';
+    }
+
+    function doSimpan() {
+        document.getElementById('alertConfirmSimpan').style.display = 'none';
+        document.getElementById('loadingOverlay').style.display = 'flex';
+        document.getElementById('storeForm').submit();
+    }
+</script>
 </x-app-layout>

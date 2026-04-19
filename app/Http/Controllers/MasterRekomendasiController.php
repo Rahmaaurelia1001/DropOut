@@ -32,24 +32,24 @@ class MasterRekomendasiController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'kategori_risiko' => 'required|in:Tinggi,Sedang,Rendah',
-            'faktor_dominan' => 'required|in:Nilai Rata Rata Akademik,Ketidak hadiran,Pekerjaan orang tua,Pendidikan Orang Tua',
-            'deskripsi_rekomendasi' => 'required|string',
-            'is_active' => 'required|boolean',
-        ]);
+{
+    $request->validate([
+        'kategori_risiko'      => 'required|in:Tinggi,Sedang,Rendah',
+        'faktor_dominan'       => 'required|in:Nilai Rata Rata Akademik,Ketidak hadiran,Pekerjaan orang tua,Pendidikan Orang Tua',
+        'deskripsi_rekomendasi'=> 'required|string',
+        // ✅ is_active dihapus dari validasi
+    ]);
 
-        MasterRekomendasi::create([
-            'kategori_risiko' => $request->kategori_risiko,
-            'faktor_dominan' => $request->faktor_dominan,
-            'deskripsi_rekomendasi' => $request->deskripsi_rekomendasi,
-            'is_active' => $request->is_active,
-        ]);
+    MasterRekomendasi::create([
+        'kategori_risiko'       => $request->kategori_risiko,
+        'faktor_dominan'        => $request->faktor_dominan,
+        'deskripsi_rekomendasi' => $request->deskripsi_rekomendasi,
+        'is_active'             => 1, // ✅ selalu aktif saat dibuat
+    ]);
 
-        return redirect()->route('admin.master-rekomendasi.index')
-            ->with('success', 'Master rekomendasi berhasil ditambahkan.');
-    }
+    return redirect()->route('admin.master-rekomendasi.index')
+        ->with('success', 'Master rekomendasi berhasil ditambahkan.');
+}
 
     public function edit($id)
     {

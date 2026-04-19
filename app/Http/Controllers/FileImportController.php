@@ -14,16 +14,23 @@ use App\Imports\RaporImport;
 class FileImportController extends Controller
 {
     public function index()
-    {
-        $imports = DB::table('file_import')
-            ->where('uploaded_by', Auth::id())
-            ->orderBy('id_file', 'desc')
-            ->get();
+{
+    $importNilai = DB::table('file_import')
+        ->where('uploaded_by', Auth::id())
+        ->where('jenis_data', 'nilai_mapel')
+        ->orderBy('id_file', 'desc')
+        ->first();
 
-        $periodeAktif = PeriodePenilaian::where('status', 'Aktif')->first();
+    $importEvaluasi = DB::table('file_import')
+        ->where('uploaded_by', Auth::id())
+        ->where('jenis_data', 'evaluasi')
+        ->orderBy('id_file', 'desc')
+        ->first();
 
-        return view('walas.import.index', compact('imports', 'periodeAktif'));
-    }
+    $periodeAktif = PeriodePenilaian::where('status', 'Aktif')->first();
+
+    return view('walas.import.index', compact('importNilai', 'importEvaluasi', 'periodeAktif'));
+}
 
     public function create()
     {
@@ -64,14 +71,34 @@ class FileImportController extends Controller
         ]);
 
         $fullPath = storage_path('app/public/' . $tempPath);
-        $data = Excel::toArray([], $fullPath);
-        $rows = $data[0] ?? [];
+$data = Excel::toArray([], $fullPath);
+$rows = $data[0] ?? [];
 
-        return view('walas.import.preview', [
-            'rows' => $rows,
-            'jenis_data' => $request->jenis_data,
-            'periodeAktif' => $periodeAktif,
-        ]);
+// 🔥 Validasi NISN vs siswa di kelas wali kelas
+$idKelasWalas = Auth::user()->id_kelas;
+$nisnDiKelas = DB::table('siswa')
+    ->where('id_kelas', $idKelasWalas)
+    ->pluck('nisn')
+    ->map(fn($n) => trim((string) $n))
+    ->toArray();
+
+$nisnTidakCocok = [];
+foreach ($rows as $index => $row) {
+    if ($index == 0) continue; // skip header
+    $nisn = trim((string) ($row[0] ?? ''));
+    if (!$nisn) continue;
+    if (!in_array($nisn, $nisnDiKelas)) {
+        $namaSiswa = trim((string) ($row[1] ?? $nisn));
+        $nisnTidakCocok[] = "NISN: $nisn ($namaSiswa)";
+    }
+}
+
+return view('walas.import.preview', [
+    'rows' => $rows,
+    'jenis_data' => $request->jenis_data,
+    'periodeAktif' => $periodeAktif,
+    'nisnTidakCocok' => $nisnTidakCocok,
+]);
     }
 
     public function store(Request $request)

@@ -420,17 +420,7 @@ textarea.form-control {
                             @enderror
                         </div>
 
-                        <div class="form-divider"></div>
-
-                        {{-- Status --}}
-                        <div class="form-group" style="max-width: 240px;">
-                            <label class="form-label">Status</label>
-                            <select name="is_active" class="form-control">
-                                <option value="1" {{ old('is_active', '1') == '1' ? 'selected' : '' }}>Aktif</option>
-                                <option value="0" {{ old('is_active') == '0' ? 'selected' : '' }}>Nonaktif</option>
-                            </select>
-                            <span class="form-hint">Rekomendasi aktif akan digunakan dalam sistem analisis.</span>
-                        </div>
+                        <input type="hidden" name="is_active" value="1">
 
                     </div>
 

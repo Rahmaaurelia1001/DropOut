@@ -272,6 +272,52 @@
                 </div>
             </div>
 
+
+            {{-- ③.5 TOP 5 SISWA RISIKO TINGGI --}}
+<div class="card" style="margin-bottom:0;">
+    <div class="card-title" style="color:#ef4444;">
+        🚨 Top 5 Siswa Risiko Tinggi
+    </div>
+    @if($topSiswaTinggi->count() > 0)
+        <div class="tbl-wrap">
+            <table class="da-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Siswa</th>
+                        <th style="text-align:center;">Nilai Preferensi</th>
+                        <th>Faktor Dominan</th>
+                        <th style="text-align:center;">Kategori</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($topSiswaTinggi as $i => $item)
+                    <tr>
+                        <td style="color:#9ca3af; font-weight:700;">{{ $i + 1 }}</td>
+                        <td style="font-weight:700; color:#111827;">{{ $item->siswa->nama_siswa ?? '-' }}</td>
+                        <td style="text-align:center; font-weight:700; color:#ef4444; font-family:monospace;">
+                            {{ number_format($item->total_nilai_preferensi, 4) }}
+                        </td>
+                        <td style="font-size:12px; color:#6b7280;">{{ $item->faktor_dominan ?? '-' }}</td>
+                        <td style="text-align:center;">
+                            <span style="background:#fef2f2; color:#ef4444; font-size:11px; font-weight:800; padding:4px 10px; border-radius:20px;">
+                                Tinggi
+                            </span>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    @else
+        <div class="empty-state">
+            <svg fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <p>Tidak ada siswa dengan risiko tinggi</p>
+            <small>Semua siswa di kelas ini berada dalam kategori risiko rendah atau sedang.</small>
+        </div>
+    @endif
+</div>
+
             {{-- ④ TABEL DATA SISWA --}}
             <div class="card" style="margin-bottom:0;">
                 <div class="card-title">

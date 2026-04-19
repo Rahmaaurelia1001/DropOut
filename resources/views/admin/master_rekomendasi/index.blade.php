@@ -382,15 +382,14 @@ header { display: none !important; }
                                                 <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                                 Edit
                                             </a>
-                                            <form action="{{ route('admin.master-rekomendasi.destroy', $item->id_master_rekomendasi) }}" method="POST" style="margin:0"
-                                                onsubmit="return confirm('Hapus rekomendasi ini?')">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="act-btn act-delete">
-                                                    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                                    Hapus
-                                                </button>
-                                            </form>
+                                            <form id="delete-rekomendasi-{{ $item->id_master_rekomendasi }}" action="{{ route('admin.master-rekomendasi.destroy', $item->id_master_rekomendasi) }}" method="POST" style="margin:0">
+    @csrf
+    @method('DELETE')
+</form>
+<button class="act-btn act-delete" onclick="confirmDelete('delete-rekomendasi-{{ $item->id_master_rekomendasi }}', '{{ Str::limit($item->deskripsi_rekomendasi, 40) }}')">
+    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+    Hapus
+</button>
                                         </div>
                                     </td>
                                 </tr>

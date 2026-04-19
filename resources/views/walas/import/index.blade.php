@@ -3,52 +3,30 @@
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
     :root {
-        --blue:     #2563eb; 
-        --blue-lt:  #eff6ff; 
-        --white:    #ffffff;
-        --gray-50:  #f9fafb; 
-        --gray-100: #f3f4f6; 
-        --gray-200: #e5e7eb;
-        --gray-400: #9ca3af; 
-        --gray-500: #64748b; 
-        --gray-800: #1e293b; 
-        --gray-900: #0f172a;
+        --blue: #2563eb; --blue-lt: #eff6ff; --white: #ffffff;
+        --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb;
+        --gray-400: #9ca3af; --gray-500: #64748b; --gray-800: #1e293b; --gray-900: #0f172a;
         --sidebar-w: 240px;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     nav[x-data], header { display: none !important; }
 
-    .da-root {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        background: var(--gray-50); color: var(--gray-800);
-        height: 100vh; overflow: hidden;
-    }
-
+    .da-root { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--gray-50); color: var(--gray-800); height: 100vh; overflow: hidden; }
     .da-shell { display: flex; height: 100vh; }
 
-    /* ── SIDEBAR WALAS ── */
-    .da-sidebar {
-        width: var(--sidebar-w); background: var(--white); border-right: 1px solid var(--gray-200);
-        display: flex; flex-direction: column; flex-shrink: 0;
-    }
+    .da-sidebar { width: var(--sidebar-w); background: var(--white); border-right: 1px solid var(--gray-200); display: flex; flex-direction: column; flex-shrink: 0; }
     .sb-brand { padding: 24px 20px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid var(--gray-100); }
     .sb-logo { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #1d4ed8, #2563eb); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(37,99,235,.2); flex-shrink: 0; }
     .sb-brand-name { font-size: 14px; font-weight: 800; color: var(--gray-900); line-height: 1.2; letter-spacing: -0.2px; }
     .sb-brand-sub { font-size: 10px; color: var(--gray-400); font-weight: 600; margin-top: 1px; }
-
     .sb-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
     .sb-nav-section { font-size: 10px; font-weight: 800; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.1em; padding: 0 10px; margin: 20px 0 8px; }
     .sb-nav-section:first-child { margin-top: 0; }
-
-    .sb-item { 
-        display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; 
-        text-decoration: none; font-size: 13px; font-weight: 600; color: var(--gray-500); transition: all .2s; margin-bottom: 2px; 
-    }
+    .sb-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; text-decoration: none; font-size: 13px; font-weight: 600; color: var(--gray-500); transition: all .2s; margin-bottom: 2px; }
     .sb-item:hover { background: var(--gray-100); color: var(--gray-900); }
     .sb-item.active { background: var(--blue-lt); color: var(--blue); }
     .sb-item svg { width: 18px; height: 18px; stroke-width: 2.5; flex-shrink: 0; }
-
     .sb-user { padding: 16px; border-top: 1px solid var(--gray-100); display: flex; align-items: center; gap: 10px; background: white; }
     .sb-user-av { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #2563eb, #38bdf8); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; flex-shrink: 0; }
     .sb-user-info { flex: 1; min-width: 0; }
@@ -58,43 +36,40 @@
     .sb-btn-icon { background: none; border: none; cursor: pointer; padding: 6px; color: var(--gray-400); border-radius: 8px; transition: .15s; display: flex; align-items: center; }
     .sb-btn-icon:hover { background: var(--gray-100); color: var(--gray-800); }
 
-    /* ── MAIN AREA ── */
     .da-main { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100vh; overflow-y: auto; }
-    .da-phead { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 16px 32px; flex-shrink: 0; }
-    
+    .da-phead { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 16px 32px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; }
     .da-body { padding: 32px; }
 
-    /* ── STATS ── */
-    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 32px; }
-    .stat-card { background: white; border: 1.5px solid var(--gray-200); border-radius: 20px; padding: 20px; }
-    .stat-label { font-size: 12px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em; }
-    .stat-val { font-size: 28px; font-weight: 800; color: var(--gray-900); margin-top: 8px; }
+    .btn-upload { background: var(--blue); color: white; padding: 10px 20px; border-radius: 12px; font-weight: 700; font-size: 13px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: .2s; }
+    .btn-upload:hover { background: #1d4ed8; }
 
-    /* ── TABLE ── */
-    .card-table { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 24px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-    .table-header { padding: 24px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; }
-    
-    .btn-upload { 
-        background: var(--blue); color: white; padding: 10px 20px; border-radius: 12px; 
-        font-weight: 700; font-size: 13.5px; text-decoration: none; transition: .2s;
-        display: flex; align-items: center; gap: 8px;
-    }
-    .btn-upload:hover { background: #1d4ed8; transform: translateY(-1px); }
+    .status-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+    .status-card { background: white; border: 1.5px solid var(--gray-200); border-radius: 20px; padding: 24px; display: flex; gap: 16px; align-items: flex-start; }
+    .status-icon { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+    .status-icon.blue { background: #eff6ff; }
+    .status-icon.green { background: #ecfdf5; }
+    .status-info { flex: 1; min-width: 0; }
+    .status-title { font-size: 12px; font-weight: 800; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+    .status-file { font-size: 13px; font-weight: 700; color: var(--gray-900); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-bottom: 4px; }
+    .status-date { font-size: 11px; color: var(--gray-400); font-weight: 500; }
+    .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 10px; font-weight: 800; margin-top: 8px; }
+    .status-badge.done { background: #ecfdf5; color: #059669; }
+    .status-badge.empty { background: var(--gray-100); color: var(--gray-400); }
 
-    table { width: 100%; border-collapse: collapse; }
-    th { background: var(--gray-50); padding: 16px 24px; text-align: left; font-size: 11px; font-weight: 800; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em; }
-    td { padding: 18px 24px; font-size: 14px; border-bottom: 1px solid var(--gray-100); color: var(--gray-800); }
-    tr:hover td { background: var(--gray-50); }
-
-    .badge { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 800; text-transform: uppercase; }
-    .badge-blue { background: #eff6ff; color: #2563eb; }
-    .badge-emerald { background: #ecfdf5; color: #059669; }
+    .checklist-card { background: white; border: 1.5px solid var(--gray-200); border-radius: 20px; padding: 24px; }
+    .check-item { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--gray-100); }
+    .check-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .check-item:first-child { padding-top: 0; }
+    .check-dot { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 800; flex-shrink: 0; }
+    .check-dot.done { background: #ecfdf5; color: #059669; }
+    .check-dot.pending { background: var(--gray-100); color: var(--gray-400); font-size: 12px; }
+    .check-label { font-size: 13px; font-weight: 700; color: var(--gray-800); }
+    .check-sub { font-size: 11px; color: var(--gray-400); margin-top: 2px; line-height: 1.4; }
 </style>
 
 <div class="da-root">
 <div class="da-shell">
-    
-    {{-- SIDEBAR --}}
+
     <aside class="da-sidebar">
         <div class="sb-brand">
             <div class="sb-logo"><svg width="20" height="20" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg></div>
@@ -130,69 +105,115 @@
 
     <main class="da-main">
         <div class="da-phead">
-            <h2 style="font-size:18px; font-weight:800; letter-spacing:-0.5px;">Import Data Akademik</h2>
+            <div>
+                <h2 style="font-size:18px; font-weight:800; letter-spacing:-0.5px;">Import Data Akademik</h2>
+                <p style="font-size:12px; color:var(--gray-400); margin-top:2px;">Status upload data untuk periode aktif</p>
+            </div>
+            <a href="{{ route('walas.import.create') }}" class="btn-upload">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+                Upload File Baru
+            </a>
         </div>
 
         <div class="da-body">
-            {{-- Stats --}}
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-label">Total File</div>
-                    <div class="stat-val">{{ $imports->count() }}</div>
+            @if(session('success'))
+                <div style="background:#ecfdf5; border:1px solid #d1fae5; padding:14px 20px; border-radius:14px; margin-bottom:24px; color:#059669; font-size:13px; font-weight:600;">
+                    ✅ {{ session('success') }}
                 </div>
-                <div class="stat-card">
-                    <div class="stat-label" style="color:var(--blue)">Nilai Mapel</div>
-                    <div class="stat-val">{{ $imports->where('jenis_data', 'nilai_mapel')->count() }}</div>
+            @endif
+            @if(session('error'))
+                <div style="background:#fef2f2; border:1px solid #fee2e2; padding:14px 20px; border-radius:14px; margin-bottom:24px; color:#b91c1c; font-size:13px; font-weight:600;">
+                    ❌ {{ session('error') }}
                 </div>
-                <div class="stat-card">
-                    <div class="stat-label" style="color:#059669">Evaluasi Rapor</div>
-                    <div class="stat-val">{{ $imports->where('jenis_data', 'evaluasi')->count() }}</div>
+            @endif
+
+            {{-- Periode Aktif --}}
+            @if($periodeAktif)
+                <div style="background:#eff6ff; border:1px solid #bfdbfe; border-radius:14px; padding:14px 20px; margin-bottom:24px; display:flex; align-items:center; gap:10px;">
+                    <span style="font-size:16px;">📅</span>
+                    <span style="font-size:13px; font-weight:700; color:#1d4ed8;">Periode Aktif: {{ $periodeAktif->tahun_ajaran }} - Semester {{ $periodeAktif->semester }}</span>
+                </div>
+            @else
+                <div style="background:#fef2f2; border:1px solid #fee2e2; border-radius:14px; padding:14px 20px; margin-bottom:24px; display:flex; align-items:center; gap:10px;">
+                    <span style="font-size:16px;">⚠️</span>
+                    <span style="font-size:13px; font-weight:700; color:#b91c1c;">Belum ada periode aktif. Hubungi admin.</span>
+                </div>
+            @endif
+
+            {{-- Status Upload Cards --}}
+            <div class="status-grid">
+                <div class="status-card">
+                    <div class="status-icon blue">📊</div>
+                    <div class="status-info">
+                        <div class="status-title">Nilai Mapel</div>
+                        @if($importNilai)
+                            <div class="status-file" title="{{ $importNilai->nama_file }}">
+                                {{ Str::limit($importNilai->nama_file, 35) }}
+                            </div>
+                            <div class="status-date">
+                                Diupload: {{ \Carbon\Carbon::parse($importNilai->tanggal_upload)->translatedFormat('d M Y, H:i') }}
+                            </div>
+                            <span class="status-badge done">✅ Sudah Diupload</span>
+                        @else
+                            <div class="status-file" style="color:var(--gray-400); font-style:italic;">Belum ada file</div>
+                            <div class="status-date">—</div>
+                            <span class="status-badge empty">⏳ Belum Diupload</span>
+                        @endif
+                    </div>
+                </div>
+
+                <div class="status-card">
+                    <div class="status-icon green">📋</div>
+                    <div class="status-info">
+                        <div class="status-title">Evaluasi Siswa</div>
+                        @if($importEvaluasi)
+                            <div class="status-file" title="{{ $importEvaluasi->nama_file }}">
+                                {{ Str::limit($importEvaluasi->nama_file, 35) }}
+                            </div>
+                            <div class="status-date">
+                                Diupload: {{ \Carbon\Carbon::parse($importEvaluasi->tanggal_upload)->translatedFormat('d M Y, H:i') }}
+                            </div>
+                            <span class="status-badge done">✅ Sudah Diupload</span>
+                        @else
+                            <div class="status-file" style="color:var(--gray-400); font-style:italic;">Belum ada file</div>
+                            <div class="status-date">—</div>
+                            <span class="status-badge empty">⏳ Belum Diupload</span>
+                        @endif
+                    </div>
                 </div>
             </div>
 
-            {{-- Table --}}
-            <div class="card-table">
-                <div class="table-header">
-                    <div>
-                        <h3 style="font-size:15px; font-weight:800; color:var(--gray-900)">Riwayat Import</h3>
-                    </div>
-                    <a href="{{ route('walas.import.create') }}" class="btn-upload">
-                        <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
-                        Upload File
-                    </a>
+            {{-- Checklist panduan --}}
+            <div class="checklist-card">
+                <div style="font-size:14px; font-weight:800; color:var(--gray-900); margin-bottom:16px; display:flex; align-items:center; gap:8px;">
+                    📌 Panduan Upload Data
                 </div>
-
-                <div style="overflow-x: auto;">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Nama File</th>
-                                <th>Jenis Data</th>
-                                <th>Tanggal Upload</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @forelse($imports as $index => $item)
-                            <tr>
-                                <td style="color:var(--gray-400); font-weight:700;">{{ $index + 1 }}</td>
-                                <td style="font-weight:700; color:var(--gray-800)">{{ $item->nama_file }}</td>
-                                <td>
-                                    @if($item->jenis_data == 'nilai_mapel')
-                                        <span class="badge badge-blue">Nilai Mapel</span>
-                                    @else
-                                        <span class="badge badge-emerald">Evaluasi</span>
-                                    @endif
-                                </td>
-                                <td style="color:var(--gray-500)">{{ \Carbon\Carbon::parse($item->tanggal_upload)->format('d/m/Y H:i') }}</td>
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="4" style="padding:48px; text-align:center; color:var(--gray-400); font-size:13px;">Belum ada riwayat.</td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-                    </table>
+                <div class="check-item">
+                    <div class="check-dot {{ $importNilai ? 'done' : 'pending' }}">
+                        {{ $importNilai ? '✅' : '1' }}
+                    </div>
+                    <div>
+                        <div class="check-label">Upload file Nilai Mapel</div>
+                        <div class="check-sub">File Excel berisi NISN, nama siswa, dan nilai per mata pelajaran</div>
+                    </div>
+                </div>
+                <div class="check-item">
+                    <div class="check-dot {{ $importEvaluasi ? 'done' : 'pending' }}">
+                        {{ $importEvaluasi ? '✅' : '2' }}
+                    </div>
+                    <div>
+                        <div class="check-label">Upload file Evaluasi Siswa</div>
+                        <div class="check-sub">File Excel berisi NISN, presensi, pekerjaan dan pendidikan orang tua</div>
+                    </div>
+                </div>
+                <div class="check-item">
+                    <div class="check-dot {{ ($importNilai && $importEvaluasi) ? 'done' : 'pending' }}">
+                        {{ ($importNilai && $importEvaluasi) ? '✅' : '3' }}
+                    </div>
+                    <div>
+                        <div class="check-label">Jalankan Analisis Risiko</div>
+                        <div class="check-sub">Setelah kedua file terupload, buka menu Analisis Risiko dan klik Proses</div>
+                    </div>
                 </div>
             </div>
         </div>

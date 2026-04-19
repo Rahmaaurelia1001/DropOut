@@ -448,11 +448,11 @@ class MfepController extends Controller
 
         if ($idPeriode) {
             $topSiswaTinggi = HasilKeputusan::with(['siswa.kelas'])
-                ->where('id_periode', $idPeriode)
-                ->where('kategori_risiko', 'Tinggi')
-                ->orderBy('total_nilai_preferensi', 'desc')
-                ->limit(5)
-                ->get();
+            ->where('id_periode', $idPeriode)
+            ->where('kategori_risiko', 'Tinggi')
+            ->orderBy('total_nilai_preferensi', 'asc') // ✅ terkecil = risiko tertinggi
+            ->limit(5)
+            ->get();
         }
 
         $statusPerKelas = HasilKeputusan::select(
