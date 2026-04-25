@@ -15,6 +15,7 @@ class Penilaian extends Model
         'id_kriteria',
         'id_periode',
         'nilai_penilaian',
+        'id_evaluasi',
     ];
 
     public function siswa()

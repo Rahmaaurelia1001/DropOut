@@ -19,6 +19,10 @@ class HasilKeputusan extends Model
         'kategori_risiko',
         'faktor_dominan',
         'tanggal_proses',
+        'tindak_lanjut_final',
+        'deskripsi_tambahan',
+        'tanggal_keputusan',
+        'id_perhitungan',
     ];
 
     public function siswa()

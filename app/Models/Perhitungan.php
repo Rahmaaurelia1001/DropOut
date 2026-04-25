@@ -17,6 +17,7 @@ class Perhitungan extends Model
         'nilai_bobot',
         'nilai_skala',
         'hasil_perkalian',
+        'id_penilaian',
     ];
 
     public function siswa()
