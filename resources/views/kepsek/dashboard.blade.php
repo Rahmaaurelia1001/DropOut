@@ -65,7 +65,7 @@
     .stat-lbl { font-size: 11px; font-weight: 800; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em; }
     .stat-val { font-size: 28px; font-weight: 800; color: var(--gray-900); margin-top: 6px; line-height: 1; }
 
-    /* ── MID ROW: chart + info ── */
+    /* ── MID ROW ── */
     .mid-row { display: grid; grid-template-columns: 1.6fr 1fr; gap: 20px; }
     canvas { max-height: 220px; width: 100% !important; }
 
@@ -80,13 +80,26 @@
     .da-table td { padding: 11px 14px; border-bottom: 1px solid var(--gray-100); vertical-align: middle; }
     .da-table tr:last-child td { border-bottom: none; }
 
-    /* ── BOTTOM ROW: bar chart + kelas grid ── */
+    /* ── BOTTOM ROW ── */
     .bottom-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 
     /* ── KELAS STATUS GRID ── */
     .kelas-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
     .kelas-card { border: 1.5px solid var(--gray-100); border-radius: 16px; padding: 14px 16px; background: white; }
     .prog-item { text-align: center; padding: 8px 6px; border-radius: 10px; }
+
+    /* ── LEVEL KELAS GRID ── */
+    .level-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .level-card { border: 1.5px solid var(--gray-100); border-radius: 16px; padding: 16px; background: white; overflow: hidden; position: relative; }
+    .level-badge { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; font-size: 16px; font-weight: 800; margin-bottom: 10px; }
+    .level-kelas-name { font-size: 11px; color: var(--gray-400); font-weight: 600; margin-bottom: 12px; }
+    .level-bars { display: flex; flex-direction: column; gap: 6px; }
+    .level-bar-row { display: flex; align-items: center; gap: 8px; }
+    .level-bar-label { font-size: 10px; font-weight: 700; width: 42px; flex-shrink: 0; }
+    .level-bar-track { flex: 1; height: 8px; background: var(--gray-100); border-radius: 99px; overflow: hidden; }
+    .level-bar-fill { height: 100%; border-radius: 99px; transition: width .4s ease; }
+    .level-bar-count { font-size: 11px; font-weight: 800; width: 20px; text-align: right; flex-shrink: 0; }
+    .level-total { font-size: 10px; color: var(--gray-400); font-weight: 600; margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--gray-100); }
 
     /* ── BADGE ROLE ── */
     .role-badge { background: var(--blue-lt); color: var(--blue); font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 6px; text-transform: uppercase; }
@@ -147,8 +160,6 @@
             </div>
             <div style="display:flex; align-items:center; gap:10px;">
                 <div class="date-chip" id="date-indo"></div>
-
-                {{-- Bell --}}
                 <div style="position:relative;" id="kepsekBellWrap">
                     <button class="bell-btn" id="kepsekBellBtn">
                         <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
@@ -228,7 +239,70 @@
                 </div>
             </div>
 
-            {{-- ④ TOP 5 SISWA + CHART KELAS --}}
+            {{-- ④ RISIKO PER LEVEL KELAS --}}
+            <div class="card">
+                <div class="card-title">Persentase Risiko per Tingkatan Kelas</div>
+                @if($risikoPerLevel->count() > 0)
+                    <div class="level-grid">
+                        @foreach($risikoPerLevel as $level)
+                        @php
+                            $total      = max(1, $level->total_siswa);
+                            $pctTinggi  = round(($level->jumlah_tinggi  / $total) * 100);
+                            $pctSedang  = round(($level->jumlah_sedang  / $total) * 100);
+                            $pctRendah  = round(($level->jumlah_rendah  / $total) * 100);
+
+                            // warna badge level
+                            $badgeColors = [
+                                1 => ['bg'=>'#fee2e2','color'=>'#b91c1c'],
+                                2 => ['bg'=>'#ffedd5','color'=>'#c2410c'],
+                                3 => ['bg'=>'#fef9c3','color'=>'#854d0e'],
+                                4 => ['bg'=>'#d1fae5','color'=>'#065f46'],
+                                5 => ['bg'=>'#dbeafe','color'=>'#1e40af'],
+                                6 => ['bg'=>'#ede9fe','color'=>'#4c1d95'],
+                            ];
+                            $bc = $badgeColors[$level->level_kelas] ?? ['bg'=>'#f3f4f6','color'=>'#374151'];
+                        @endphp
+                        <div class="level-card">
+                            <div class="level-badge" style="background:{{ $bc['bg'] }}; color:{{ $bc['color'] }};">
+                                {{ $level->level_kelas }}
+                            </div>
+                            <div class="level-kelas-name">{{ $level->nama_kelas_list }}</div>
+                            <div class="level-bars">
+                                {{-- Tinggi --}}
+                                <div class="level-bar-row">
+                                    <span class="level-bar-label" style="color:#ef4444;">Tinggi</span>
+                                    <div class="level-bar-track">
+                                        <div class="level-bar-fill" style="width:{{ $pctTinggi }}%; background:#ef4444;"></div>
+                                    </div>
+                                    <span class="level-bar-count" style="color:#ef4444;">{{ $level->jumlah_tinggi }}</span>
+                                </div>
+                                {{-- Sedang --}}
+                                <div class="level-bar-row">
+                                    <span class="level-bar-label" style="color:#f59e0b;">Sedang</span>
+                                    <div class="level-bar-track">
+                                        <div class="level-bar-fill" style="width:{{ $pctSedang }}%; background:#f59e0b;"></div>
+                                    </div>
+                                    <span class="level-bar-count" style="color:#f59e0b;">{{ $level->jumlah_sedang }}</span>
+                                </div>
+                                {{-- Rendah --}}
+                                <div class="level-bar-row">
+                                    <span class="level-bar-label" style="color:#10b981;">Rendah</span>
+                                    <div class="level-bar-track">
+                                        <div class="level-bar-fill" style="width:{{ $pctRendah }}%; background:#10b981;"></div>
+                                    </div>
+                                    <span class="level-bar-count" style="color:#10b981;">{{ $level->jumlah_rendah }}</span>
+                                </div>
+                            </div>
+                            <div class="level-total">Total siswa: <strong>{{ $level->total_siswa }}</strong> &nbsp;|&nbsp; Risiko tinggi: <strong style="color:#ef4444;">{{ $pctTinggi }}%</strong></div>
+                        </div>
+                        @endforeach
+                    </div>
+                @else
+                    <p class="empty-state">Belum ada data risiko per tingkatan kelas.</p>
+                @endif
+            </div>
+
+            {{-- ⑤ TOP 5 SISWA + CHART KELAS --}}
             <div class="bottom-row">
                 <div class="card">
                     <div class="card-title">Top 5 Siswa Risiko Tinggi</div>
@@ -237,11 +311,7 @@
                             <table class="da-table">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>Nama Siswa</th>
-                                        <th>Kelas</th>
-                                        <th>Preferensi</th>
-                                        <th>Kategori</th>
+                                        <th>No</th><th>Nama Siswa</th><th>Kelas</th><th>Preferensi</th><th>Kategori</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -261,14 +331,13 @@
                         <p class="empty-state">Tidak ada siswa dengan risiko tinggi.</p>
                     @endif
                 </div>
-
                 <div class="card">
                     <div class="card-title">Kelas dengan Risiko Tertinggi</div>
                     <canvas id="chartKelas"></canvas>
                 </div>
             </div>
 
-            {{-- ⑤ STATUS REKOMENDASI PER KELAS --}}
+            {{-- ⑥ STATUS REKOMENDASI PER KELAS --}}
             <div class="card">
                 <div class="card-title">Status Rekomendasi per Kelas</div>
                 @if($statusPerKelas->count() > 0)
@@ -301,7 +370,7 @@
                 @endif
             </div>
 
-            {{-- ⑥ AKTIVITAS TERBARU (5 saja) --}}
+            {{-- ⑦ AKTIVITAS TERBARU --}}
             <div class="card">
                 <div class="card-title">Aktivitas Terbaru</div>
                 <div id="dashLogList">
@@ -309,19 +378,17 @@
                 </div>
             </div>
 
-        </div>{{-- /da-body --}}
+        </div>
     </main>
 </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Tanggal
     document.getElementById('date-indo').textContent = new Date().toLocaleDateString('id-ID', {
         weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
     });
 
-    // Chart: Distribusi Risiko
     new Chart(document.getElementById('chartRisiko').getContext('2d'), {
         type: 'doughnut',
         data: {
@@ -338,7 +405,6 @@
         }
     });
 
-    // Chart: Risiko per Kelas
     const dataKelas = @json($risikoPerKelas);
     new Chart(document.getElementById('chartKelas').getContext('2d'), {
         type: 'bar',
@@ -413,7 +479,6 @@
         });
     });
 
-    // ── TABEL AKTIVITAS — 5 terbaru ──
     fetch('{{ route("log.activities") }}')
         .then(r => r.json())
         .then(logs => {
@@ -422,9 +487,7 @@
             var top5 = logs.slice(0, 5);
             el.innerHTML = `<div style="overflow-x:auto;">
                 <table class="da-table">
-                    <thead><tr>
-                        <th>User</th><th>Role</th><th>Aktivitas</th><th>Waktu</th>
-                    </tr></thead>
+                    <thead><tr><th>User</th><th>Role</th><th>Aktivitas</th><th>Waktu</th></tr></thead>
                     <tbody>
                         ${top5.map(log => `<tr>
                             <td style="font-weight:700; color:var(--gray-900);">${log.nama_user}</td>

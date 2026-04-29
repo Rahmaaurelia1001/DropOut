@@ -21,24 +21,33 @@ class KelasController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'nama_kelas'   => 'required|unique:kelas,nama_kelas',
-            'tahun_ajaran' => 'required'
-        ], [
-            'nama_kelas.required' => 'Nama kelas wajib diisi.',
-            'nama_kelas.unique'   => 'Kelas ini sudah terdaftar, gunakan nama kelas yang berbeda.',
-            'tahun_ajaran.required' => 'Tahun ajaran wajib diisi.'
-        ]);
+{
+    $request->validate([
+        'level_kelas'  => 'required|integer|between:1,6',
+        'huruf_kelas'  => 'required|alpha|max:1',
+        'tahun_ajaran' => 'required'
+    ], [
+        'level_kelas.required'  => 'Tingkatan kelas wajib dipilih.',
+        'huruf_kelas.required'  => 'Huruf kelas wajib dipilih.',
+        'tahun_ajaran.required' => 'Tahun ajaran wajib diisi.'
+    ]);
 
-        Kelas::create([
-            'nama_kelas'   => $request->nama_kelas,
-            'tahun_ajaran' => $request->tahun_ajaran
-        ]);
+    $namaKelas = $request->level_kelas . strtoupper($request->huruf_kelas);
 
-        return redirect()->route('admin.kelas.index')
-            ->with('success', 'Data kelas berhasil ditambahkan.');
+    // Cek duplikat
+    if (Kelas::where('nama_kelas', $namaKelas)->exists()) {
+        return back()->withErrors(['huruf_kelas' => 'Kelas ' . $namaKelas . ' sudah terdaftar.'])->withInput();
     }
+
+    Kelas::create([
+        'nama_kelas'   => $namaKelas,
+        'tahun_ajaran' => $request->tahun_ajaran,
+        'level_kelas'  => $request->level_kelas,
+    ]);
+
+    return redirect()->route('admin.kelas.index')
+        ->with('success', 'Kelas ' . $namaKelas . ' berhasil ditambahkan.');
+}
 
     public function edit($id)
     {
@@ -47,25 +56,34 @@ class KelasController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'nama_kelas'   => 'required|unique:kelas,nama_kelas,' . $id . ',id_kelas',
-            'tahun_ajaran' => 'required'
-        ], [
-            'nama_kelas.required' => 'Nama kelas wajib diisi.',
-            'nama_kelas.unique'   => 'Kelas ini sudah terdaftar, gunakan nama kelas yang berbeda.',
-            'tahun_ajaran.required' => 'Tahun ajaran wajib diisi.'
-        ]);
+{
+    $request->validate([
+        'level_kelas'  => 'required|integer|between:1,6',
+        'huruf_kelas'  => 'required|alpha|max:1',
+        'tahun_ajaran' => 'required'
+    ], [
+        'level_kelas.required'  => 'Tingkatan kelas wajib dipilih.',
+        'huruf_kelas.required'  => 'Huruf kelas wajib dipilih.',
+        'tahun_ajaran.required' => 'Tahun ajaran wajib diisi.'
+    ]);
 
-        $kelas = Kelas::findOrFail($id);
-        $kelas->update([
-            'nama_kelas'   => $request->nama_kelas,
-            'tahun_ajaran' => $request->tahun_ajaran
-        ]);
+    $namaKelas = $request->level_kelas . strtoupper($request->huruf_kelas);
 
-        return redirect()->route('admin.kelas.index')
-            ->with('success', 'Data kelas berhasil diperbarui.');
+    // Cek duplikat kecuali diri sendiri
+    if (Kelas::where('nama_kelas', $namaKelas)->where('id_kelas', '!=', $id)->exists()) {
+        return back()->withErrors(['huruf_kelas' => 'Kelas ' . $namaKelas . ' sudah terdaftar.'])->withInput();
     }
+
+    $kelas = Kelas::findOrFail($id);
+    $kelas->update([
+        'nama_kelas'   => $namaKelas,
+        'tahun_ajaran' => $request->tahun_ajaran,
+        'level_kelas'  => $request->level_kelas,
+    ]);
+
+    return redirect()->route('admin.kelas.index')
+        ->with('success', 'Kelas ' . $namaKelas . ' berhasil diperbarui.');
+}
 
     public function destroy($id)
     {

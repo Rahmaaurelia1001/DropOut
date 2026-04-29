@@ -410,7 +410,7 @@ class MfepController extends Controller
         ));
     }
 
-    public function dashboardKepsek(Request $request)
+   public function dashboardKepsek(Request $request)
     {
         $periodes = PeriodePenilaian::orderBy('id_periode', 'desc')->get();
 
@@ -422,7 +422,7 @@ class MfepController extends Controller
         }
 
         $periode = null;
-        $hasil = collect();
+        $hasil   = collect();
 
         if ($idPeriode) {
             $periode = PeriodePenilaian::where('id_periode', $idPeriode)->first();
@@ -432,7 +432,7 @@ class MfepController extends Controller
                 ->get();
         }
 
-        $totalSiswa = $hasil->count();
+        $totalSiswa   = $hasil->count();
         $jumlahTinggi = $hasil->where('kategori_risiko', 'Tinggi')->count();
         $jumlahSedang = $hasil->where('kategori_risiko', 'Sedang')->count();
         $jumlahRendah = $hasil->where('kategori_risiko', 'Rendah')->count();
@@ -448,17 +448,17 @@ class MfepController extends Controller
 
         if ($idPeriode) {
             $topSiswaTinggi = HasilKeputusan::with(['siswa.kelas'])
-            ->where('id_periode', $idPeriode)
-            ->where('kategori_risiko', 'Tinggi')
-            ->orderBy('total_nilai_preferensi', 'asc') // ✅ terkecil = risiko tertinggi
-            ->limit(5)
-            ->get();
+                ->where('id_periode', $idPeriode)
+                ->where('kategori_risiko', 'Tinggi')
+                ->orderBy('total_nilai_preferensi', 'asc')
+                ->limit(5)
+                ->get();
         }
 
         $statusPerKelas = HasilKeputusan::select(
             'siswa.id_kelas',
             'kelas.nama_kelas',
-            DB::raw("SUM(CASE 
+            DB::raw("SUM(CASE
                         WHEN rekomendasi.id_rekomendasi IS NULL THEN 1
                         WHEN rekomendasi.status = 'belum_diproses' THEN 1
                         ELSE 0
@@ -485,10 +485,29 @@ class MfepController extends Controller
         ->leftJoin('siswa', 'kelas.id_kelas', '=', 'siswa.id_kelas')
         ->leftJoin('hasil_keputusan', function ($join) use ($idPeriode) {
             $join->on('siswa.id_siswa', '=', 'hasil_keputusan.id_siswa')
-                ->where('hasil_keputusan.id_periode', $idPeriode);
+                 ->where('hasil_keputusan.id_periode', $idPeriode);
         })
         ->groupBy('kelas.nama_kelas')
         ->orderBy('kelas.nama_kelas', 'asc')
+        ->get();
+
+        // ── RISIKO PER LEVEL KELAS (1-6) ──
+        $risikoPerLevel = \App\Models\Kelas::select(
+            'kelas.level_kelas',
+            DB::raw("GROUP_CONCAT(DISTINCT kelas.nama_kelas ORDER BY kelas.nama_kelas ASC SEPARATOR ', ') as nama_kelas_list"),
+            DB::raw("COUNT(DISTINCT siswa.id_siswa) as total_siswa"),
+            DB::raw("SUM(CASE WHEN hasil_keputusan.kategori_risiko = 'Tinggi' THEN 1 ELSE 0 END) as jumlah_tinggi"),
+            DB::raw("SUM(CASE WHEN hasil_keputusan.kategori_risiko = 'Sedang' THEN 1 ELSE 0 END) as jumlah_sedang"),
+            DB::raw("SUM(CASE WHEN hasil_keputusan.kategori_risiko = 'Rendah' THEN 1 ELSE 0 END) as jumlah_rendah")
+        )
+        ->leftJoin('siswa', 'kelas.id_kelas', '=', 'siswa.id_kelas')
+        ->leftJoin('hasil_keputusan', function ($join) use ($idPeriode) {
+            $join->on('siswa.id_siswa', '=', 'hasil_keputusan.id_siswa')
+                 ->where('hasil_keputusan.id_periode', $idPeriode);
+        })
+        ->whereNotNull('kelas.level_kelas')
+        ->groupBy('kelas.level_kelas')
+        ->orderBy('kelas.level_kelas', 'asc')
         ->get();
 
         return view('kepsek.dashboard', compact(
@@ -502,10 +521,12 @@ class MfepController extends Controller
             'faktorDominanTerbanyak',
             'statusPerKelas',
             'topSiswaTinggi',
-            'risikoPerKelas'
+            'risikoPerKelas',
+            'risikoPerLevel'
         ));
     }
 
+    
     public function simpanDeskripsiTambahan(Request $request, $id_hasil)
 {
     $request->validate([

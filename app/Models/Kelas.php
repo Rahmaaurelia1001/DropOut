@@ -21,7 +21,8 @@ class Kelas extends Model
     // Kolom yang boleh diisi secara massal
     protected $fillable = [
         'nama_kelas',
-        'tahun_ajaran'
+        'tahun_ajaran',
+        'level_kelas',
     ];
 
     /**
