@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 
 class KelasController extends Controller
 {
-    public function index()
+   public function index()
 {
     $kelas = Kelas::orderByRaw("CAST(REGEXP_REPLACE(nama_kelas, '[^0-9]', '') AS UNSIGNED) ASC")
         ->orderByRaw("REGEXP_REPLACE(nama_kelas, '[0-9]', '') ASC")
-        ->get();
+        ->paginate(10); // ✅ ganti get() jadi paginate(10)
     return view('kelas.index', compact('kelas'));
 }
 
@@ -93,4 +93,17 @@ class KelasController extends Controller
         return redirect()->route('admin.kelas.index')
             ->with('success', 'Data kelas berhasil dihapus.');
     }
+    public function updateTahunAjaran(Request $request)
+{
+    $request->validate([
+        'tahun_ajaran' => 'required|regex:/^\d{4}\/\d{4}$/'
+    ], [
+        'tahun_ajaran.regex' => 'Format tahun ajaran harus seperti: 2024/2025'
+    ]);
+
+    Kelas::query()->update(['tahun_ajaran' => $request->tahun_ajaran]);
+
+    return redirect()->route('admin.kelas.index')
+        ->with('success', 'Tahun ajaran semua kelas berhasil diperbarui ke ' . $request->tahun_ajaran);
+}
 }

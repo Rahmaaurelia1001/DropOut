@@ -80,6 +80,7 @@ Route::middleware(['auth', 'role:admin'])
 
         // Master data
         Route::resource('user', UserController::class);
+        Route::post('kelas/update-tahun-ajaran', [KelasController::class, 'updateTahunAjaran'])->name('kelas.updateTahunAjaran'); // ✅ taruh SEBELUM resource kelas
         Route::resource('kelas', KelasController::class);
         Route::resource('siswa', SiswaController::class);
         Route::resource('kriteria', KriteriaController::class);
@@ -87,6 +88,7 @@ Route::middleware(['auth', 'role:admin'])
         Route::resource('periode', PeriodePenilaianController::class);
         Route::resource('mapel', MataPelajaranController::class);
         Route::resource('master-rekomendasi', MasterRekomendasiController::class)->except(['show']);
+       
     });
 
 /*

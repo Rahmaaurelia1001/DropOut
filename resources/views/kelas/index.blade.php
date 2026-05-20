@@ -27,66 +27,72 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     nav[x-data], header { display: none !important; }
 
-    .da-root {
-        font-family: 'Plus Jakarta Sans', sans-serif;
-        background: var(--gray-50); color: var(--gray-800);
-        -webkit-font-smoothing: antialiased; min-height: 100vh;
-    }
-
+    .da-root { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--gray-50); color: var(--gray-800); -webkit-font-smoothing: antialiased; min-height: 100vh; }
     .da-shell { display: flex; min-height: 100vh; }
 
-    /* ── SIDEBAR LENGKAP ── */
-    .da-sidebar {
-        width: var(--sidebar-w); background: var(--white);
-        border-right: 1px solid var(--gray-200);
-        position: fixed; top: 0; left: 0; bottom: 0;
-        z-index: 40; display: flex; flex-direction: column; overflow: hidden;
-    }
+    .da-sidebar { width: var(--sidebar-w); background: var(--white); border-right: 1px solid var(--gray-200); position: fixed; top: 0; left: 0; bottom: 0; z-index: 40; display: flex; flex-direction: column; overflow: hidden; }
     .sb-brand { padding: 18px 16px 14px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--gray-100); }
     .sb-logo { width: 36px; height: 36px; border-radius: 9px; background: linear-gradient(135deg, #1d4ed8, #2563eb); display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(37,99,235,.25); }
     .sb-brand-name { font-size: 13px; font-weight: 800; color: var(--gray-900); line-height: 1.2; }
     .sb-brand-sub  { font-size: 10px; color: var(--gray-400); font-weight: 500; margin-top: 1px; }
-
     .sb-nav { padding: 12px 10px; flex: 1; overflow-y: auto; }
     .sb-nav-section { font-size: 9.5px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.1em; padding: 0 8px; margin: 14px 0 5px; }
-    
     .sb-item { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 8px; text-decoration: none; font-size: 12.5px; font-weight: 600; color: var(--gray-500); transition: all .13s; margin-bottom: 1px; }
     .sb-item:hover { background: var(--gray-100); color: var(--gray-800); }
     .sb-item.active { background: var(--blue-lt); color: var(--blue); }
-
     .sb-user { padding: 12px 14px; border-top: 1px solid var(--gray-100); display: flex; align-items: center; gap: 9px; background: var(--white); }
     .sb-user-av { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(135deg, #2563eb, #38bdf8); color: white; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 800; }
     .sb-action-btn { background: none; border: none; padding: 5px; color: var(--gray-400); border-radius: 6px; transition: all .13s; cursor: pointer; display: flex; text-decoration: none; }
     .sb-action-btn:hover { background: var(--gray-100); color: var(--gray-700); }
     .sb-action-logout:hover { background: #fee2e2; color: var(--red); }
 
-    /* ── MAIN AREA ── */
     .da-main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-width: 0; }
     .da-phead { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 20px 28px; display: flex; align-items: center; justify-content: space-between; }
     .da-phead-title { font-size: 20px; font-weight: 800; color: var(--gray-900); letter-spacing: -0.4px; }
     .da-content { padding: 24px 28px; }
 
-    /* Button Tambah */
-    .btn-add { display: inline-flex; align-items: center; gap: 7px; padding: 9px 16px; border-radius: 9px; background: var(--blue); color: var(--white); font-size: 13px; font-weight: 700; text-decoration: none; transition: 0.15s; }
+    .btn-add { display: inline-flex; align-items: center; gap: 7px; padding: 9px 16px; border-radius: 9px; background: var(--blue); color: var(--white); font-size: 13px; font-weight: 700; text-decoration: none; transition: 0.15s; border: none; cursor: pointer; font-family: inherit; }
     .btn-add:hover { background: #1d4ed8; box-shadow: 0 3px 10px rgba(37,99,235,.2); }
 
-    /* Table */
+    /* ✅ Tombol update tahun ajaran */
+    .btn-update-ta { display: inline-flex; align-items: center; gap: 7px; padding: 9px 16px; border-radius: 9px; background: var(--white); color: var(--gray-700); font-size: 13px; font-weight: 700; text-decoration: none; transition: 0.15s; border: 1.5px solid var(--gray-200); cursor: pointer; font-family: inherit; }
+    .btn-update-ta:hover { border-color: #a78bfa; background: #f5f3ff; color: #7c3aed; }
+
     .table-card { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 14px; overflow: hidden; }
     .table-card-head { padding: 14px 20px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; }
     .spk-table { width: 100%; border-collapse: collapse; }
     .spk-table thead tr { background: var(--gray-50); border-bottom: 1px solid var(--gray-200); }
     .spk-table th { padding: 10px 20px; font-size: 10.5px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; text-align: left; letter-spacing: 0.07em; }
     .spk-table td { padding: 13px 20px; font-size: 13px; border-bottom: 1px solid var(--gray-100); color: var(--gray-700); }
-    
     .act-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 7px; font-size: 11.5px; font-weight: 700; text-decoration: none; border: 1px solid transparent; }
     .act-edit { color: var(--blue); background: var(--blue-lt); border-color: var(--blue-mid); }
     .act-delete { color: var(--red); background: var(--red-lt); border-color: var(--red-bd); cursor: pointer; }
+
+    /* ✅ Alert success */
+    .alert-success { display: flex; align-items: center; gap: 10px; background: var(--green-lt); border: 1.5px solid var(--green-bd); border-radius: 11px; padding: 12px 16px; margin-bottom: 18px; font-size: 13px; font-weight: 600; color: var(--green-dk); animation: slideDown .2s ease; }
+    @keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+
+    /* ✅ Modal overlay */
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 100; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
+    .modal-overlay.open { display: flex; }
+    .modal-box { background: var(--white); border-radius: 16px; padding: 28px; width: 100%; max-width: 400px; box-shadow: 0 20px 60px rgba(0,0,0,0.15); animation: modalIn .2s ease; }
+    @keyframes modalIn { from { opacity:0; transform:scale(.95); } to { opacity:1; transform:scale(1); } }
+    .modal-title { font-size: 16px; font-weight: 800; color: var(--gray-900); margin-bottom: 4px; }
+    .modal-sub { font-size: 12px; color: var(--gray-400); margin-bottom: 20px; }
+    .modal-label { font-size: 12px; font-weight: 700; color: var(--gray-700); margin-bottom: 6px; display: block; }
+    .modal-input { width: 100%; padding: 10px 12px; border: 1.5px solid var(--gray-200); border-radius: 9px; font-size: 14px; font-weight: 600; font-family: inherit; outline: none; transition: .15s; letter-spacing: 0.05em; }
+    .modal-input:focus { border-color: #7c3aed; box-shadow: 0 0 0 3px rgba(124,58,237,.1); }
+    .modal-hint { font-size: 11px; color: var(--gray-400); margin-top: 5px; }
+    .modal-foot { display: flex; gap: 8px; justify-content: flex-end; margin-top: 20px; }
+    .btn-modal-cancel { padding: 8px 16px; border-radius: 8px; background: var(--white); border: 1.5px solid var(--gray-200); font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; color: var(--gray-700); }
+    .btn-modal-confirm { padding: 8px 18px; border-radius: 8px; background: #7c3aed; border: none; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; color: white; transition: .15s; }
+    .btn-modal-confirm:hover { background: #6d28d9; }
+    .modal-warning { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 9px 12px; font-size: 11.5px; color: #92400e; font-weight: 600; margin-bottom: 16px; display: flex; gap: 7px; align-items: flex-start; }
 </style>
 
 <div class="da-root">
 <div class="da-shell">
 
-    {{-- ══ SIDEBAR LENGKAP ══ --}}
     <aside class="da-sidebar">
         <div class="sb-brand">
             <div class="sb-logo"><svg width="20" height="20" fill="none" stroke="white" viewBox="0 0 24 24" stroke-width="2"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg></div>
@@ -95,34 +101,24 @@
                 <div class="sb-brand-sub">SDN 11 Kampung Batu</div>
             </div>
         </div>
-
         <div class="sb-nav">
             <div class="sb-nav-section">Menu</div>
-            <a href="{{ route('dashboard') }}" class="sb-item {{ request()->routeIs('dashboard') ? 'active' : '' }}">
-                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard
-            </a>
-
+            <a href="{{ route('dashboard') }}" class="sb-item {{ request()->routeIs('dashboard') ? 'active' : '' }}"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
             <div class="sb-nav-section">Manajemen</div>
-            <a href="{{ route('admin.user.index') }}" class="sb-item {{ request()->routeIs('admin.user.*') ? 'active' : '' }}">
-                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Manajemen User</a>
-            <a href="{{ route('admin.kelas.index') }}" class="sb-item active {{ request()->routeIs('admin.kelas.*') ? 'active' : '' }}">
-                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>Data Kelas</a>
-            <a href="{{ route('admin.siswa.index') }}" class="sb-item {{ request()->routeIs('admin.siswa.*') ? 'active' : '' }}">
-                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>Data Siswa</a>
-            <a href="{{ route('admin.mapel.index') }}" class="sb-item {{ request()->routeIs('admin.mapel.*') ? 'active' : '' }}">
-                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>Mata Pelajaran</a>
-
+            <a href="{{ route('admin.user.index') }}" class="sb-item {{ request()->routeIs('admin.user.*') ? 'active' : '' }}"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Manajemen User</a>
+            <a href="{{ route('admin.kelas.index') }}" class="sb-item {{ request()->routeIs('admin.kelas.*') ? 'active' : '' }}"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>Data Kelas</a>
+            <a href="{{ route('admin.siswa.index') }}" class="sb-item {{ request()->routeIs('admin.siswa.*') ? 'active' : '' }}"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>Data Siswa</a>
+            <a href="{{ route('admin.mapel.index') }}" class="sb-item {{ request()->routeIs('admin.mapel.*') ? 'active' : '' }}"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>Mata Pelajaran</a>
             <div class="sb-nav-section">SPK</div>
             <a href="{{ route('admin.kriteria.index') }}" class="sb-item"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>Data Kriteria</a>
             <a href="{{ route('admin.subkriteria.index') }}" class="sb-item"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M4 6h16M4 10h16M4 14h10M4 18h6"/></svg>Data Subkriteria</a>
             <a href="{{ route('admin.periode.index') }}" class="sb-item"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Periode</a>
             <a href="{{ route('admin.master-rekomendasi.index') }}" class="sb-item"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>Rekomendasi</a>
         </div>
-
         <div class="sb-user">
             <div class="sb-user-av">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
             <div style="flex:1; min-width:0">
-                <div class="sb-user-name" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; font-size:12px;">{{ Auth::user()->name }}</div>
+                <div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; font-size:12px;">{{ Auth::user()->name }}</div>
                 <div style="font-size:10px; color:var(--gray-400)">Administrator</div>
             </div>
             <div style="display:flex; gap:2px">
@@ -134,28 +130,40 @@
         </div>
     </aside>
 
-    {{-- ══ MAIN CONTENT ══ --}}
     <main class="da-main">
         <div class="da-phead">
             <div>
                 <h2 class="da-phead-title">Manajemen Data Kelas</h2>
                 <p style="font-size:12px; color:var(--gray-400); margin-top:2px">Kelola daftar kelas dan tahun ajaran aktif</p>
             </div>
-            <a href="{{ route('admin.kelas.create') }}" class="btn-add">
-                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
-                Tambah Kelas
-            </a>
+            {{-- ✅ Dua tombol di header --}}
+            <div style="display:flex; gap:8px; align-items:center;">
+                <button class="btn-update-ta" onclick="document.getElementById('modalTahunAjaran').classList.add('open')">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    Update Tahun Ajaran
+                </button>
+                <a href="{{ route('admin.kelas.create') }}" class="btn-add">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
+                    Tambah Kelas
+                </a>
+            </div>
         </div>
 
         <div class="da-content">
-            
+
+            {{-- ✅ Alert sukses --}}
+            @if(session('success'))
+                <div class="alert-success">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
+                    {{ session('success') }}
+                </div>
+            @endif
 
             <div class="table-card">
                 <div class="table-card-head">
                     <span style="font-weight: 800; font-size: 13px;">Daftar Kelas Terdaftar</span>
                     <span style="font-size: 11px; color: var(--gray-400); background: var(--gray-100); padding: 2px 9px; border-radius: 99px;">{{ $kelas->count() }} kelas</span>
                 </div>
-
                 <div style="overflow-x:auto;">
                     <table class="spk-table">
                         <thead>
@@ -196,4 +204,44 @@
 
 </div>
 </div>
+
+{{-- ✅ MODAL UPDATE TAHUN AJARAN --}}
+<div class="modal-overlay" id="modalTahunAjaran">
+    <div class="modal-box">
+        <div class="modal-title">Update Tahun Ajaran</div>
+        <div class="modal-sub">Semua kelas akan diperbarui ke tahun ajaran yang dipilih</div>
+
+        <div class="modal-warning">
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" style="flex-shrink:0; margin-top:1px"><path d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+            Tindakan ini akan mengubah tahun ajaran <strong>seluruh kelas</strong> sekaligus. Pastikan tahun ajaran sudah benar sebelum menyimpan.
+        </div>
+
+        <form action="{{ route('admin.kelas.updateTahunAjaran') }}" method="POST">
+            @csrf
+            <label class="modal-label">Tahun Ajaran Baru</label>
+            <input type="text" name="tahun_ajaran" class="modal-input"
+                placeholder="Contoh: 2025/2026"
+                pattern="\d{4}/\d{4}"
+                value="{{ date('Y') . '/' . (date('Y') + 1) }}"
+                required>
+            <div class="modal-hint">Format: YYYY/YYYY &nbsp;·&nbsp; Contoh: 2025/2026</div>
+
+            <div class="modal-foot">
+                <button type="button" class="btn-modal-cancel" onclick="document.getElementById('modalTahunAjaran').classList.remove('open')">Batal</button>
+                <button type="submit" class="btn-modal-confirm">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5" style="display:inline"><path d="M5 13l4 4L19 7"/></svg>
+                    Simpan Perubahan
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Tutup modal kalau klik di luar box
+    document.getElementById('modalTahunAjaran').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('open');
+    });
+</script>
+
 </x-app-layout>

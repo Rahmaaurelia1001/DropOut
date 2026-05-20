@@ -1,9 +1,10 @@
 <x-app-layout>
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;700;800&display=swap');
 
     :root {
         --blue:     #2563eb; 
+        --blue-dark:#1d4ed8;
         --blue-lt:  #eff6ff; 
         --white:    #ffffff;
         --gray-50:  #f9fafb; 
@@ -27,6 +28,7 @@
 
     .da-shell { display: flex; height: 100vh; }
 
+    /* SIDEBAR: UTUH SESUAI KODE ASLI */
     .da-sidebar {
         width: var(--sidebar-w); background: var(--white); border-right: 1px solid var(--gray-200);
         display: flex; flex-direction: column; flex-shrink: 0;
@@ -35,10 +37,8 @@
     .sb-logo { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(135deg, #1d4ed8, #2563eb); display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(37,99,235,.2); flex-shrink: 0; }
     .sb-brand-name { font-size: 14px; font-weight: 800; color: var(--gray-900); line-height: 1.2; letter-spacing: -0.2px; }
     .sb-brand-sub { font-size: 10px; color: var(--gray-400); font-weight: 600; margin-top: 1px; }
-
     .sb-nav { padding: 16px 12px; flex: 1; overflow-y: auto; }
     .sb-nav-section { font-size: 10px; font-weight: 800; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.1em; padding: 0 10px; margin: 20px 0 8px; }
-    
     .sb-item { 
         display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; 
         text-decoration: none; font-size: 13px; font-weight: 600; color: var(--gray-500); transition: all .2s; margin-bottom: 2px; 
@@ -46,7 +46,6 @@
     .sb-item:hover { background: var(--gray-100); color: var(--gray-900); }
     .sb-item.active { background: var(--blue-lt); color: var(--blue); }
     .sb-item svg { width: 18px; height: 18px; stroke-width: 2.5; flex-shrink: 0; }
-
     .sb-user { padding: 16px; border-top: 1px solid var(--gray-100); display: flex; align-items: center; gap: 10px; background: white; }
     .sb-user-av { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, #2563eb, #38bdf8); color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 12px; flex-shrink: 0; }
     .sb-user-info { flex: 1; min-width: 0; }
@@ -55,67 +54,93 @@
     .sb-btn-icon { background: none; border: none; cursor: pointer; padding: 6px; color: var(--gray-400); border-radius: 8px; transition: .15s; display: flex; align-items: center; }
     .sb-btn-icon:hover { background: var(--gray-100); color: var(--gray-800); }
 
+    /* AREA KONTEN UTAMA */
     .da-main { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100vh; overflow-y: auto; }
-    .da-phead { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 16px 32px; flex-shrink: 0; }
-    .da-body { padding: 24px 32px; }
+    .da-phead { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 16px 24px; flex-shrink: 0; border-top: 3px solid var(--blue); }
+    .da-body { padding: 20px 24px; }
 
-    .filter-card { background: white; border: 1.5px solid var(--gray-200); border-radius: 20px; padding: 16px 24px; margin-bottom: 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-    .f-label { font-size: 12px; font-weight: 800; color: var(--gray-400); text-transform: uppercase; margin-right: 12px; }
-    .f-select { border-radius: 10px; border: 1.5px solid var(--gray-200); padding: 8px 16px; font-size: 13px; font-weight: 600; min-width: 240px; }
-    .btn-show { background: var(--blue); color: white; padding: 9px 20px; border-radius: 10px; font-weight: 700; font-size: 13px; border: none; cursor: pointer; transition: .2s; }
-    .btn-show:hover { background: #1d4ed8; }
+    /* Filter Bar */
+    .filter-card { background: white; border: 1px solid var(--gray-200); border-radius: 12px; padding: 14px 16px; margin-bottom: 16px; box-shadow: 0 2px 4px rgba(0,0,0,0.01); }
+    .filter-container { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 14px; }
+    .filter-wrapper { display: flex; flex: 1; flex-wrap: wrap; gap: 14px; }
+    .filter-field { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 140px; }
+    .f-label { font-size: 11px; font-weight: 700; color: var(--gray-500); text-transform: capitalize; }
+    .f-select { border-radius: 8px; border: 1px solid var(--gray-200); padding: 6px 12px; font-size: 12.5px; font-weight: 600; color: var(--gray-800); background-color: var(--white); outline: none; width: 100%; height: 36px; transition: all 0.2s; }
+    .f-select:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.15); }
+    .btn-show { background: linear-gradient(135deg, var(--blue), var(--blue-dark)); color: white; padding: 0 20px; border-radius: 8px; font-weight: 700; font-size: 12.5px; border: none; cursor: pointer; transition: .2s; height: 36px; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(37,99,235,0.15); margin-left: auto; }
+    .btn-show:hover { transform: translateY(-1px); box-shadow: 0 6px 12px rgba(37,99,235,0.2); }
 
-    .table-card { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 24px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-    .t-header { padding: 20px 24px; border-bottom: 1px solid var(--gray-100); display: flex; justify-content: space-between; align-items: center; }
+    /* Tabel dengan Fixed Layout & Presisi Kolom */
+    .table-card { background: var(--white); border: 1px solid var(--gray-200); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02); }
+    .t-header { padding: 16px 20px; border-bottom: 1px solid var(--gray-100); display: flex; justify-content: space-between; align-items: center; background: linear-gradient(to right, #ffffff, var(--gray-50)); }
     
-    table { width: 100%; border-collapse: collapse; }
-    th { background: var(--gray-50); padding: 14px 24px; text-align: left; font-size: 11px; font-weight: 800; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em; border-bottom: 1px solid var(--gray-200); }
-    td { padding: 14px 24px; font-size: 13px; border-bottom: 1px solid var(--gray-100); vertical-align: middle; }
+    .table-responsive { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 950px; }
     
-    .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; display: inline-flex; align-items: center; }
-    .badge-red { background: #fef2f2; color: #ef4444; }
-    .badge-yellow { background: #fffbeb; color: #d97706; }
-    .badge-green { background: #ecfdf5; color: #10b981; }
-    .badge-gray { background: #f3f4f6; color: var(--gray-500); }
-    .status-dot { width: 7px; height: 7px; border-radius: 50%; margin-right: 5px; }
+    /* Ukuran Lebar Kolom Diatur Rapi */
+    th:nth-child(1), td:nth-child(1) { width: 55px; text-align: center; } /* Kolom No */
+    th:nth-child(2), td:nth-child(2) { width: 170px; }
+    th:nth-child(3), td:nth-child(3) { width: 90px; }
+    th:nth-child(4), td:nth-child(4) { width: 105px; }
+    th:nth-child(5), td:nth-child(5) { width: 120px; }
+    th:nth-child(6), td:nth-child(6) { width: 220px; }
+    th:nth-child(7), td:nth-child(7) { width: 115px; }
+    th:nth-child(8), td:nth-child(8) { width: 155px; }
 
-    /* Action buttons */
-    .btn-aksi { padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; border: none; cursor: pointer; transition: .15s; display: inline-flex; align-items: center; gap: 5px; }
-    .btn-update { background: #eff6ff; color: #2563eb; }
-    .btn-update:hover { background: #dbeafe; }
-    .btn-chat { background: #f0fdf4; color: #10b981; position: relative; }
-    .btn-chat:hover { background: #dcfce7; }
-    .chat-badge { position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; font-size: 9px; font-weight: 800; border-radius: 999px; min-width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; padding: 0 3px; border: 2px solid white; }
+    th { background: var(--gray-100); padding: 12px 16px; text-align: left; font-size: 11.5px; font-weight: 700; color: var(--gray-500); border-bottom: 1px solid var(--gray-200); text-transform: none; letter-spacing: normal; }
+    td { padding: 12px 16px; font-size: 12.5px; border-bottom: 0.5px solid var(--gray-200); vertical-align: middle; word-break: break-word; }
+    tr:hover td { background-color: #f8fafc; }
+    
+    /* KOLOM NO: Diperbaiki Agar Sejajar Sempurna dan Terpusat */
+    .ranking-container { display: flex; align-items: center; justify-content: center; width: 100%; }
+    .ranking-number { font-weight: 700; color: #2563eb; background: #eff6ff; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; border: 1px solid #bfdbfe; flex-shrink: 0; }
+
+    /* Badge & Status */
+    .badge { padding: 4px 10px; border-radius: 999px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; line-height: 1; box-shadow: 0 1px 2px rgba(0,0,0,0.02); }
+    .badge-red { background: #fef2f2; color: #dc2626; border: 1px solid #fca5a5; }
+    .badge-yellow { background: #fffbeb; color: #d97706; border: 1px solid #fcd34d; }
+    .badge-green { background: #f0fdf4; color: #16a34a; border: 1px solid #86efac; }
+    .badge-gray { background: #f8fafc; color: #475569; border: 1px solid #cbd5e1; }
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; flex-shrink: 0; }
+
+    /* Tombol Aksi */
+    .btn-aksi { padding: 5px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 700; border: 1px solid var(--gray-200); cursor: pointer; transition: .15s; display: inline-flex; align-items: center; gap: 4px; background: white; }
+    .btn-update { color: var(--blue); border-color: #bfdbfe; background: #f0f6ff; }
+    .btn-update:hover { background: var(--blue); color: white; border-color: var(--blue); }
+    .btn-chat { color: #16a34a; border-color: #bbf7d0; background: #f0fdf4; position: relative; }
+    .btn-chat:hover { background: #16a34a; color: white; border-color: #16a34a; }
+    .chat-badge { position: absolute; top: -5px; right: -5px; background: #ef4444; color: white; font-size: 9px; font-weight: 800; border-radius: 999px; min-width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; padding: 0 2px; border: 1.5px solid white; box-shadow: 0 2px 4px rgba(239,68,68,0.3); }
 
     /* Modal */
-    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 200; align-items: center; justify-content: center; }
+    .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.4); z-index: 200; align-items: center; justify-content: center; backdrop-filter: blur(2px); }
     .modal-overlay.open { display: flex; }
-    .modal-box { background: white; border-radius: 20px; width: 100%; max-width: 480px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.2); }
-    .modal-head { padding: 20px 24px; border-bottom: 1px solid var(--gray-100); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: white; z-index: 1; }
-    .modal-title { font-size: 15px; font-weight: 800; color: var(--gray-900); }
-    .modal-close { background: var(--gray-100); border: none; border-radius: 8px; padding: 6px 10px; cursor: pointer; font-size: 16px; color: var(--gray-500); }
-    .modal-close:hover { background: var(--gray-200); }
-    .modal-body { padding: 20px 24px; }
+    .modal-box { background: white; border-radius: 12px; width: 100%; max-width: 450px; max-height: 85vh; overflow-y: auto; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.15); border: 1px solid var(--gray-200); }
+    .modal-head { padding: 16px 20px; border-bottom: 1px solid var(--gray-100); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: white; z-index: 1; border-left: 4px solid var(--blue); }
+    .modal-title { font-size: 14px; font-weight: 700; color: var(--gray-900); }
+    .modal-close { background: transparent; border: none; border-radius: 6px; padding: 4px; cursor: pointer; color: var(--gray-400); display: flex; align-items: center; }
+    .modal-close:hover { background: #f1f5f9; color: #334155; }
+    .modal-body { padding: 16px 20px; }
 
-    .form-group { margin-bottom: 14px; }
-    .form-label { font-size: 11px; font-weight: 800; color: var(--gray-400); text-transform: uppercase; margin-bottom: 6px; display: block; }
-    .form-control { width: 100%; border-radius: 10px; border: 1.5px solid var(--gray-200); padding: 10px 12px; font-size: 13px; font-weight: 500; font-family: inherit; outline: none; transition: .2s; }
-    .form-control:focus { border-color: var(--blue); }
+    .form-group { margin-bottom: 12px; }
+    .form-label { font-size: 11px; font-weight: 700; color: var(--gray-500); margin-bottom: 4px; display: block; }
+    .form-control { width: 100%; border-radius: 8px; border: 1px solid var(--gray-200); padding: 8px 12px; font-size: 12.5px; font-weight: 500; font-family: inherit; outline: none; transition: .2s; background: white; }
+    .form-control:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
 
-    /* Chat */
-    .chat-list { max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; margin-bottom: 14px; }
-    .chat-bubble { border-radius: 12px; padding: 10px 12px; }
-    .chat-bubble.kepsek { background: #eff6ff; border: 1px solid #bfdbfe; }
-    .chat-bubble.walas { background: var(--gray-50); border: 1px solid var(--gray-100); }
-    .chat-meta { display: flex; justify-content: space-between; margin-bottom: 4px; }
-    .chat-name { font-size: 10px; font-weight: 800; }
-    .chat-time { font-size: 10px; color: var(--gray-400); }
-    .chat-text { font-size: 12px; color: var(--gray-800); line-height: 1.5; }
+    /* Chat Bubble */
+    .chat-list { max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; padding: 2px; }
+    .chat-bubble { border-radius: 8px; padding: 8px 12px; border: 1px solid transparent; }
+    .chat-bubble.kepsek { background: #e0f2fe; border-color: #bae6fd; } 
+    .chat-bubble.walas { background: #f1f5f9; border-color: #e2e8f0; } 
+    .chat-meta { display: flex; justify-content: space-between; margin-bottom: 2px; gap: 10px; }
+    .chat-name { font-size: 10.5px; font-weight: 700; }
+    .chat-time { font-size: 10px; color: var(--gray-500); }
+    .chat-text { font-size: 12px; color: var(--gray-900); line-height: 1.4; font-weight: 500; }
 </style>
 
 <div class="da-root">
 <div class="da-shell">
     
+    <!-- SIDEBAR UTUH SESUAI KODE ASLI -->
     <aside class="da-sidebar">
         <div class="sb-brand">
             <div class="sb-logo"><svg width="20" height="20" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg></div>
@@ -149,98 +174,88 @@
         </div>
     </aside>
 
+    <!-- AREA KONTEN UTAMA -->
     <main class="da-main">
         <div class="da-phead">
-            <h2 style="font-size:18px; font-weight:800; letter-spacing:-0.5px;">Hasil Analisis Risiko</h2>
-            <p style="font-size:12px; color:var(--gray-400); margin-top:2px;">Hasil identifikasi risiko putus sekolah siswa berdasarkan perhitungan MFEP.</p>
+            <h2 style="font-size:16px; font-weight:700; color:var(--gray-900); letter-spacing:-0.3px;">Hasil Analisis Risiko</h2>
+            <p style="font-size:12px; color:var(--gray-500); margin-top:1px;">Hasil identifikasi risiko putus sekolah siswa berdasarkan perhitungan MFEP.</p>
         </div>
 
         <div class="da-body">
             @if(session('success'))
-                <div style="background:#ecfdf5; color:#059669; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:600; margin-bottom:20px; border:1px solid #d1fae5;">{{ session('success') }}</div>
+                <div style="background:#ecfdf5; color:#059669; padding:10px 16px; border-radius:8px; font-size:12.5px; font-weight:600; margin-bottom:16px; border:1px solid #d1fae5;">{{ session('success') }}</div>
             @endif
             @if(session('error'))
-                <div style="background:#fef2f2; color:#ef4444; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:600; margin-bottom:20px; border:1px solid #fecaca;">{{ session('error') }}</div>
+                <div style="background:#fef2f2; color:#ef4444; padding:10px 16px; border-radius:8px; font-size:12.5px; font-weight:600; margin-bottom:16px; border:1px solid #fecaca;">{{ session('error') }}</div>
             @endif
 
-       <form method="GET" action="{{ route('walas.mfep.hasil') }}">
-    <div style="background:white; border:1.5px solid var(--gray-200); border-radius:20px; padding:20px 24px; margin-bottom:24px; display:flex; flex-direction:column; gap:14px;">
-
-        {{-- Baris 1 --}}
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;">
-            <div>
-                <label class="f-label">Periode</label>
-                <select name="id_periode" class="f-select">
-                    <option value="">-- Pilih Periode --</option>
-                    @foreach($periodes as $p)
-                        <option value="{{ $p->id_periode }}" {{ (string) $idPeriode === (string) $p->id_periode ? 'selected' : '' }}>
-                            {{ $p->tahun_ajaran }} - Smstr {{ $p->semester }}
-                        </option>
-                    @endforeach
-                </select>
-            </div>
-            <div>
-                <label class="f-label">Kategori Risiko</label>
-                <select name="kategori" class="f-select">
-                    <option value="">Semua Kategori</option>
-                    <option value="Tinggi" {{ ($kategori ?? '') === 'Tinggi' ? 'selected' : '' }}>🔴 Tinggi</option>
-                    <option value="Sedang" {{ ($kategori ?? '') === 'Sedang' ? 'selected' : '' }}>🟡 Sedang</option>
-                    <option value="Rendah" {{ ($kategori ?? '') === 'Rendah' ? 'selected' : '' }}>🟢 Rendah</option>
-                </select>
-            </div>
-            <div>
-                <label class="f-label">Status</label>
-                <select name="status" class="f-select">
-                    <option value="">Semua Status</option>
-                    <option value="belum_diproses"  {{ ($status ?? '') === 'belum_diproses'  ? 'selected' : '' }}>⏳ Menunggu</option>
-                    <option value="sedang_diproses" {{ ($status ?? '') === 'sedang_diproses' ? 'selected' : '' }}>🔄 Dalam Proses</option>
-                    <option value="selesai"         {{ ($status ?? '') === 'selesai'         ? 'selected' : '' }}>✅ Selesai</option>
-                </select>
-            </div>
-        </div>
-
-        {{-- Baris 2 --}}
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; align-items:flex-end;">
-            <div>
-                <label class="f-label">Faktor Dominan</label>
-                <select name="faktor" class="f-select">
-                    <option value="">Semua Faktor</option>
-                    @foreach($faktorList as $f)
-                        <option value="{{ $f }}" {{ ($faktorFilter ?? '') === $f ? 'selected' : '' }}>{{ $f }}</option>
-                    @endforeach
-                </select>
-            </div>
-            <div></div>
-            <div>
-                <button type="submit" class="btn-show" style="width:100%; height:42px;">Tampilkan</button>
-            </div>
-        </div>
-
-    </div>
-</form>
-
-
+            <!-- Filter Horizontal Satu Baris -->
+            <form method="GET" action="{{ route('walas.mfep.hasil') }}" class="filter-card">
+                <div class="filter-container">
+                    <div class="filter-wrapper">
+                        <div class="filter-field">
+                            <label class="f-label">Periode</label>
+                            <select name="id_periode" class="f-select">
+                                <option value="">-- Pilih Periode --</option>
+                                @foreach($periodes as $p)
+                                    <option value="{{ $p->id_periode }}" {{ (string) $idPeriode === (string) $p->id_periode ? 'selected' : '' }}>
+                                        {{ $p->tahun_ajaran }} - Smstr {{ $p->semester }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="filter-field">
+                            <label class="f-label">Kategori risiko</label>
+                            <select name="kategori" class="f-select">
+                                <option value="">Semua Kategori</option>
+                                <option value="Tinggi" {{ ($kategori ?? '') === 'Tinggi' ? 'selected' : '' }}>🔴 Tinggi</option>
+                                <option value="Sedang" {{ ($kategori ?? '') === 'Sedang' ? 'selected' : '' }}>🟡 Sedang</option>
+                                <option value="Rendah" {{ ($kategori ?? '') === 'Rendah' ? 'selected' : '' }}>🟢 Rendah</option>
+                            </select>
+                        </div>
+                        <div class="filter-field">
+                            <label class="f-label">Status</label>
+                            <select name="status" class="f-select">
+                                <option value="">Semua Status</option>
+                                <option value="belum_diproses"  {{ ($status ?? '') === 'belum_diproses'  ? 'selected' : '' }}>⏳ Menunggu</option>
+                                <option value="sedang_diproses" {{ ($status ?? '') === 'sedang_diproses' ? 'selected' : '' }}>🔄 Dalam Proses</option>
+                                <option value="selesai"         {{ ($status ?? '') === 'selesai'         ? 'selected' : '' }}>✅ Selesai</option>
+                            </select>
+                        </div>
+                        <div class="filter-field">
+                            <label class="f-label">Faktor dominan</label>
+                            <select name="faktor" class="f-select">
+                                <option value="">Semua Faktor</option>
+                                @foreach($faktorList as $f)
+                                    <option value="{{ $f }}" {{ ($faktorFilter ?? '') === $f ? 'selected' : '' }}>{{ $f }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-show">Tampilkan</button>
+                </div>
+            </form>
 
             <div class="table-card">
                 <div class="t-header">
                     <div>
-                        <h3 style="font-size:15px; font-weight:800; color:var(--gray-900)">Ranking Identifikasi</h3>
-                        <p style="font-size:11px; color:var(--gray-400); margin-top:4px;">
-                            @if($periode) Periode Aktif: <b>{{ $periode->tahun_ajaran }} - Smstr {{ $periode->semester }}</b> @else Silakan pilih periode @endif
+                        <h3 style="font-size:14px; font-weight:700; color:var(--gray-900)">Ranking Identifikasi</h3>
+                        <p style="font-size:11px; color:var(--gray-400); margin-top:2px;">
+                            @if($periode) Periode Aktif: <b style="color:var(--blue);">{{ $periode->tahun_ajaran }} - Smstr {{ $periode->semester }}</b> @else Silakan pilih periode @endif
                         </p>
                     </div>
                     <a href="{{ route('walas.mfep.index') }}" style="font-size:12px; font-weight:700; color:var(--blue); text-decoration:none;">Ulangi Analisis</a>
                 </div>
 
-                <div style="overflow-x: auto;">
+                <div class="table-responsive">
                     <table>
                         <thead>
                             <tr>
-                                <th>No</th>
-                                <th>Nama Siswa</th>
+                                <th style="text-align: center;">No</th>
+                                <th>Nama siswa</th>
                                 <th>Preferensi</th>
                                 <th>Risiko</th>
-                                <th>Faktor Dominan</th>
+                                <th>Faktor dominan</th>
                                 <th>Rekomendasi</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
@@ -263,65 +278,59 @@
                                 $jumlahKomentar = $komentarList->count();
                             @endphp
                             <tr>
-                                <td style="font-weight:800; color:var(--gray-400)">{{ $index + 1 }}</td>
+                                <!-- Bagian Kolom Nomor Urut yang Dirapikan Sejajar Tengah -->
+                                <td>
+                                    <div class="ranking-container">
+                                        <span class="ranking-number">{{ $index + 1 }}</span>
+                                    </div>
+                                </td>
                                 <td>
                                     <div style="font-weight:700; color:var(--gray-900)">{{ $item->siswa->nama_siswa ?? '-' }}</div>
                                     @if($tglPelaksanaan)
-                                        <div style="font-size:11px; color:var(--gray-400); margin-top:2px;">📅 {{ \Carbon\Carbon::parse($tglPelaksanaan)->translatedFormat('d M Y') }}</div>
+                                        <div style="font-size:11px; color:var(--blue); font-weight:500; margin-top:1px;">📅 {{ \Carbon\Carbon::parse($tglPelaksanaan)->translatedFormat('d M Y') }}</div>
                                     @endif
                                 </td>
-                                <td style="font-family:monospace; font-weight:600;">{{ number_format((float) $item->total_nilai_preferensi, 4) }}</td>
+                                <td style="font-family:monospace; font-weight:700; color:var(--gray-900);">{{ number_format((float) $item->total_nilai_preferensi, 4) }}</td>
                                 <td>
                                     @if($item->kategori_risiko === 'Tinggi')
-                                        <span class="badge badge-red">Tinggi</span>
+                                        <span class="badge badge-red"><span class="status-dot" style="background:#ef4444"></span>Tinggi</span>
                                     @elseif($item->kategori_risiko === 'Sedang')
-                                        <span class="badge badge-yellow">Sedang</span>
+                                        <span class="badge badge-yellow"><span class="status-dot" style="background:#d97706"></span>Sedang</span>
                                     @else
-                                        <span class="badge badge-green">Rendah</span>
+                                        <span class="badge badge-green"><span class="status-dot" style="background:#10b981"></span>Rendah</span>
                                     @endif
                                 </td>
-                                <td style="font-size:12px; color:var(--gray-500); font-weight:500; max-width:120px;">{{ $item->faktor_dominan ?? '-' }}</td>
-                                
-                                <td style="max-width:200px;">
-    @if($rekomendasiFinal)
-        <span style="font-size:12px; font-weight:600; color:var(--gray-800); line-height:1.4;">{{ $rekomendasiFinal }}</span>
-        
-        @if(!empty($item->deskripsi_tambahan))
-            <div style="margin-top:8px; background:#fffbeb; border:1px solid #fde68a; border-radius:8px; padding:8px;">
-                <p style="font-size:10px; font-weight:800; color:#92400e; text-transform:uppercase; margin-bottom:3px;">📝 Catatan Kepsek</p>
-                <p style="font-size:11px; color:#78350f; line-height:1.4; margin:0;">{{ $item->deskripsi_tambahan }}</p>
-            </div>
-        @endif
-    @else
-        <span style="font-size:11px; color:var(--gray-400); font-style:italic;">Menunggu validasi Kepsek</span>
-    @endif
-</td>
-
-
-
-
+                                <td style="font-size:12px; color:var(--gray-500); font-weight:600;">{{ $item->faktor_dominan ?? '-' }}</td>
+                                <td>
+                                    @if($rekomendasiFinal)
+                                        <span style="font-size:12px; font-weight:600; color:var(--gray-800); line-height:1.4;">{{ $rekomendasiFinal }}</span>
+                                        @if(!empty($item->deskripsi_tambahan))
+                                            <div style="margin-top:6px; background:#fffbeb; border:1px solid #fcd34d; border-radius:6px; padding:6px; box-shadow: 0 1px 2px rgba(217,119,6,0.05);">
+                                                <p style="font-size:9.5px; font-weight:800; color:#b45309; text-transform:uppercase; margin-bottom:2px;">📝 Catatan Kepsek</p>
+                                                <p style="font-size:11px; color:#78350f; line-height:1.3; margin:0; font-weight: 500;">{{ $item->deskripsi_tambahan }}</p>
+                                            </div>
+                                        @endif
+                                    @else
+                                        <span style="font-size:11px; color:var(--gray-400); font-style:italic;">Menunggu validasi Kepsek</span>
+                                    @endif
+                                </td>
                                 <td>
                                     @if($statusRekomendasi === 'belum_diproses')
-                                        <span class="badge badge-gray"><span class="status-dot" style="background:#9ca3af"></span>Menunggu</span>
+                                        <span class="badge badge-gray"><span class="status-dot" style="background:#64748b"></span>Menunggu</span>
                                     @elseif($statusRekomendasi === 'sedang_diproses')
-                                        <span class="badge badge-yellow"><span class="status-dot" style="background:#f59e0b"></span>Dalam Proses</span>
+                                        <span class="badge badge-yellow"><span class="status-dot" style="background:#d97706"></span>Proses</span>
                                     @else
-                                        <span class="badge badge-green"><span class="status-dot" style="background:#10b981"></span>Selesai</span>
+                                        <span class="badge badge-green"><span class="status-dot" style="background:#16a34a"></span>Selesai</span>
                                     @endif
                                 </td>
                                 <td>
                                     @if($rekomendasiFinal)
-                                        <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                                            {{-- Tombol Update Status --}}
+                                        <div style="display:flex; gap:4px; flex-wrap:wrap;">
                                             <button class="btn-aksi btn-update" onclick="openModalUpdate({{ $item->id_hasil }})">
-                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                                Update
+                                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-bottom:-1px;"><path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg> Update
                                             </button>
-
-                                            {{-- Tombol Catatan --}}
                                             <button class="btn-aksi btn-chat" onclick="openModalChat({{ $item->id_hasil }})">
-                                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
-                                                Catatan
+                                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" style="margin-bottom:-1px;"><path d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg> Catatan
                                                 @if($jumlahKomentar > 0)
                                                     <span class="chat-badge">{{ $jumlahKomentar }}</span>
                                                 @endif
@@ -333,17 +342,17 @@
                                 </td>
                             </tr>
 
-                            {{-- MODAL UPDATE STATUS --}}
+                            <!-- MODAL UPDATE STATUS -->
                             <div id="modal-update-{{ $item->id_hasil }}" class="modal-overlay" onclick="closeModalOnOverlay(event, 'modal-update-{{ $item->id_hasil }}')">
                                 <div class="modal-box">
                                     <div class="modal-head">
                                         <span class="modal-title">✏️ Update Status Rekomendasi</span>
-                                        <button class="modal-close" onclick="closeModal('modal-update-{{ $item->id_hasil }}')">✕</button>
+                                        <button class="modal-close" onclick="closeModal('modal-update-{{ $item->id_hasil }}')"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg></button>
                                     </div>
                                     <div class="modal-body">
-                                        <div style="background:var(--gray-50); border-radius:10px; padding:12px; margin-bottom:16px; border:1px solid var(--gray-100);">
-                                            <p style="font-size:11px; font-weight:800; color:var(--gray-400); text-transform:uppercase; margin-bottom:4px;">Rekomendasi</p>
-                                            <p style="font-size:13px; font-weight:600; color:var(--gray-800);">{{ $rekomendasiFinal }}</p>
+                                        <div style="background:var(--blue-lt); border-radius:8px; padding:10px; margin-bottom:12px; border:1px solid #bfdbfe;">
+                                            <p style="font-size:10px; font-weight:700; color:var(--blue); text-transform:uppercase; margin-bottom:2px;">Rekomendasi</p>
+                                            <p style="font-size:12.5px; font-weight:600; color:var(--gray-800);">{{ $rekomendasiFinal }}</p>
                                         </div>
 
                                         <form action="{{ route('walas.rekomendasi.updateStatus', $item->id_hasil) }}" method="POST">
@@ -361,21 +370,20 @@
                                                 <input type="date" name="tanggal_pelaksanaan" class="form-control" required
                                                     value="{{ $tglPelaksanaan ? \Carbon\Carbon::parse($tglPelaksanaan)->format('Y-m-d') : date('Y-m-d') }}">
                                             </div>
-                                            <button type="submit" class="btn-show" style="width:100%; justify-content:center; display:flex;">
+                                            <button type="submit" class="btn-show" style="width:100%; margin-top:4px;">
                                                 Simpan Perubahan
                                             </button>
                                         </form>
 
-                                        {{-- Chatbox muncul saat selesai --}}
-                                        <div id="modal-chatbox-{{ $item->id_hasil }}" style="{{ $statusRekomendasi === 'selesai' ? '' : 'display:none;' }} margin-top:20px; border-top:1px solid var(--gray-100); padding-top:16px;">
-                                            <p style="font-size:11px; font-weight:800; color:var(--gray-400); text-transform:uppercase; margin-bottom:10px;">💬 Catatan Penyelesaian</p>
+                                        <div id="modal-chatbox-{{ $item->id_hasil }}" style="{{ $statusRekomendasi === 'selesai' ? '' : 'display:none;' }} margin-top:16px; border-top:1px solid var(--gray-100); padding-top:12px;">
+                                            <p style="font-size:10.5px; font-weight:700; color:var(--gray-400); text-transform:uppercase; margin-bottom:8px;">💬 Catatan Penyelesaian</p>
                                             
                                             @if($jumlahKomentar > 0)
                                                 <div class="chat-list">
                                                     @foreach($komentarList as $kom)
                                                         <div class="chat-bubble {{ $kom->role === 'kepsek' ? 'kepsek' : 'walas' }}">
                                                             <div class="chat-meta">
-                                                                <span class="chat-name" style="color:{{ $kom->role === 'kepsek' ? '#2563eb' : 'var(--gray-500)' }}">
+                                                                <span class="chat-name" style="color:{{ $kom->role === 'kepsek' ? '#1d4ed8' : '#475569' }}">
                                                                     {{ $kom->role === 'kepsek' ? '👤 Kepala Sekolah' : '👤 ' . $kom->nama_user }}
                                                                 </span>
                                                                 <span class="chat-time">{{ \Carbon\Carbon::parse($kom->created_at)->translatedFormat('d M Y, H:i') }}</span>
@@ -385,13 +393,13 @@
                                                     @endforeach
                                                 </div>
                                             @else
-                                                <p style="font-size:11px; color:var(--gray-400); font-style:italic; margin-bottom:10px;">Belum ada catatan.</p>
+                                                <p style="font-size:11px; color:var(--gray-400); font-style:italic; margin-bottom:8px;">Belum ada catatan.</p>
                                             @endif
 
                                             <form action="{{ route('walas.rekomendasi.komentar.simpan', $item->id_hasil) }}" method="POST">
                                                 @csrf
-                                                <textarea name="komentar" rows="3" placeholder="Tulis catatan penyelesaian..." required class="form-control" style="resize:none;"></textarea>
-                                                <button type="submit" style="margin-top:8px; width:100%; background:#10b981; color:white; border:none; padding:10px; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer;">
+                                                <textarea name="komentar" rows="2" placeholder="Tulis catatan penyelesaian..." required class="form-control" style="resize:none;"></textarea>
+                                                <button type="submit" style="margin-top:6px; width:100%; background:#16a34a; color:white; border:none; padding:8px; border-radius:8px; font-size:12.5px; font-weight:700; cursor:pointer; box-shadow: 0 2px 4px rgba(22,163,74,0.2);">
                                                     Kirim Catatan
                                                 </button>
                                             </form>
@@ -400,16 +408,16 @@
                                 </div>
                             </div>
 
-                            {{-- MODAL CHATBOX --}}
+                            <!-- MODAL CHATBOX UTAMA -->
                             <div id="modal-chat-{{ $item->id_hasil }}" class="modal-overlay" onclick="closeModalOnOverlay(event, 'modal-chat-{{ $item->id_hasil }}')">
                                 <div class="modal-box">
                                     <div class="modal-head">
                                         <span class="modal-title">💬 Catatan & Komentar</span>
-                                        <button class="modal-close" onclick="closeModal('modal-chat-{{ $item->id_hasil }}')">✕</button>
+                                        <button class="modal-close" onclick="closeModal('modal-chat-{{ $item->id_hasil }}')"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12"/></svg></button>
                                     </div>
                                     <div class="modal-body">
-                                        <div style="background:var(--gray-50); border-radius:10px; padding:10px; margin-bottom:14px; border:1px solid var(--gray-100);">
-                                            <p style="font-size:11px; font-weight:800; color:var(--gray-400); text-transform:uppercase; margin-bottom:2px;">Rekomendasi</p>
+                                        <div style="background:var(--gray-50); border-radius:8px; padding:8px; margin-bottom:12px; border:1px solid var(--gray-200);">
+                                            <p style="font-size:10px; font-weight:700; color:var(--gray-400); text-transform:uppercase; margin-bottom:2px;">Rekomendasi</p>
                                             <p style="font-size:12px; font-weight:600; color:var(--gray-800);">{{ $rekomendasiFinal }}</p>
                                         </div>
 
@@ -418,7 +426,7 @@
                                                 @foreach($komentarList as $kom)
                                                     <div class="chat-bubble {{ $kom->role === 'kepsek' ? 'kepsek' : 'walas' }}">
                                                         <div class="chat-meta">
-                                                            <span class="chat-name" style="color:{{ $kom->role === 'kepsek' ? '#2563eb' : 'var(--gray-500)' }}">
+                                                            <span class="chat-name" style="color:{{ $kom->role === 'kepsek' ? '#1d4ed8' : '#475569' }}">
                                                                 {{ $kom->role === 'kepsek' ? '👤 Kepala Sekolah' : '👤 ' . $kom->nama_user }}
                                                             </span>
                                                             <span class="chat-time">{{ \Carbon\Carbon::parse($kom->created_at)->translatedFormat('d M Y, H:i') }}</span>
@@ -428,13 +436,13 @@
                                                 @endforeach
                                             </div>
                                         @else
-                                            <p style="font-size:12px; color:var(--gray-400); font-style:italic; text-align:center; padding:20px 0;">Belum ada catatan atau komentar.</p>
+                                            <p style="font-size:12px; color:var(--gray-400); font-style:italic; text-align:center; padding:16px 0;">Belum ada catatan atau komentar.</p>
                                         @endif
 
                                         <form action="{{ route('walas.rekomendasi.komentar.simpan', $item->id_hasil) }}" method="POST">
                                             @csrf
-                                            <textarea name="komentar" rows="3" placeholder="Tulis catatan..." required class="form-control" style="resize:none;"></textarea>
-                                            <button type="submit" style="margin-top:8px; width:100%; background:#10b981; color:white; border:none; padding:10px; border-radius:10px; font-size:13px; font-weight:700; cursor:pointer;">
+                                            <textarea name="komentar" rows="2" placeholder="Tulis catatan..." required class="form-control" style="resize:none;"></textarea>
+                                            <button type="submit" style="margin-top:6px; width:100%; background:#16a34a; color:white; border:none; padding:8px; border-radius:8px; font-size:12.5px; font-weight:700; cursor:pointer; box-shadow: 0 2px 4px rgba(22,163,74,0.2);">
                                                 Kirim Catatan
                                             </button>
                                         </form>
@@ -444,7 +452,7 @@
 
                             @empty
                             <tr>
-                                <td colspan="8" style="padding:60px; text-align:center; color:var(--gray-400);">Belum ada hasil analisis. Silakan jalankan proses MFEP terlebih dahulu.</td>
+                                <td colspan="8" style="padding:40px; text-align:center; color:var(--gray-400); font-size:13px;">Belum ada hasil analisis. Silakan jalankan proses MFEP terlebih dahulu.</td>
                             </tr>
                             @endforelse
                         </tbody>
