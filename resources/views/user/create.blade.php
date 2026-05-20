@@ -100,7 +100,7 @@
     .form-hint { font-size: 11px; color: var(--gray-400); font-weight: 500; margin-top: 2px; }
     .form-error { font-size: 11px; color: var(--red); font-weight: 600; margin-top: 2px; display: flex; align-items: center; gap: 4px; }
 
-    /* ── ALERT BOX ── */
+    /* ── ALERTS ── */
     .alert-warning {
         display: none;
         padding: 12px 16px;
@@ -127,9 +127,22 @@
         display: flex;
         align-items: flex-start;
         gap: 10px;
-        margin-bottom: 18px;
+        margin-bottom: 4px;
     }
     .alert-error svg { flex-shrink: 0; margin-top: 1px; }
+
+    /* ── KELAS ROW TRANSITION ── */
+    .kelas-row-wrap {
+        overflow: hidden;
+        transition: max-height 0.3s ease, opacity 0.3s ease, margin 0.3s ease;
+        max-height: 0;
+        opacity: 0;
+        margin-top: 0;
+    }
+    .kelas-row-wrap.visible {
+        max-height: 120px;
+        opacity: 1;
+    }
 
     .form-foot { padding: 16px 22px; background: var(--gray-50); border-top: 1px solid var(--gray-100); display: flex; justify-content: space-between; align-items: center; }
 
@@ -137,6 +150,7 @@
     .btn-primary { background: var(--blue); color: white; }
     .btn-primary:hover { background: #1d4ed8; box-shadow: 0 3px 10px rgba(37,99,235,.2); }
     .btn-secondary { background: white; color: var(--gray-700); border: 1.5px solid var(--gray-200); }
+    .btn-secondary:hover { background: var(--gray-100); }
 </style>
 
 <div class="da-root">
@@ -145,7 +159,12 @@
     {{-- ══ SIDEBAR ══ --}}
     <aside class="da-sidebar">
         <div class="sb-brand">
-            <div class="sb-logo"><svg width="20" height="20" fill="none" stroke="white" viewBox="0 0 24 24" stroke-width="2"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg></div>
+            <div class="sb-logo">
+                <svg width="20" height="20" fill="none" stroke="white" viewBox="0 0 24 24" stroke-width="2">
+                    <path d="M12 14l9-5-9-5-9 5 9 5z"/>
+                    <path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0112 20.055a11.952 11.952 0 01-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+                </svg>
+            </div>
             <div>
                 <div class="sb-brand-name">SPK Putus Sekolah</div>
                 <div class="sb-brand-sub">SDN 11 Kampung Batu</div>
@@ -154,19 +173,46 @@
 
         <div class="sb-nav">
             <div class="sb-nav-section">Menu</div>
-            <a href="{{ route('dashboard') }}" class="sb-item"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>Dashboard</a>
+            <a href="{{ route('dashboard') }}" class="sb-item">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                Dashboard
+            </a>
 
             <div class="sb-nav-section">Manajemen</div>
-            <a href="{{ route('admin.user.index') }}" class="sb-item active"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>Manajemen User</a>
-            <a href="{{ route('admin.kelas.index') }}" class="sb-item"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>Data Kelas</a>
-            <a href="{{ route('admin.siswa.index') }}" class="sb-item"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>Data Siswa</a>
-            <a href="{{ route('admin.mapel.index') }}" class="sb-item"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>Mata Pelajaran</a>
+            <a href="{{ route('admin.user.index') }}" class="sb-item active">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                Manajemen User
+            </a>
+            <a href="{{ route('admin.kelas.index') }}" class="sb-item">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>
+                Data Kelas
+            </a>
+            <a href="{{ route('admin.siswa.index') }}" class="sb-item">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                Data Siswa
+            </a>
+            <a href="{{ route('admin.mapel.index') }}" class="sb-item">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                Mata Pelajaran
+            </a>
 
             <div class="sb-nav-section">SPK</div>
-            <a href="{{ route('admin.kriteria.index') }}" class="sb-item"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>Data Kriteria</a>
-            <a href="{{ route('admin.subkriteria.index') }}" class="sb-item"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M4 6h16M4 10h16M4 14h10M4 18h6"/></svg>Data Subkriteria</a>
-            <a href="{{ route('admin.periode.index') }}" class="sb-item"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>Periode Penilaian</a>
-            <a href="{{ route('admin.master-rekomendasi.index') }}" class="sb-item"><svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>Rekomendasi</a>
+            <a href="{{ route('admin.kriteria.index') }}" class="sb-item">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                Data Kriteria
+            </a>
+            <a href="{{ route('admin.subkriteria.index') }}" class="sb-item">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M4 6h16M4 10h16M4 14h10M4 18h6"/></svg>
+                Data Subkriteria
+            </a>
+            <a href="{{ route('admin.periode.index') }}" class="sb-item">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                Periode Penilaian
+            </a>
+            <a href="{{ route('admin.master-rekomendasi.index') }}" class="sb-item">
+                <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                Rekomendasi
+            </a>
         </div>
 
         <div class="sb-user">
@@ -176,14 +222,20 @@
                 <div style="font-size:10px; color:var(--gray-400)">Administrator</div>
             </div>
             <div style="display:flex; gap:2px">
-                <a href="{{ route('profile.edit') }}" class="sb-action-btn"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></a>
-                <form action="{{ route('logout') }}" method="POST" style="margin:0">@csrf
-                    <button type="submit" class="sb-action-btn sb-action-logout"><svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg></button>
+                <a href="{{ route('profile.edit') }}" class="sb-action-btn">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                </a>
+                <form action="{{ route('logout') }}" method="POST" style="margin:0">
+                    @csrf
+                    <button type="submit" class="sb-action-btn sb-action-logout">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                    </button>
                 </form>
             </div>
         </div>
     </aside>
 
+    {{-- ══ MAIN ══ --}}
     <main class="da-main">
         <div class="da-phead">
             <a href="{{ route('admin.user.index') }}" class="da-phead-back" title="Kembali">
@@ -191,7 +243,7 @@
             </a>
             <div>
                 <h2 class="da-phead-title">Tambah Pengguna Baru</h2>
-                <p style="font-size:12px; color:var(--gray-400); margin-top:2px">Daftarkan akun administrator atau wali kelas baru</p>
+                <p style="font-size:12px; color:var(--gray-400); margin-top:2px">Daftarkan akun administrator, wali kelas, atau kepala sekolah</p>
             </div>
         </div>
 
@@ -205,14 +257,14 @@
                             <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
                         </div>
                         <div>
-                            <div style="font-weight: 800; font-size: 14px;">Registrasi Akun</div>
-                            <div style="font-size: 11px; color: var(--gray-400);">Silakan lengkapi formulir di bawah ini</div>
+                            <div style="font-weight:800; font-size:14px;">Registrasi Akun</div>
+                            <div style="font-size:11px; color:var(--gray-400);">Silakan lengkapi formulir di bawah ini</div>
                         </div>
                     </div>
 
                     <div class="form-body">
 
-                        {{-- Alert error dari server (jika ada error id_kelas dari controller) --}}
+                        {{-- Alert error server untuk id_kelas --}}
                         @if($errors->has('id_kelas'))
                             <div class="alert-error">
                                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
@@ -223,12 +275,12 @@
                             </div>
                         @endif
 
-                        {{-- Alert peringatan dinamis (muncul saat pilih role Wali Kelas) --}}
+                        {{-- Alert peringatan wali kelas --}}
                         <div class="alert-warning" id="alertWalas">
                             <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
                             <div>
                                 <div style="font-weight:800; margin-bottom:2px;">Penugasan Kelas Wajib Diisi</div>
-                                Akun dengan role <strong>Wali Kelas</strong> harus ditugaskan ke salah satu kelas. Pilih kelas di bawah sebelum menyimpan.
+                                Akun dengan role <strong>Wali Kelas</strong> harus ditugaskan ke salah satu kelas.
                             </div>
                         </div>
 
@@ -236,7 +288,8 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">Nama Lengkap</label>
-                                <input type="text" name="name" class="form-control @error('name') is-error @enderror"
+                                <input type="text" name="name"
+                                    class="form-control @error('name') is-error @enderror"
                                     placeholder="Masukkan nama lengkap"
                                     value="{{ old('name') }}" required>
                                 @error('name')
@@ -248,7 +301,8 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Alamat Email</label>
-                                <input type="email" name="email" class="form-control @error('email') is-error @enderror"
+                                <input type="email" name="email"
+                                    class="form-control @error('email') is-error @enderror"
                                     placeholder="email@contoh.com"
                                     value="{{ old('email') }}" required>
                                 @error('email')
@@ -264,7 +318,8 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">Password</label>
-                                <input type="password" name="password" class="form-control @error('password') is-error @enderror"
+                                <input type="password" name="password"
+                                    class="form-control @error('password') is-error @enderror"
                                     placeholder="••••••••" required>
                                 @error('password')
                                     <span class="form-error">
@@ -275,7 +330,8 @@
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Role / Jabatan</label>
-                                <select name="role" id="roleSelect" class="form-control @error('role') is-error @enderror" required>
+                                <select name="role" id="roleSelect"
+                                    class="form-control @error('role') is-error @enderror" required>
                                     <option value="" disabled {{ old('role') ? '' : 'selected' }}>-- Pilih Role --</option>
                                     <option value="admin"      {{ old('role') == 'admin'      ? 'selected' : '' }}>Administrator</option>
                                     <option value="wali_kelas" {{ old('role') == 'wali_kelas' ? 'selected' : '' }}>Wali Kelas</option>
@@ -290,85 +346,123 @@
                             </div>
                         </div>
 
-                        {{-- Kelas & Status --}}
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label class="form-label" id="kelasLabel">
-                                    Penugasan Kelas
-                                    <span class="required-badge" id="kelasRequired" style="display:none;">
-                                        <svg width="9" height="9" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path d="M12 9v4m0 4h.01"/></svg>
-                                        Wajib diisi
-                                    </span>
-                                </label>
-                                <select name="id_kelas" id="kelasSelect"
-                                    class="form-control @error('id_kelas') is-error @enderror">
-                                    <option value="">-- Pilih Kelas --</option>
-                                    @foreach($kelas as $k)
-                                        <option value="{{ $k->id_kelas }}" {{ old('id_kelas') == $k->id_kelas ? 'selected' : '' }}>
-                                            {{ $k->nama_kelas }} - {{ $k->tahun_ajaran }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('id_kelas')
-                                    <span class="form-error">
-                                        <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
-                                        {{ $message }}
-                                    </span>
-                                @else
-                                    <span class="form-hint" id="kelasHint">Hanya wajib diisi untuk role Wali Kelas</span>
-                                @enderror
+                        {{-- Kelas: hanya muncul saat wali_kelas (animated) --}}
+                        <div class="kelas-row-wrap" id="kelasRowWrap">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        Penugasan Kelas
+                                        <span class="required-badge">
+                                            <svg width="9" height="9" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path d="M12 9v4m0 4h.01"/></svg>
+                                            Wajib diisi
+                                        </span>
+                                    </label>
+                                    <select name="id_kelas" id="kelasSelect"
+                                        class="form-control @error('id_kelas') is-error @enderror">
+                                        <option value="">-- Pilih Kelas --</option>
+                                        @foreach($kelas as $k)
+                                            <option value="{{ $k->id_kelas }}" {{ old('id_kelas') == $k->id_kelas ? 'selected' : '' }}>
+                                                {{ $k->nama_kelas }} - {{ $k->tahun_ajaran }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('id_kelas')
+                                        <span class="form-error">
+                                            <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 9v4m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                                            {{ $message }}
+                                        </span>
+                                    @else
+                                        <span class="form-hint">Pilih kelas yang akan diampu wali kelas ini</span>
+                                    @enderror
+                                </div>
+
+                                {{-- Status akun sejajar kelas saat wali kelas --}}
+                                <div class="form-group">
+                                    <label class="form-label">Status Akun</label>
+                                    <select name="is_active" id="isActiveWalas" class="form-control">
+                                        <option value="1" {{ old('is_active', '1') == '1' ? 'selected' : '' }}>Aktif</option>
+                                        <option value="0" {{ old('is_active') == '0'      ? 'selected' : '' }}>Nonaktif</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div class="form-group">
+                        </div>
+
+                        {{-- Status akun: muncul saat bukan wali_kelas (full width) --}}
+                        <div id="statusRowSingle">
+                            <div class="form-group" style="max-width: calc(50% - 8px);">
                                 <label class="form-label">Status Akun</label>
-                                <select name="is_active" class="form-control" required>
+                                <select name="is_active" id="isActiveSingle" class="form-control">
                                     <option value="1" {{ old('is_active', '1') == '1' ? 'selected' : '' }}>Aktif</option>
                                     <option value="0" {{ old('is_active') == '0'      ? 'selected' : '' }}>Nonaktif</option>
                                 </select>
                             </div>
                         </div>
 
-                    </div>
+                    </div>{{-- /form-body --}}
 
                     <div class="form-foot">
-                        <a href="{{ route('admin.user.index') }}" class="btn btn-secondary">Batal</a>
+                        <a href="{{ route('admin.user.index') }}" class="btn btn-secondary">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                            Batal
+                        </a>
                         <button type="submit" class="btn btn-primary">
                             <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M5 13l4 4L19 7"/></svg>
                             Simpan Data
                         </button>
                     </div>
                 </div>
+
             </form>
         </div>
     </main>
+
 </div>
 </div>
 
 <script>
-    var roleSelect    = document.getElementById('roleSelect');
-    var kelasSelect   = document.getElementById('kelasSelect');
-    var alertWalas    = document.getElementById('alertWalas');
-    var kelasRequired = document.getElementById('kelasRequired');
-    var kelasHint     = document.getElementById('kelasHint');
+    var roleSelect       = document.getElementById('roleSelect');
+    var kelasSelect      = document.getElementById('kelasSelect');
+    var kelasRowWrap     = document.getElementById('kelasRowWrap');
+    var alertWalas       = document.getElementById('alertWalas');
+    var statusRowSingle  = document.getElementById('statusRowSingle');
+    var isActiveSingle   = document.getElementById('isActiveSingle');
+    var isActiveWalas    = document.getElementById('isActiveWalas');
+
+    function syncStatus() {
+        // Sinkronkan nilai status antara dua select agar tidak bertabrakan
+        isActiveWalas.value = isActiveSingle.value;
+    }
 
     function toggleWalasUI(role) {
         var isWalas = role === 'wali_kelas';
 
-        alertWalas.classList.toggle('show', isWalas);
-        kelasRequired.style.display = isWalas ? 'inline-flex' : 'none';
-        if (kelasHint) kelasHint.style.display = isWalas ? 'none' : 'block';
+        // Animasi show/hide field kelas
+        kelasRowWrap.classList.toggle('visible', isWalas);
 
-        // Set required attribute di select kelas
+        // Tampilkan alert
+        alertWalas.classList.toggle('show', isWalas);
+
+        // Toggle status row
+        statusRowSingle.style.display = isWalas ? 'none' : 'block';
+
+        // Set required pada kelasSelect
         if (isWalas) {
             kelasSelect.setAttribute('required', 'required');
         } else {
             kelasSelect.removeAttribute('required');
+            kelasSelect.value = '';
+            kelasSelect.classList.remove('is-required-highlight');
+            // Hapus pesan error kelas dinamis jika ada
+            var errEl = document.getElementById('kelas-error-msg');
+            if (errEl) errEl.remove();
         }
 
+        // Highlight kelas jika belum dipilih
         if (isWalas && !kelasSelect.value) {
             kelasSelect.classList.add('is-required-highlight');
-        } else {
-            kelasSelect.classList.remove('is-required-highlight');
         }
+
+        syncStatus();
     }
 
     roleSelect.addEventListener('change', function () {
@@ -378,20 +472,29 @@
     kelasSelect.addEventListener('change', function () {
         if (this.value) {
             this.classList.remove('is-required-highlight');
+            var errEl = document.getElementById('kelas-error-msg');
+            if (errEl) errEl.remove();
         } else if (roleSelect.value === 'wali_kelas') {
             this.classList.add('is-required-highlight');
         }
     });
 
+    // Sinkronkan status saat salah satu diubah
+    isActiveSingle.addEventListener('change', function () {
+        isActiveWalas.value = this.value;
+    });
+    isActiveWalas.addEventListener('change', function () {
+        isActiveSingle.value = this.value;
+    });
+
     // Validasi saat submit
-    document.querySelector('form').addEventListener('submit', function(e) {
+    document.querySelector('form').addEventListener('submit', function (e) {
         if (roleSelect.value === 'wali_kelas' && !kelasSelect.value) {
             e.preventDefault();
             kelasSelect.classList.add('is-required-highlight');
             alertWalas.classList.add('show');
             kelasSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-            // Tampilkan pesan error di bawah select kelas
             var existing = document.getElementById('kelas-error-msg');
             if (!existing) {
                 var errMsg = document.createElement('span');
@@ -401,8 +504,14 @@
                 kelasSelect.parentNode.appendChild(errMsg);
             }
         }
+
+        // Pastikan hanya satu is_active yang terkirim (disable yang tersembunyi)
+        var isWalas = roleSelect.value === 'wali_kelas';
+        isActiveSingle.disabled = isWalas;
+        isActiveWalas.disabled  = !isWalas;
     });
 
+    // Jalankan saat load (handle old() setelah validasi gagal)
     toggleWalasUI(roleSelect.value);
 </script>
 

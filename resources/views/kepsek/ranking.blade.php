@@ -145,32 +145,42 @@
         <div class="da-body">
             {{-- FILTER --}}
             <div class="card-filter">
-                <form method="GET" action="{{ route('kepsek.ranking') }}" class="f-grid">
-                    <div>
-                        <label class="f-label">Pilih Periode</label>
-                        <select name="id_periode" class="f-select">
-                            <option value="">-- Periode --</option>
-                            @foreach($periodes as $p)
-                                <option value="{{ $p->id_periode }}" {{ (string) $idPeriode === (string) $p->id_periode ? 'selected' : '' }}>
-                                    {{ $p->tahun_ajaran }} - Semester {{ $p->semester }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <label class="f-label">Filter Kelas</label>
-                        <select name="id_kelas" class="f-select">
-                            <option value="">Semua Kelas</option>
-                            @foreach($kelasList as $kelas)
-                                <option value="{{ $kelas->id_kelas }}" {{ (string) $idKelas === (string) $kelas->id_kelas ? 'selected' : '' }}>
-                                    {{ $kelas->nama_kelas }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <button type="submit" class="btn-primary">Tampilkan</button>
-                </form>
-            </div>
+    <form method="GET" action="{{ route('kepsek.ranking') }}" class="f-grid" style="grid-template-columns: 1fr 1fr 1fr 160px;">
+        <div>
+            <label class="f-label">Pilih Periode</label>
+            <select name="id_periode" class="f-select">
+                <option value="">-- Periode --</option>
+                @foreach($periodes as $p)
+                    <option value="{{ $p->id_periode }}" {{ (string) $idPeriode === (string) $p->id_periode ? 'selected' : '' }}>
+                        {{ $p->tahun_ajaran }} - Semester {{ $p->semester }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label class="f-label">Filter Kelas</label>
+            <select name="id_kelas" class="f-select">
+                <option value="">Semua Kelas</option>
+                @foreach($kelasList as $kelas)
+                    <option value="{{ $kelas->id_kelas }}" {{ (string) $idKelas === (string) $kelas->id_kelas ? 'selected' : '' }}>
+                        {{ $kelas->nama_kelas }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label class="f-label">Kategori Risiko</label>
+            <select name="kategori" class="f-select">
+                <option value="">Semua Kategori</option>
+                <option value="Tinggi" {{ ($kategori ?? '') === 'Tinggi' ? 'selected' : '' }}>🔴 Tinggi</option>
+                <option value="Sedang" {{ ($kategori ?? '') === 'Sedang' ? 'selected' : '' }}>🟡 Sedang</option>
+                <option value="Rendah" {{ ($kategori ?? '') === 'Rendah' ? 'selected' : '' }}>🟢 Rendah</option>
+            </select>
+        </div>
+        <button type="submit" class="btn-primary">Tampilkan</button>
+    </form>
+</div>
+
 
             {{-- TABLE --}}
             <div class="card-table">

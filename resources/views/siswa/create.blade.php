@@ -35,7 +35,6 @@
 
     .da-shell { display: flex; min-height: 100vh; }
 
-    /* ── SIDEBAR LENGKAP ── */
     .da-sidebar {
         width: var(--sidebar-w); background: var(--white);
         border-right: 1px solid var(--gray-200);
@@ -60,14 +59,12 @@
     .sb-action-btn:hover { background: var(--gray-100); color: var(--gray-700); }
     .sb-action-logout:hover { background: #fee2e2; color: var(--red); }
 
-    /* ── MAIN AREA ── */
     .da-main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-width: 0; }
     .da-phead { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 20px 28px; display: flex; align-items: center; gap: 12px; }
     .da-phead-back { width: 32px; height: 32px; border-radius: 8px; border: 1.5px solid var(--gray-200); display: flex; align-items: center; justify-content: center; text-decoration: none; color: var(--gray-500); transition: .13s; }
     .da-phead-back:hover { border-color: var(--blue-mid); background: var(--blue-lt); color: var(--blue); }
     .da-phead-title { font-size: 18px; font-weight: 800; color: var(--gray-900); letter-spacing: -0.3px; }
 
-    /* ── FORM STYLING ── */
     .da-content { padding: 28px; max-width: 800px; }
     .form-card { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 14px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
     .form-card-head { padding: 16px 22px; border-bottom: 1px solid var(--gray-100); display: flex; align-items: center; gap: 12px; }
@@ -90,12 +87,28 @@
     .btn-primary { background: var(--blue); color: white; }
     .btn-primary:hover { background: #1d4ed8; box-shadow: 0 3px 10px rgba(37,99,235,.2); }
     .btn-secondary { background: white; color: var(--gray-700); border: 1.5px solid var(--gray-200); }
+
+    {{-- ✅ CSS BARU: alert error & input error --}}
+    .alert-error-box {
+        display: flex; align-items: flex-start; gap: 12px;
+        background: var(--red-lt); border: 1.5px solid var(--red-bd);
+        border-radius: 12px; padding: 14px 16px; margin-bottom: 18px;
+        animation: slideDown .2s ease;
+    }
+    .alert-error-icon {
+        width: 32px; height: 32px; background: #fee2e2; border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        color: var(--red); flex-shrink: 0;
+    }
+    .field-error { font-size: 11px; color: var(--red); font-weight: 600; margin-top: 2px; }
+    .input-error { border-color: var(--red) !important; background: var(--red-lt); }
+    .input-error:focus { box-shadow: 0 0 0 3px rgba(239,68,68,0.15) !important; }
+    @keyframes slideDown { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
 </style>
 
 <div class="da-root">
 <div class="da-shell">
 
-    {{-- ══ SIDEBAR LENGKAP ══ --}}
     <aside class="da-sidebar">
         <div class="sb-brand">
             <div class="sb-logo"><svg width="20" height="20" fill="none" stroke="white" viewBox="0 0 24 24" stroke-width="2"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg></div>
@@ -138,7 +151,6 @@
     </aside>
 
     <main class="da-main">
-        {{-- Header --}}
         <div class="da-phead">
             <a href="{{ route('admin.siswa.index') }}" class="da-phead-back" title="Kembali">
                 <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M15 19l-7-7 7-7"/></svg>
@@ -150,6 +162,27 @@
         </div>
 
         <div class="da-content">
+
+            {{-- ✅ ALERT ERROR DI SINI, sebelum <form> --}}
+            @if ($errors->any())
+                <div class="alert-error-box">
+                    <div class="alert-error-icon">
+                        <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                    </div>
+                    <div>
+                        <div style="font-weight:700; font-size:13px; color:#991b1b;">Data siswa tidak dapat disimpan</div>
+                        <ul style="margin:4px 0 0 16px; font-size:12px; color:#b91c1c;">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                    <button onclick="this.parentElement.remove()" style="margin-left:auto; background:none; border:none; cursor:pointer; color:#b91c1c; padding:4px;">
+                        <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+            @endif
+
             <form action="{{ route('admin.siswa.store') }}" method="POST">
                 @csrf
 
@@ -168,11 +201,25 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">NISN</label>
-                                <input type="text" name="nisn" class="form-control" placeholder="Contoh: 0123456789" required autofocus>
+                                {{-- ✅ tambah value old() & class input-error --}}
+                                <input type="text" name="nisn"
+                                    class="form-control {{ $errors->has('nisn') ? 'input-error' : '' }}"
+                                    placeholder="Contoh: 0123456789"
+                                    value="{{ old('nisn') }}" required autofocus>
+                                @error('nisn')
+                                    <span class="field-error">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Nama Lengkap Siswa</label>
-                                <input type="text" name="nama_siswa" class="form-control" placeholder="Nama sesuai akta kelahiran" required>
+                                {{-- ✅ tambah value old() & class input-error --}}
+                                <input type="text" name="nama_siswa"
+                                    class="form-control {{ $errors->has('nama_siswa') ? 'input-error' : '' }}"
+                                    placeholder="Nama sesuai akta kelahiran"
+                                    value="{{ old('nama_siswa') }}" required>
+                                @error('nama_siswa')
+                                    <span class="field-error">{{ $message }}</span>
+                                @enderror
                             </div>
                         </div>
 
@@ -180,14 +227,18 @@
                             <div class="form-group">
                                 <label class="form-label">Jenis Kelamin</label>
                                 <select name="jenis_kelamin" class="form-control" required>
-                                    <option value="" disabled selected>-- Pilih --</option>
-                                    <option value="L">Laki-laki</option>
-                                    <option value="P">Perempuan</option>
+                                    <option value="" disabled {{ old('jenis_kelamin') ? '' : 'selected' }}>-- Pilih --</option>
+                                    {{-- ✅ tambah old() selected --}}
+                                    <option value="L" {{ old('jenis_kelamin') == 'L' ? 'selected' : '' }}>Laki-laki</option>
+                                    <option value="P" {{ old('jenis_kelamin') == 'P' ? 'selected' : '' }}>Perempuan</option>
                                 </select>
                             </div>
                             <div class="form-group">
                                 <label class="form-label">Tanggal Lahir</label>
-                                <input type="date" name="tanggal_lahir" class="form-control" required>
+                                {{-- ✅ tambah value old() --}}
+                                <input type="date" name="tanggal_lahir"
+                                    class="form-control"
+                                    value="{{ old('tanggal_lahir') }}" required>
                             </div>
                         </div>
 
@@ -195,9 +246,10 @@
                             <div class="form-group">
                                 <label class="form-label">Penempatan Kelas</label>
                                 <select name="id_kelas" class="form-control" required>
-                                    <option value="" disabled selected>-- Pilih Kelas --</option>
+                                    <option value="" disabled {{ old('id_kelas') ? '' : 'selected' }}>-- Pilih Kelas --</option>
                                     @foreach($kelas as $k)
-                                        <option value="{{ $k->id_kelas }}">
+                                        {{-- ✅ tambah old() selected --}}
+                                        <option value="{{ $k->id_kelas }}" {{ old('id_kelas') == $k->id_kelas ? 'selected' : '' }}>
                                             {{ $k->nama_kelas }} - {{ $k->tahun_ajaran }}
                                         </option>
                                     @endforeach

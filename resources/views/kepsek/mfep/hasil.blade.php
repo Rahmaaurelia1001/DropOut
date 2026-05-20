@@ -257,33 +257,42 @@
                 <div style="background:#ecfdf5; color:#059669; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:600; margin-bottom:24px; border:1px solid #d1fae5;">{{ session('success') }}</div>
             @endif
 
-            <div class="filter-card">
-                <form method="GET" action="{{ route('kepsek.mfep.hasil') }}" class="f-grid">
-                    <div>
-                        <label class="f-label">Periode</label>
-                        <select name="id_periode" class="f-select">
-                            <option value="">Pilih Periode</option>
-                            @foreach($periodes as $p)
-                                <option value="{{ $p->id_periode }}" {{ (string) $idPeriode === (string) $p->id_periode ? 'selected' : '' }}>
-                                    {{ $p->tahun_ajaran }} - Smstr {{ $p->semester }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <label class="f-label">Kelas</label>
-                        <select name="id_kelas" class="f-select">
-                            <option value="">Semua Kelas</option>
-                            @foreach($kelasList as $kelas)
-                                <option value="{{ $kelas->id_kelas }}" {{ (string) $idKelas === (string) $kelas->id_kelas ? 'selected' : '' }}>
-                                    {{ $kelas->nama_kelas }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <button type="submit" class="btn-filter">Tampilkan</button>
-                </form>
-            </div>
+    <div class="filter-card">
+    <form method="GET" action="{{ route('kepsek.mfep.hasil') }}" class="f-grid" style="grid-template-columns: 1fr 1fr 1fr 120px;">
+        <div>
+            <label class="f-label">Periode</label>
+            <select name="id_periode" class="f-select">
+                <option value="">Pilih Periode</option>
+                @foreach($periodes as $p)
+                    <option value="{{ $p->id_periode }}" {{ (string) $idPeriode === (string) $p->id_periode ? 'selected' : '' }}>
+                        {{ $p->tahun_ajaran }} - Smstr {{ $p->semester }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label class="f-label">Kelas</label>
+            <select name="id_kelas" class="f-select">
+                <option value="">Semua Kelas</option>
+                @foreach($kelasList as $kelas)
+                    <option value="{{ $kelas->id_kelas }}" {{ (string) $idKelas === (string) $kelas->id_kelas ? 'selected' : '' }}>
+                        {{ $kelas->nama_kelas }}
+                    </option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <label class="f-label">Kategori Risiko</label>
+            <select name="kategori" class="f-select">
+                <option value="">Semua Kategori</option>
+                <option value="Tinggi"  {{ ($kategori ?? '') === 'Tinggi'  ? 'selected' : '' }}>🔴 Tinggi</option>
+<option value="Sedang"  {{ ($kategori ?? '') === 'Sedang'  ? 'selected' : '' }}>🟡 Sedang</option>
+<option value="Rendah"  {{ ($kategori ?? '') === 'Rendah'  ? 'selected' : '' }}>🟢 Rendah</option>
+            </select>
+        </div>
+        <button type="submit" class="btn-filter">Tampilkan</button>
+    </form>
+</div>
 
             <div class="card-table">
                 <div style="overflow-x: auto;">

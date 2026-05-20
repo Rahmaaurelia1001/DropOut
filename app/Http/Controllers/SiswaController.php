@@ -27,7 +27,6 @@ class SiswaController extends Controller
         }
     }
 
-    // Filter search nama / NISN
     if ($request->filled('search')) {
         $query->where(function($q) use ($request) {
             $q->where('nama_siswa', 'like', '%' . $request->search . '%')
@@ -35,7 +34,9 @@ class SiswaController extends Controller
         });
     }
 
-    $siswa = $query->orderBy('nama_siswa')->get();
+    $siswa = $query->orderBy('nama_siswa')
+                   ->paginate(10)        // ← ganti get()
+                   ->withQueryString();  // ← bawa filter & search saat pindah halaman
 
     return view('siswa.index', compact('siswa', 'kelasList'));
 }
@@ -47,20 +48,23 @@ class SiswaController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $request->validate([
-            'nisn' => 'required|unique:Siswa,nisn',
-            'nama_siswa' => 'required',
-            'jenis_kelamin' => 'required',
-            'tanggal_lahir' => 'required',
-            'id_kelas' => 'required'
-        ]);
+{
+    $request->validate([
+        'nisn'          => 'required|unique:Siswa,nisn',
+        'nama_siswa'    => 'required|unique:Siswa,nama_siswa',
+        'jenis_kelamin' => 'required',
+        'tanggal_lahir' => 'required',
+        'id_kelas'      => 'required'
+    ], [
+        'nisn.unique'       => 'NISN ini sudah terdaftar di sistem.',
+        'nama_siswa.unique' => 'Nama siswa ini sudah terdaftar di sistem.',
+    ]);
 
-        Siswa::create($request->all());
+    Siswa::create($request->all());
 
-        return redirect()->route('admin.siswa.index')
-            ->with('success', 'Data siswa berhasil ditambahkan');
-    }
+    return redirect()->route('admin.siswa.index')
+        ->with('success', 'Data siswa berhasil ditambahkan');
+}
 
     public function edit($id)
     {
@@ -94,14 +98,21 @@ class SiswaController extends Controller
         ->with('success', 'Data siswa berhasil diupdate');
 }
     public function destroy($id)
-    {
-        $siswa = Siswa::findOrFail($id);
-        $siswa->delete();
+{
+    $siswa = Siswa::findOrFail($id);
 
+    $adaHasil = \App\Models\HasilKeputusan::where('id_siswa', $id)->exists();
+
+    if ($adaHasil) {
         return redirect()->route('admin.siswa.index')
-            ->with('success', 'Data siswa berhasil dihapus');
+            ->with('error', 'Siswa ' . $siswa->nama_siswa . ' tidak dapat dihapus karena sudah memiliki data hasil analisis.');
     }
 
+    $siswa->delete();
+
+    return redirect()->route('admin.siswa.index')
+        ->with('success', 'Data siswa ' . $siswa->nama_siswa . ' berhasil dihapus.');
+}
     public function importForm()
     {
     $kelas = \App\Models\Kelas::all();

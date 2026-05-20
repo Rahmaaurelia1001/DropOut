@@ -37,7 +37,7 @@
 
     .da-shell { display: flex; min-height: 100vh; }
 
-    /* ── SIDEBAR LENGKAP ── */
+    /* ── SIDEBAR ── */
     .da-sidebar {
         width: var(--sidebar-w); background: var(--white);
         border-right: 1px solid var(--gray-200);
@@ -51,7 +51,6 @@
 
     .sb-nav { padding: 12px 10px; flex: 1; overflow-y: auto; }
     .sb-nav-section { font-size: 9.5px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.1em; padding: 0 8px; margin: 14px 0 5px; }
-    
     .sb-item { display: flex; align-items: center; gap: 9px; padding: 8px 10px; border-radius: 8px; text-decoration: none; font-size: 12.5px; font-weight: 600; color: var(--gray-500); transition: all .13s; margin-bottom: 1px; }
     .sb-item:hover { background: var(--gray-100); color: var(--gray-800); }
     .sb-item.active { background: var(--blue-lt); color: var(--blue); }
@@ -62,13 +61,13 @@
     .sb-action-btn:hover { background: var(--gray-100); color: var(--gray-700); }
     .sb-action-logout:hover { background: #fee2e2; color: var(--red); }
 
-    /* ── MAIN AREA ── */
+    /* ── MAIN ── */
     .da-main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-width: 0; }
     .da-phead { background: var(--white); border-bottom: 1px solid var(--gray-200); padding: 20px 28px; display: flex; align-items: center; justify-content: space-between; }
     .da-phead-title { font-size: 20px; font-weight: 800; color: var(--gray-900); letter-spacing: -0.4px; }
     .da-content { padding: 24px 28px; display: flex; flex-direction: column; gap: 16px; }
 
-    /* Filter Card */
+    /* Filter */
     .filter-card { background: var(--white); border: 1.5px solid var(--gray-200); border-radius: 14px; padding: 16px 20px; display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 16px; }
     .form-group { display: flex; flex-direction: column; gap: 6px; }
     .form-label { font-size: 11px; font-weight: 800; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.05em; }
@@ -87,16 +86,25 @@
     .spk-table thead tr { background: var(--gray-50); border-bottom: 1px solid var(--gray-200); }
     .spk-table th { padding: 10px 20px; font-size: 10.5px; font-weight: 700; color: var(--gray-400); text-transform: uppercase; text-align: left; letter-spacing: 0.07em; }
     .spk-table td { padding: 13px 20px; font-size: 13px; border-bottom: 1px solid var(--gray-100); color: var(--gray-700); }
-    
+
     .act-btn { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 7px; font-size: 11.5px; font-weight: 700; text-decoration: none; }
     .act-edit { color: var(--orange); background: var(--orange-lt); border: 1px solid #fde68a; }
     .act-delete { color: var(--red); background: var(--red-lt); border: 1px solid var(--red-bd); cursor: pointer; }
+
+    /* Pagination */
+    .pagination-wrap { padding: 14px 20px; border-top: 1px solid var(--gray-100); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .pagination-info { font-size: 12px; color: var(--gray-400); }
+    .pagination-links { display: flex; gap: 5px; align-items: center; }
+    .pg-btn { padding: 6px 12px; border-radius: 8px; border: 1.5px solid var(--gray-200); font-size: 12px; font-weight: 700; color: var(--gray-600); text-decoration: none; transition: .13s; background: var(--white); cursor: pointer; font-family: inherit; }
+    .pg-btn:hover { background: var(--gray-100); }
+    .pg-btn.active { background: var(--blue); color: var(--white); border-color: var(--blue); }
+    .pg-btn.disabled { color: var(--gray-300); cursor: not-allowed; pointer-events: none; }
 </style>
 
 <div class="da-root">
 <div class="da-shell">
 
-    {{-- ══ SIDEBAR LENGKAP ══ --}}
+    {{-- ══ SIDEBAR ══ --}}
     <aside class="da-sidebar">
         <div class="sb-brand">
             <div class="sb-logo"><svg width="20" height="20" fill="none" stroke="white" viewBox="0 0 24 24" stroke-width="2"><path d="M12 14l9-5-9-5-9 5 9 5z"/><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/></svg></div>
@@ -126,7 +134,7 @@
         <div class="sb-user">
             <div class="sb-user-av">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</div>
             <div style="flex:1; min-width:0">
-                <div class="sb-user-name" style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; font-size:12px;">{{ Auth::user()->name }}</div>
+                <div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-weight:700; font-size:12px;">{{ Auth::user()->name }}</div>
                 <div style="font-size:10px; color:var(--gray-400)">Administrator</div>
             </div>
             <div style="display:flex; gap:2px">
@@ -145,7 +153,7 @@
                 <h2 class="da-phead-title">Manajemen Data Siswa</h2>
                 <p style="font-size:12px; color:var(--gray-400); margin-top:2px">Kelola profil siswa dan data akademik per kelas</p>
             </div>
-            <div class="flex gap-2">
+            <div style="display:flex; gap:8px;">
                 <a href="{{ route('admin.siswa.import.form') }}" class="btn btn-white">
                     <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/></svg> Import Siswa
                 </a>
@@ -156,39 +164,48 @@
         </div>
 
         <div class="da-content">
-            
+
+        @if(session('error'))
+        <div style="background:#fef2f2; color:#ef4444; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:600; border:1px solid #fecaca;">
+            {{ session('error') }}
+        </div>
+    @endif
+    @if(session('success'))
+        <div style="background:#ecfdf5; color:#059669; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:600; border:1px solid #d1fae5;">
+            {{ session('success') }}
+        </div>
+    @endif
 
             {{-- Filter Bar --}}
             <div class="filter-card">
                 <form method="GET" action="{{ route('admin.siswa.index') }}" style="display:flex; align-items:flex-end; gap:12px; flex-wrap:wrap;">
-    <div class="form-group">
-        <label class="form-label">Cari Nama / NISN</label>
-        <input type="text" name="search" value="{{ request('search') }}"
-            placeholder="Ketik nama atau NISN..."
-            style="padding:8px 12px; border-radius:9px; border:1.5px solid var(--gray-200); font-size:13px; font-weight:500; outline:none; min-width:220px; font-family:inherit;">
-    </div>
-    <div class="form-group">
-        <label class="form-label">Filter Kelas</label>
-        <select name="id_kelas" class="form-select">
-            <option value="">-- Semua Kelas --</option>
-            @foreach($kelasList as $kelas)
-                <option value="{{ $kelas->id_kelas }}" {{ request('id_kelas') == $kelas->id_kelas ? 'selected' : '' }}>
-                    {{ $kelas->nama_kelas }} - {{ $kelas->tahun_ajaran }}
-                </option>
-            @endforeach
-        </select>
-    </div>
-    <button type="submit" class="btn btn-primary" style="padding:8px 16px;">Cari</button>
-    <a href="{{ route('admin.siswa.index') }}" class="btn btn-white" style="padding:8px 16px;">Reset</a>
-</form>
-
-
+                    <div class="form-group">
+                        <label class="form-label">Cari Nama / NISN</label>
+                        <input type="text" name="search" value="{{ request('search') }}"
+                            placeholder="Ketik nama atau NISN..."
+                            style="padding:8px 12px; border-radius:9px; border:1.5px solid var(--gray-200); font-size:13px; font-weight:500; outline:none; min-width:220px; font-family:inherit;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Filter Kelas</label>
+                        <select name="id_kelas" class="form-select">
+                            <option value="">-- Semua Kelas --</option>
+                            @foreach($kelasList as $kelas)
+                                <option value="{{ $kelas->id_kelas }}" {{ request('id_kelas') == $kelas->id_kelas ? 'selected' : '' }}>
+                                    {{ $kelas->nama_kelas }} - {{ $kelas->tahun_ajaran }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="padding:8px 16px;">Cari</button>
+                    <a href="{{ route('admin.siswa.index') }}" class="btn btn-white" style="padding:8px 16px;">Reset</a>
+                </form>
             </div>
 
+            {{-- Table --}}
             <div class="table-card">
                 <div class="table-card-head">
-                    <span style="font-weight: 800; font-size: 13px;">Daftar Siswa Aktif</span>
-                    <span style="font-size: 11px; color: var(--gray-400); background: var(--gray-100); padding: 2px 9px; border-radius: 99px;">{{ $siswa->count() }} siswa</span>
+                    <span style="font-weight:800; font-size:13px;">Daftar Siswa Aktif</span>
+                    <span style="font-size:11px; color:var(--gray-400); background:var(--gray-100); padding:2px 9px; border-radius:99px;">{{ $siswa->total() }} siswa</span>
                 </div>
 
                 <div style="overflow-x:auto;">
@@ -203,9 +220,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($siswa as $index => $s)
+                            @forelse($siswa as $s)
                             <tr>
-                                <td style="font-weight:700; color:var(--gray-400)">{{ $index + 1 }}</td>
+                                <td style="font-weight:700; color:var(--gray-400)">{{ $siswa->firstItem() + $loop->index }}</td>
                                 <td style="font-weight:600">{{ $s->nisn }}</td>
                                 <td>
                                     <div style="font-weight:700; color:var(--gray-900)">{{ $s->nama_siswa }}</div>
@@ -229,7 +246,41 @@
                         </tbody>
                     </table>
                 </div>
-            </div>
+
+                {{-- Pagination --}}
+                @if ($siswa->hasPages())
+                <div class="pagination-wrap">
+                    <span class="pagination-info">
+                        Menampilkan {{ $siswa->firstItem() }}–{{ $siswa->lastItem() }} dari {{ $siswa->total() }} siswa
+                    </span>
+                    <div class="pagination-links">
+                        {{-- Prev --}}
+                        @if ($siswa->onFirstPage())
+                            <span class="pg-btn disabled">‹</span>
+                        @else
+                            <a href="{{ $siswa->previousPageUrl() }}" class="pg-btn">‹</a>
+                        @endif
+
+                        {{-- Page numbers --}}
+                        @foreach ($siswa->getUrlRange(max(1, $siswa->currentPage() - 2), min($siswa->lastPage(), $siswa->currentPage() + 2)) as $page => $url)
+                            @if ($page == $siswa->currentPage())
+                                <span class="pg-btn active">{{ $page }}</span>
+                            @else
+                                <a href="{{ $url }}" class="pg-btn">{{ $page }}</a>
+                            @endif
+                        @endforeach
+
+                        {{-- Next --}}
+                        @if ($siswa->hasMorePages())
+                            <a href="{{ $siswa->nextPageUrl() }}" class="pg-btn">›</a>
+                        @else
+                            <span class="pg-btn disabled">›</span>
+                        @endif
+                    </div>
+                </div>
+                @endif
+
+            </div>{{-- end .table-card --}}
         </div>
     </main>
 

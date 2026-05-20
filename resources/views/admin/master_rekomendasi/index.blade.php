@@ -25,7 +25,6 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
 nav[x-data] { display: none !important; }
 header { display: none !important; }
 
@@ -98,7 +97,6 @@ header { display: none !important; }
 
 /* ── MAIN ── */
 .da-main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-width: 0; }
-
 .da-phead {
     background: var(--white);
     border-bottom: 1px solid var(--gray-200);
@@ -108,7 +106,6 @@ header { display: none !important; }
 .da-phead-title { font-size: 20px; font-weight: 800; color: var(--gray-900); letter-spacing: -0.4px; }
 .da-phead-sub   { font-size: 12px; color: var(--gray-400); font-weight: 500; margin-top: 2px; }
 
-/* Tambah btn */
 .btn-add {
     display: inline-flex; align-items: center; gap: 7px;
     padding: 9px 16px; border-radius: 9px;
@@ -123,16 +120,40 @@ header { display: none !important; }
 /* ── CONTENT ── */
 .da-content { padding: 24px 28px; display: flex; flex-direction: column; gap: 16px; }
 
-/* Alert */
-.alert-success {
-    display: flex; align-items: center; gap: 10px;
-    padding: 12px 16px;
-    background: var(--green-lt); border: 1.5px solid var(--green-bd);
-    border-radius: 10px;
-    font-size: 13px; font-weight: 600; color: var(--green-dk);
+/* ── FILTER TABS ── */
+.filter-bar {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.filter-tab {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 7px 14px; border-radius: 9px;
+    font-size: 12px; font-weight: 700;
+    border: 1.5px solid var(--gray-200);
+    background: var(--white); color: var(--gray-500);
+    cursor: pointer; transition: all .15s; white-space: nowrap;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    text-decoration: none;
+}
+.filter-tab:hover { border-color: var(--blue-mid); color: var(--blue); background: var(--blue-lt); }
+.filter-tab.active-all  { background: var(--gray-900); border-color: var(--gray-900); color: white; }
+.filter-tab.active-tinggi { background: #fef2f2; border-color: #fecaca; color: #dc2626; }
+.filter-tab.active-sedang { background: #fffbeb; border-color: #fde68a; color: #d97706; }
+.filter-tab.active-rendah { background: var(--green-lt); border-color: var(--green-bd); color: var(--green-dk); }
+
+.filter-dot {
+    width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+}
+.dot-tinggi { background: #dc2626; }
+.dot-sedang { background: #d97706; }
+.dot-rendah { background: var(--green-dk); }
+.dot-all    { background: var(--gray-400); }
+
+.filter-count {
+    font-size: 10px; font-weight: 800;
+    background: rgba(0,0,0,.07); padding: 1px 6px; border-radius: 99px;
 }
 
-/* Table card */
+/* ── TABLE ── */
 .table-card {
     background: var(--white);
     border: 1.5px solid var(--gray-200);
@@ -149,7 +170,6 @@ header { display: none !important; }
     background: var(--gray-100); padding: 2px 9px; border-radius: 99px;
 }
 
-/* Table */
 .spk-table { width: 100%; border-collapse: collapse; }
 .spk-table thead tr { background: var(--gray-50); border-bottom: 1px solid var(--gray-200); }
 .spk-table th {
@@ -169,7 +189,7 @@ header { display: none !important; }
 .spk-table tbody tr { transition: background .1s; }
 .spk-table tbody tr:hover { background: var(--gray-50); }
 
-/* Badge risiko */
+/* Badges */
 .badge-risiko {
     display: inline-flex; align-items: center; gap: 5px;
     padding: 3px 10px; border-radius: 99px;
@@ -179,7 +199,6 @@ header { display: none !important; }
 .badge-sedang  { background: #fffbeb; color: #d97706; border: 1px solid #fde68a; }
 .badge-rendah  { background: var(--green-lt); color: var(--green-dk); border: 1px solid var(--green-bd); }
 
-/* Badge status */
 .badge-aktif {
     display: inline-flex; align-items: center; gap: 4px;
     font-size: 10.5px; font-weight: 700; color: var(--green-dk);
@@ -197,14 +216,12 @@ header { display: none !important; }
     padding: 3px 9px; border-radius: 99px;
 }
 
-/* Deskripsi truncate */
 .td-desc {
     max-width: 300px;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     color: var(--gray-500);
 }
 
-/* Action buttons */
 .td-actions { display: flex; align-items: center; justify-content: center; gap: 6px; }
 .act-btn {
     display: inline-flex; align-items: center; gap: 5px;
@@ -214,25 +231,31 @@ header { display: none !important; }
     text-decoration: none; border: none; cursor: pointer;
     transition: all .13s;
 }
-.act-edit {
-    color: var(--blue); background: var(--blue-lt);
-    border: 1px solid var(--blue-mid);
-}
+.act-edit   { color: var(--blue); background: var(--blue-lt); border: 1px solid var(--blue-mid); }
 .act-edit:hover { background: var(--blue-mid); }
-.act-delete {
-    color: var(--red); background: var(--red-lt);
-    border: 1px solid var(--red-bd);
-}
+.act-delete { color: var(--red); background: var(--red-lt); border: 1px solid var(--red-bd); }
 .act-delete:hover { background: #fee2e2; }
 
-/* Empty */
 .spk-empty {
     text-align: center; padding: 40px 20px;
     font-size: 13px; color: var(--gray-400); font-style: italic;
 }
+
+/* Empty state saat filter kosong */
+.filter-empty {
+    text-align: center; padding: 48px 20px;
+    display: flex; flex-direction: column; align-items: center; gap: 10px;
+}
+.filter-empty-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--gray-100); display: flex; align-items: center; justify-content: center;
+    color: var(--gray-400);
+}
+.filter-empty-text { font-size: 13px; font-weight: 600; color: var(--gray-500); }
+.filter-empty-sub  { font-size: 12px; color: var(--gray-400); }
 </style>
 
-<div class="da-root" id="spk-admin-dash">
+<div class="da-root">
 <div class="da-shell">
 
     {{-- ══ SIDEBAR ══ --}}
@@ -256,7 +279,6 @@ header { display: none !important; }
                 <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                 Dashboard
             </a>
-
             <div class="sb-nav-section">Manajemen</div>
             <a href="{{ route('admin.user.index') }}" class="sb-item {{ request()->routeIs('admin.user.*') ? 'active' : '' }}">
                 <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
@@ -274,7 +296,6 @@ header { display: none !important; }
                 <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
                 Mata Pelajaran
             </a>
-
             <div class="sb-nav-section">SPK</div>
             <a href="{{ route('admin.kriteria.index') }}" class="sb-item {{ request()->routeIs('admin.kriteria.*') ? 'active' : '' }}">
                 <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
@@ -317,7 +338,6 @@ header { display: none !important; }
     {{-- ══ MAIN ══ --}}
     <main class="da-main">
 
-        {{-- Page Header --}}
         <div class="da-phead">
             <div>
                 <div class="da-phead-title">Master Rekomendasi</div>
@@ -329,16 +349,61 @@ header { display: none !important; }
             </a>
         </div>
 
-        {{-- Content --}}
         <div class="da-content">
 
-            
+            {{-- ── FILTER TABS ── --}}
+            @php
+                $aktifFilter = request('kategori', 'semua');
+                $countSemua   = $masterRekomendasi->count();
+                $countTinggi  = $masterRekomendasi->filter(fn($i) => strtolower($i->kategori_risiko) === 'tinggi')->count();
+                $countSedang  = $masterRekomendasi->filter(fn($i) => strtolower($i->kategori_risiko) === 'sedang')->count();
+                $countRendah  = $masterRekomendasi->filter(fn($i) => strtolower($i->kategori_risiko) === 'rendah')->count();
+            @endphp
 
-            {{-- Table --}}
+            <div class="filter-bar">
+                <a href="{{ route('admin.master-rekomendasi.index') }}"
+                   class="filter-tab {{ $aktifFilter === 'semua' ? 'active-all' : '' }}">
+                    <span class="filter-dot dot-all"></span>
+                    Semua
+                    <span class="filter-count">{{ $countSemua }}</span>
+                </a>
+                <a href="{{ route('admin.master-rekomendasi.index', ['kategori' => 'tinggi']) }}"
+                   class="filter-tab {{ $aktifFilter === 'tinggi' ? 'active-tinggi' : '' }}">
+                    <span class="filter-dot dot-tinggi"></span>
+                    Risiko Tinggi
+                    <span class="filter-count">{{ $countTinggi }}</span>
+                </a>
+                <a href="{{ route('admin.master-rekomendasi.index', ['kategori' => 'sedang']) }}"
+                   class="filter-tab {{ $aktifFilter === 'sedang' ? 'active-sedang' : '' }}">
+                    <span class="filter-dot dot-sedang"></span>
+                    Risiko Sedang
+                    <span class="filter-count">{{ $countSedang }}</span>
+                </a>
+                <a href="{{ route('admin.master-rekomendasi.index', ['kategori' => 'rendah']) }}"
+                   class="filter-tab {{ $aktifFilter === 'rendah' ? 'active-rendah' : '' }}">
+                    <span class="filter-dot dot-rendah"></span>
+                    Risiko Rendah
+                    <span class="filter-count">{{ $countRendah }}</span>
+                </a>
+            </div>
+
+            {{-- ── TABLE ── --}}
+            @php
+                $filtered = $aktifFilter === 'semua'
+                    ? $masterRekomendasi
+                    : $masterRekomendasi->filter(fn($i) => strtolower($i->kategori_risiko) === $aktifFilter);
+            @endphp
+
             <div class="table-card">
                 <div class="table-card-head">
-                    <span class="table-card-title">Daftar Rekomendasi</span>
-                    <span class="table-card-count">{{ $masterRekomendasi->count() }} data</span>
+                    <span class="table-card-title">
+                        @if($aktifFilter === 'semua')
+                            Semua Rekomendasi
+                        @else
+                            Rekomendasi Risiko {{ ucfirst($aktifFilter) }}
+                        @endif
+                    </span>
+                    <span class="table-card-count">{{ $filtered->count() }} data</span>
                 </div>
 
                 <div style="overflow-x:auto;">
@@ -353,12 +418,10 @@ header { display: none !important; }
                             </tr>
                         </thead>
                         <tbody>
-                            @forelse($masterRekomendasi as $item)
+                            @forelse($filtered as $item)
                                 <tr>
                                     <td>
-                                        @php
-                                            $kat = strtolower($item->kategori_risiko);
-                                        @endphp
+                                        @php $kat = strtolower($item->kategori_risiko); @endphp
                                         <span class="badge-risiko {{ $kat === 'tinggi' ? 'badge-tinggi' : ($kat === 'sedang' ? 'badge-sedang' : 'badge-rendah') }}">
                                             {{ $item->kategori_risiko }}
                                         </span>
@@ -382,20 +445,37 @@ header { display: none !important; }
                                                 <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                                 Edit
                                             </a>
-                                            <form id="delete-rekomendasi-{{ $item->id_master_rekomendasi }}" action="{{ route('admin.master-rekomendasi.destroy', $item->id_master_rekomendasi) }}" method="POST" style="margin:0">
-    @csrf
-    @method('DELETE')
-</form>
-<button class="act-btn act-delete" onclick="confirmDelete('delete-rekomendasi-{{ $item->id_master_rekomendasi }}', '{{ Str::limit($item->deskripsi_rekomendasi, 40) }}')">
-    <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-    Hapus
-</button>
+                                            <form id="delete-rekomendasi-{{ $item->id_master_rekomendasi }}"
+                                                  action="{{ route('admin.master-rekomendasi.destroy', $item->id_master_rekomendasi) }}"
+                                                  method="POST" style="margin:0">
+                                                @csrf
+                                                @method('DELETE')
+                                            </form>
+                                            <button class="act-btn act-delete"
+                                                onclick="confirmDelete('delete-rekomendasi-{{ $item->id_master_rekomendasi }}', '{{ Str::limit($item->deskripsi_rekomendasi, 40) }}')">
+                                                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                                Hapus
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="5" class="spk-empty">Belum ada data rekomendasi</td>
+                                    <td colspan="5">
+                                        <div class="filter-empty">
+                                            <div class="filter-empty-icon">
+                                                <svg width="22" height="22" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                                            </div>
+                                            <div class="filter-empty-text">Tidak ada data rekomendasi</div>
+                                            <div class="filter-empty-sub">
+                                                @if($aktifFilter !== 'semua')
+                                                    Belum ada rekomendasi untuk kategori risiko <strong>{{ $aktifFilter }}</strong>.
+                                                @else
+                                                    Belum ada data rekomendasi yang ditambahkan.
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                             @endforelse
                         </tbody>
@@ -408,5 +488,13 @@ header { display: none !important; }
 
 </div>
 </div>
+
+<script>
+function confirmDelete(formId, label) {
+    if (confirm('Yakin hapus rekomendasi:\n"' + label + '"?')) {
+        document.getElementById(formId).submit();
+    }
+}
+</script>
 
 </x-app-layout>

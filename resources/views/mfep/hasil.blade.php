@@ -163,20 +163,63 @@
                 <div style="background:#fef2f2; color:#ef4444; padding:12px 20px; border-radius:12px; font-size:13px; font-weight:600; margin-bottom:20px; border:1px solid #fecaca;">{{ session('error') }}</div>
             @endif
 
-            <form method="GET" action="{{ route('walas.mfep.hasil') }}" class="filter-card">
-                <div style="display:flex; align-items:center">
-                    <span class="f-label">Filter Periode:</span>
-                    <select name="id_periode" class="f-select">
-                        <option value="">-- Pilih Periode --</option>
-                        @foreach($periodes as $p)
-                            <option value="{{ $p->id_periode }}" {{ (string) $idPeriode === (string) $p->id_periode ? 'selected' : '' }}>
-                                {{ $p->tahun_ajaran }} - Semester {{ $p->semester }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
-                <button type="submit" class="btn-show">Tampilkan Data</button>
-            </form>
+       <form method="GET" action="{{ route('walas.mfep.hasil') }}">
+    <div style="background:white; border:1.5px solid var(--gray-200); border-radius:20px; padding:20px 24px; margin-bottom:24px; display:flex; flex-direction:column; gap:14px;">
+
+        {{-- Baris 1 --}}
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;">
+            <div>
+                <label class="f-label">Periode</label>
+                <select name="id_periode" class="f-select">
+                    <option value="">-- Pilih Periode --</option>
+                    @foreach($periodes as $p)
+                        <option value="{{ $p->id_periode }}" {{ (string) $idPeriode === (string) $p->id_periode ? 'selected' : '' }}>
+                            {{ $p->tahun_ajaran }} - Smstr {{ $p->semester }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="f-label">Kategori Risiko</label>
+                <select name="kategori" class="f-select">
+                    <option value="">Semua Kategori</option>
+                    <option value="Tinggi" {{ ($kategori ?? '') === 'Tinggi' ? 'selected' : '' }}>🔴 Tinggi</option>
+                    <option value="Sedang" {{ ($kategori ?? '') === 'Sedang' ? 'selected' : '' }}>🟡 Sedang</option>
+                    <option value="Rendah" {{ ($kategori ?? '') === 'Rendah' ? 'selected' : '' }}>🟢 Rendah</option>
+                </select>
+            </div>
+            <div>
+                <label class="f-label">Status</label>
+                <select name="status" class="f-select">
+                    <option value="">Semua Status</option>
+                    <option value="belum_diproses"  {{ ($status ?? '') === 'belum_diproses'  ? 'selected' : '' }}>⏳ Menunggu</option>
+                    <option value="sedang_diproses" {{ ($status ?? '') === 'sedang_diproses' ? 'selected' : '' }}>🔄 Dalam Proses</option>
+                    <option value="selesai"         {{ ($status ?? '') === 'selesai'         ? 'selected' : '' }}>✅ Selesai</option>
+                </select>
+            </div>
+        </div>
+
+        {{-- Baris 2 --}}
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px; align-items:flex-end;">
+            <div>
+                <label class="f-label">Faktor Dominan</label>
+                <select name="faktor" class="f-select">
+                    <option value="">Semua Faktor</option>
+                    @foreach($faktorList as $f)
+                        <option value="{{ $f }}" {{ ($faktorFilter ?? '') === $f ? 'selected' : '' }}>{{ $f }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div></div>
+            <div>
+                <button type="submit" class="btn-show" style="width:100%; height:42px;">Tampilkan</button>
+            </div>
+        </div>
+
+    </div>
+</form>
+
+
 
             <div class="table-card">
                 <div class="t-header">
